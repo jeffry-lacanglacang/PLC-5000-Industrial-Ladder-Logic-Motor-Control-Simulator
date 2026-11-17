@@ -38,5 +38,5 @@ Designed as a self-contained single HTML file (`plc_simulator.html`), the interf
 Clone the repository or download `plc_simulator.html` and open it directly in Chrome, Edge, Firefox, or Safari—no web server, Node.js installation, or build step required.
 
 ```bash
-git clone [https://github.com/LoneWolf-create/plc-simulator.git](https://github.com/LoneWolf-create/plc-simulator.git)
+git clone [https://github.com/jeffry-lacanglacang/plc-simulator.git](https://github.com/LoneWolf-create/plc-simulator.git)
 cd plc-simulator
