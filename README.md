@@ -40,3 +40,9 @@ Clone the repository or download `plc_simulator.html` and open it directly in Ch
 ```bash
 git clone [https://github.com/jeffry-lacanglacang/plc-simulator.git](https://github.com/jeffry-lacanglacang/plc-simulator.git)
 cd plc-simulator
+
+---
+
+## 📜 License
+
+This project is open-source and available under the [MIT License](LICENSE).
