@@ -2,7 +2,7 @@
 
 A fully interactive, client-side **PLC (Programmable Logic Controller) simulator** built within a single-file web architecture (`index.html`). Designed for electrical technicians, automation students, and control engineers, it mimics industrial Allen-Bradley/IEC 61131-3 PLC scan cycles, supporting real-time ladder logic editing, physical digital I/O simulation, 3-phase motor control starters, and animated plant mimic displays.
 
-**🔗 Live Demo:** [Try PLC-5000 Online](https://jeffry-lacanglacang.github.io/PLC-5000-Industrial-Ladder-Logic-Motor-Control-Simulator/)
+**🔗 Live Demo:** [Try Studio 5000 Online](https://jeffry-lacanglacang.github.io/PLC-5000-Industrial-Ladder-Logic-Motor-Control-Simulator/)
 
 ![PLC-5000 Badge](https://img.shields.io/badge/PLC--5000-Industrial%20Simulator-059669?style=flat-square&logo=cplusplus&logoColor=white)
 ![HTML5 Single File](https://img.shields.io/badge/Architecture-Single%20File%20HTML5-blue?style=flat-square&logo=html5)
