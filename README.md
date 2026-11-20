@@ -1,4 +1,4 @@
-# PLC-5000 Industrial Ladder Logic & Motor Control Simulator
+# Studio 5000 Logix Designer — Ladder Logic & Motor Control Simulator
 
 A fully interactive, client-side **PLC (Programmable Logic Controller) simulator** built within a single-file web architecture (`index.html`). Designed for electrical technicians, automation students, and control engineers, it mimics industrial Allen-Bradley/IEC 61131-3 PLC scan cycles, supporting real-time ladder logic editing, physical digital I/O simulation, 3-phase motor control starters, and animated plant mimic displays.
 
