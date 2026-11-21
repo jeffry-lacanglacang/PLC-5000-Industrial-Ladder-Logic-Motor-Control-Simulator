@@ -1227,7 +1227,7 @@
     <div class="modal-actions">
       <button id="btnWrapBranch" onclick="wrapInspectedInBranch()" title="Create Parallel OR Branch Around This Instruction">+ Wrap OR Branch</button>
       <button id="btnRemoveInst" class="btn-danger" onclick="removeInspectedInstruction()">Delete</button>
-      <button class="btn-run" onclick="applyInspectorChanges()">Apply</button>
+      <button id="btnApplyInspector" class="btn-run" onclick="applyInspectorChanges()">Apply</button>
     </div>
   </div>
 </div>
@@ -2606,6 +2606,19 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    const inspectorModal = document.getElementById('inspectorModal');
+    if (inspectorModal && inspectorModal.classList.contains('open')) {
+      const activeTag = document.activeElement ? document.activeElement.tagName : '';
+      if (activeTag !== 'BUTTON') {
+        e.preventDefault();
+        applyInspectorChanges();
+      }
+    }
+  }
+});
 
 window.onload = function () {
   loadPreset('blank');
