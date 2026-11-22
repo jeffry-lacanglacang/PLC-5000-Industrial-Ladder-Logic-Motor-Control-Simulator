@@ -56,6 +56,34 @@
     padding-top: var(--safe-top);
   }
 
+  /* Desktop Keyboard Focus Ring */
+  .kb-focus,
+  button:focus-visible,
+  select:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--sky-accent) !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.22) !important;
+  }
+
+  .inst-node.kb-focus {
+    background-color: var(--sky-dim);
+    border-color: var(--sky-accent);
+  }
+
+  .wire-insert-btn.kb-focus {
+    opacity: 1;
+    background: var(--sky-accent);
+    border-color: #fff;
+    color: #090d16;
+    transform: scale(1.18);
+  }
+
+  .palette-item-btn.kb-focus {
+    border-color: var(--sky-accent);
+    background: var(--sky-dim);
+  }
+
   /* Top SCADA / Logix Header Bar */
   header {
     background-color: var(--bg-panel);
@@ -227,6 +255,15 @@
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     color: var(--sky-accent);
+  }
+
+  .kb-hint-badge {
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    color: var(--text-secondary);
+    font-size: 10px;
   }
 
   /* Mobile Navigation Tabs (< 1024px) */
@@ -974,6 +1011,7 @@
 
   .field-group {
     margin-bottom: 12px;
+    position: relative;
   }
 
   .field-group label {
@@ -1043,6 +1081,43 @@
     font-size: 11px;
     color: var(--text-secondary);
   }
+
+  /* Custom Keyboard-Navigable Dropdown Menu Overlay */
+  .kb-dropdown-popup {
+    position: fixed;
+    z-index: 250;
+    background: var(--bg-panel);
+    border: 1px solid var(--sky-accent);
+    border-radius: 8px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85);
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px;
+    display: none;
+  }
+
+  .kb-dropdown-popup.open {
+    display: block;
+  }
+
+  .kb-dropdown-item {
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .kb-dropdown-item:hover,
+  .kb-dropdown-item.active {
+    background: var(--sky-accent);
+    color: #090d16;
+    font-weight: 700;
+  }
 </style>
 </head>
 <body>
@@ -1076,6 +1151,7 @@
   </div>
 
   <div class="scan-telemetry">
+    <span class="kb-hint-badge hide-mobile">KEYS: &larr;&uarr;&rarr;&darr; NAV | ENTER EDIT/EXEC | DEL REMOVE</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
@@ -1115,7 +1191,7 @@
         <strong>MainRoutine (Ladder Diagram)</strong>
       </div>
       <div style="display:flex; gap:6px;">
-        <button onclick="addNewRung()">+ Add Rung</button>
+        <button id="btnAddRungTop" onclick="addNewRung()">+ Add Rung</button>
       </div>
     </div>
 
@@ -1178,6 +1254,9 @@
 <!-- Persistent Android / Mobile Quick-Control Dock -->
 <div class="mobile-quick-dock" id="mobileQuickDock"></div>
 
+<!-- Custom Keyboard Dropdown Popup (for instant Arrow + Enter selection & exit) -->
+<div id="kbDropdownPopup" class="kb-dropdown-popup" role="listbox"></div>
+
 <!-- Point-Specific Instruction Insertion Modal -->
 <div id="insertModal" class="modal-overlay" onclick="if(event.target===this) closeInsertModal()">
   <div class="modal-sheet">
@@ -1235,10 +1314,6 @@
 <script>
 /**
  * Studio 5000 Logix Designer — ControlLogix Ladder Logic & Motor Control Simulator
- * Cyclic Continuous Task Scan Architecture:
- * 1. Input Module Scan (1756-IB16 -> Local:1:I.Data.0..7)
- * 2. MainRoutine Rung Execution (Top-to-Bottom synchronous rung evaluation)
- * 3. Output Module Update (Local:2:O.Data.0..7 -> 1756-OB16E)
  */
 
 const PLC = {
@@ -1250,7 +1325,6 @@ const PLC = {
   rotorDeg: 0,
   presetId: 'blank',
 
-  // Physical field input states
   physicalIn: Array(8).fill(false),
   inputModes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
   inputLabels: [
@@ -1264,7 +1338,6 @@ const PLC = {
     'EStop_OK'
   ],
 
-  // ControlLogix Tag Image Tables
   I: Array(8).fill(false),
   O: Array(8).fill(false),
   physicalOut: Array(8).fill(false),
@@ -1292,7 +1365,15 @@ const PLC = {
 let activeEditPath = null;
 let pendingInsertSlot = null;
 
-// ControlLogix Tag Pools
+// Desktop Keyboard Navigation State
+const KB_NAV = {
+  selectedRungIdx: 0,
+  selectedItemIdx: 0,
+  paletteIdx: 0,
+  activeSelect: null,
+  dropdownIdx: 0
+};
+
 const CONTACT_ADDRESSES = [
   'Local:1:I.Data.0', 'Local:1:I.Data.1', 'Local:1:I.Data.2', 'Local:1:I.Data.3',
   'Local:1:I.Data.4', 'Local:1:I.Data.5', 'Local:1:I.Data.6', 'Local:1:I.Data.7',
@@ -1315,9 +1396,6 @@ const COIL_ADDRESSES = [
 
 const TIMER_ADDRESSES = ['Timer_0', 'Timer_1', 'Timer_2', 'Timer_3'];
 
-/**
- * Read single BOOL member from ControlLogix Tag Structure
- */
 function getBit(addr) {
   if (!addr) return false;
   if (addr.startsWith('Local:1:I.Data.')) {
@@ -1341,9 +1419,6 @@ function getBit(addr) {
   return false;
 }
 
-/**
- * Write single BOOL member to Output or Program DINT Tag
- */
 function setBit(addr, state) {
   if (!addr) return;
   if (addr.startsWith('Local:2:O.Data.')) {
@@ -1355,9 +1430,6 @@ function setBit(addr, state) {
   }
 }
 
-/**
- * 5 ControlLogix Motor & Automation Routine Presets
- */
 const PRESETS = {
   blank: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
@@ -1366,7 +1438,6 @@ const PRESETS = {
     outLabels: ['Main_KM1', 'Star_Rev_KM2', 'Delta_KM3', 'Fault_Horn', 'Run_Pilot', 'Conv_Belt', 'Diverter_Sol', 'Ready_Pilot'],
     rungs: []
   },
-
   preset1: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
     initIn: [false, true, true, false, false, false, false, true],
@@ -1404,7 +1475,6 @@ const PRESETS = {
       }
     ]
   },
-
   preset2: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
     initIn: [false, true, true, false, false, false, false, true],
@@ -1452,7 +1522,6 @@ const PRESETS = {
       }
     ]
   },
-
   preset3: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
     initIn: [false, true, true, false, false, false, false, true],
@@ -1501,7 +1570,6 @@ const PRESETS = {
       }
     ]
   },
-
   preset4: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
     initIn: [false, true, true, false, false, false, false, true],
@@ -1559,9 +1627,6 @@ const PRESETS = {
   }
 };
 
-/**
- * Load selected ControlLogix routine preset
- */
 function loadPreset(id) {
   const p = PRESETS[id];
   if (!p) return;
@@ -1573,6 +1638,9 @@ function loadPreset(id) {
   PLC.outputLabels = [...p.outLabels];
   PLC.rungs = JSON.parse(JSON.stringify(p.rungs));
 
+  KB_NAV.selectedRungIdx = 0;
+  KB_NAV.selectedItemIdx = 0;
+
   clearPlcMemory();
   buildInputOutputRacks();
   buildMobileQuickDock();
@@ -1581,9 +1649,6 @@ function loadPreset(id) {
   syncUiVisuals();
 }
 
-/**
- * Clear Output Tags, Program DINT Bits, Timers, and Reset Physical Inputs
- */
 function clearPlcMemory() {
   PLC.O.fill(false);
   PLC.physicalOut.fill(false);
@@ -1610,23 +1675,17 @@ function clearPlcMemory() {
   syncUiVisuals();
 }
 
-/**
- * Cyclic Continuous Task Scan Execution
- */
 function executePlcScan(dtMs) {
   const clampedDt = Math.min(100, Math.max(0, dtMs));
 
-  // 1. Input Scan (1756-IB16)
   for (let i = 0; i < 8; i++) {
     PLC.I[i] = !!PLC.physicalIn[i];
   }
 
-  // 2. MainRoutine Logic Solve
   for (let r = 0; r < PLC.rungs.length; r++) {
     solveRung(PLC.rungs[r], clampedDt);
   }
 
-  // 3. Output Module Update (1756-OB16E)
   for (let i = 0; i < 8; i++) {
     PLC.physicalOut[i] = !!PLC.O[i];
   }
@@ -1638,9 +1697,6 @@ function executePlcScan(dtMs) {
   syncUiVisuals();
 }
 
-/**
- * Evaluate power continuity across a single rung
- */
 function solveRung(rung, dtMs) {
   let rungPower = true;
 
@@ -1667,9 +1723,6 @@ function solveRung(rung, dtMs) {
   }
 }
 
-/**
- * Evaluate an individual Logix ladder instruction node
- */
 function solveInstruction(el, inPower, dtMs) {
   el.inPower = inPower;
   let outPower = inPower;
@@ -1740,9 +1793,6 @@ function solveInstruction(el, inPower, dtMs) {
   return outPower;
 }
 
-/**
- * Helper to create an interactive wire segment with a point-specific (+) insert button
- */
 function createWireSegment(slotSpec, wireMeta) {
   const seg = document.createElement('div');
   seg.className = 'wire-segment';
@@ -1759,10 +1809,11 @@ function createWireSegment(slotSpec, wireMeta) {
   lineLeft.className = 'wire-line';
 
   const insertBtn = document.createElement('button');
-  insertBtn.className = 'wire-insert-btn';
+  insertBtn.className = 'wire-insert-btn kb-nav-node';
   insertBtn.type = 'button';
   insertBtn.textContent = '+';
   insertBtn.title = 'Insert Contact, OR Branch, or Output Here';
+  insertBtn.dataset.slot = JSON.stringify(slotSpec);
   insertBtn.onclick = (e) => {
     e.stopPropagation();
     openInsertModal(slotSpec);
@@ -1777,9 +1828,6 @@ function createWireSegment(slotSpec, wireMeta) {
   return seg;
 }
 
-/**
- * Render Ladder Diagram Canvas with Point-Specific Insertion Nodes
- */
 function renderLadderCanvas() {
   const host = document.getElementById('ladderRungsHost');
   if (!host) return;
@@ -1790,9 +1838,10 @@ function renderLadderCanvas() {
       <div class="empty-routine-prompt">
         <div style="color:var(--sky-accent); font-weight:800; font-size:13px;">EMPTY MAINROUTINE (MAINPROGRAM)</div>
         <div>Blank Routine — Click <strong>'+ Add Rung'</strong> above or select a Circuit Preset to begin.</div>
-        <button class="btn-run" style="margin-top:4px;" onclick="addNewRung()">+ Add First Rung</button>
+        <button id="btnAddFirstRung" class="btn-run kb-nav-node" style="margin-top:4px;" onclick="addNewRung()">+ Add First Rung</button>
       </div>
     `;
+    applyLadderKeyboardCursor();
     syncUiVisuals();
     return;
   }
@@ -1800,6 +1849,7 @@ function renderLadderCanvas() {
   PLC.rungs.forEach((rung, rIdx) => {
     const block = document.createElement('div');
     block.className = 'rung-block';
+    block.dataset.rungIdx = rIdx;
 
     const topBar = document.createElement('div');
     topBar.className = 'rung-top-bar';
@@ -1820,7 +1870,6 @@ function renderLadderCanvas() {
     const wireRow = document.createElement('div');
     wireRow.className = 'rung-wire-row';
 
-    // Leading wire segment (index 0 on rung)
     wireRow.appendChild(createWireSegment({ rIdx, insertIndex: 0 }, { isLead: true }));
 
     rung.elements.forEach((el, eIdx) => {
@@ -1834,14 +1883,12 @@ function renderLadderCanvas() {
           const pathRow = document.createElement('div');
           pathRow.className = 'branch-path';
 
-          // Leading insertion point inside branch path (kIdx = 0)
           pathRow.appendChild(
             createWireSegment({ rIdx, eIdx, bIdx, insertIndex: 0 }, { r: rIdx, e: eIdx, b: bIdx, k: -1 })
           );
 
           bList.forEach((bEl, kIdx) => {
             pathRow.appendChild(buildInstructionNode(bEl, { rIdx, eIdx, bIdx, kIdx }));
-            // Trailing insertion point after each branch instruction (kIdx + 1)
             pathRow.appendChild(
               createWireSegment({ rIdx, eIdx, bIdx, insertIndex: kIdx + 1 }, { r: rIdx, e: eIdx, b: bIdx, k: kIdx })
             );
@@ -1850,7 +1897,6 @@ function renderLadderCanvas() {
           brBox.appendChild(pathRow);
         });
 
-        // Button to append an additional parallel OR leg to this branch
         const brFooter = document.createElement('div');
         brFooter.className = 'branch-footer-bar';
         const addLegBtn = document.createElement('button');
@@ -1869,7 +1915,6 @@ function renderLadderCanvas() {
         wireRow.appendChild(buildInstructionNode(el, { rIdx, eIdx }));
       }
 
-      // Trailing wire segment after element eIdx (insert at eIdx + 1)
       wireRow.appendChild(
         createWireSegment({ rIdx, insertIndex: eIdx + 1 }, { r: rIdx, e: eIdx })
       );
@@ -1879,14 +1924,18 @@ function renderLadderCanvas() {
     host.appendChild(block);
   });
 
+  applyLadderKeyboardCursor();
   syncUiVisuals();
 }
 
 function buildInstructionNode(el, path) {
   const node = document.createElement('div');
-  node.className = 'inst-node';
+  node.className = 'inst-node kb-nav-node';
   node.dataset.path = JSON.stringify(path);
-  node.onclick = () => openInspector(path);
+  node.onclick = () => {
+    selectNodeInNav(node);
+    openInspector(path);
+  };
 
   let symMarkup = '';
   if (el.type === 'XIC') {
@@ -1922,6 +1971,60 @@ function buildInstructionNode(el, path) {
 }
 
 /**
+ * Desktop Ladder Cursor Helpers
+ */
+function getRungNavItems(rIdx) {
+  const rungBlock = document.querySelector(`.rung-block[data-rung-idx="${rIdx}"]`);
+  if (!rungBlock) return [];
+  return Array.from(rungBlock.querySelectorAll('.kb-nav-node'));
+}
+
+function selectNodeInNav(nodeEl) {
+  const rungBlock = nodeEl.closest('.rung-block');
+  if (!rungBlock) return;
+  const rIdx = parseInt(rungBlock.dataset.rungIdx, 10);
+  const items = getRungNavItems(rIdx);
+  const idx = items.indexOf(nodeEl);
+  if (idx !== -1) {
+    KB_NAV.selectedRungIdx = rIdx;
+    KB_NAV.selectedItemIdx = idx;
+    applyLadderKeyboardCursor();
+  }
+}
+
+function applyLadderKeyboardCursor() {
+  document.querySelectorAll('.kb-nav-node.kb-focus').forEach(el => el.classList.remove('kb-focus'));
+
+  if (PLC.rungs.length === 0) {
+    const firstBtn = document.getElementById('btnAddFirstRung');
+    if (firstBtn) firstBtn.classList.add('kb-focus');
+    return;
+  }
+
+  KB_NAV.selectedRungIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
+  const items = getRungNavItems(KB_NAV.selectedRungIdx);
+  if (items.length === 0) return;
+
+  // Default to first instruction node if currently out of bounds
+  if (KB_NAV.selectedItemIdx < 0) KB_NAV.selectedItemIdx = 0;
+  if (KB_NAV.selectedItemIdx >= items.length) KB_NAV.selectedItemIdx = items.length - 1;
+
+  const target = items[KB_NAV.selectedItemIdx];
+  if (target) {
+    target.classList.add('kb-focus');
+    target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+}
+
+function getActiveNavNode() {
+  if (PLC.rungs.length === 0) {
+    return document.getElementById('btnAddFirstRung');
+  }
+  const items = getRungNavItems(KB_NAV.selectedRungIdx);
+  return items[KB_NAV.selectedItemIdx] || null;
+}
+
+/**
  * Point-Specific Instruction Insertion Modal
  */
 function openInsertModal(slotSpec, directType) {
@@ -1931,6 +2034,8 @@ function openInsertModal(slotSpec, directType) {
   }
 
   pendingInsertSlot = slotSpec;
+  KB_NAV.paletteIdx = 0;
+
   const isInsideBranch = slotSpec.bIdx !== undefined;
   const titleEl = document.getElementById('insertModalTitle');
   if (titleEl) {
@@ -1951,10 +2056,10 @@ function openInsertModal(slotSpec, directType) {
 
   const host = document.getElementById('insertPaletteHost');
   host.innerHTML = '';
-  options.forEach(opt => {
+  options.forEach((opt, idx) => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'palette-item-btn';
+    btn.className = 'palette-item-btn' + (idx === 0 ? ' kb-focus' : '');
     btn.innerHTML = `
       <span class="palette-sym">${opt.sym}</span>
       <span class="palette-desc">${opt.desc}</span>
@@ -1973,6 +2078,13 @@ function openInsertModal(slotSpec, directType) {
 function closeInsertModal() {
   document.getElementById('insertModal').classList.remove('open');
   pendingInsertSlot = null;
+}
+
+function updatePaletteHighlight() {
+  const btns = Array.from(document.querySelectorAll('#insertPaletteHost .palette-item-btn'));
+  if (btns.length === 0) return;
+  KB_NAV.paletteIdx = (KB_NAV.paletteIdx + btns.length) % btns.length;
+  btns.forEach((b, i) => b.classList.toggle('kb-focus', i === KB_NAV.paletteIdx));
 }
 
 function createDefaultInstruction(type) {
@@ -2009,7 +2121,6 @@ function executePointInsertion(slotSpec, instType) {
   const newInst = createDefaultInstruction(instType);
 
   if (slotSpec.bIdx !== undefined) {
-    // Insert inside a specific parallel OR branch leg at insertIndex
     const branchEl = rung.elements[slotSpec.eIdx];
     if (!branchEl || !branchEl.branches || !branchEl.branches[slotSpec.bIdx]) return;
     const leg = branchEl.branches[slotSpec.bIdx];
@@ -2020,7 +2131,6 @@ function executePointInsertion(slotSpec, instType) {
       openInspector({ rIdx: slotSpec.rIdx, eIdx: slotSpec.eIdx, bIdx: slotSpec.bIdx, kIdx: idx });
     }
   } else {
-    // Insert directly on the main rung at insertIndex
     const idx = Math.max(0, Math.min(rung.elements.length, slotSpec.insertIndex));
     rung.elements.splice(idx, 0, newInst);
     renderLadderCanvas();
@@ -2046,7 +2156,7 @@ function addParallelBranchLeg(rIdx, eIdx) {
 function wrapInspectedInBranch() {
   if (!activeEditPath) return;
   const { rIdx, eIdx, bIdx } = activeEditPath;
-  if (bIdx !== undefined) return; // Already inside a branch
+  if (bIdx !== undefined) return;
 
   const rung = PLC.rungs[rIdx];
   const existing = rung?.elements[eIdx];
@@ -2064,10 +2174,74 @@ function wrapInspectedInBranch() {
 }
 
 /**
+ * Custom Keyboard-Navigable Dropdown Menu for <select> Elements
+ */
+function openCustomSelectDropdown(selectEl) {
+  const popup = document.getElementById('kbDropdownPopup');
+  if (!popup || !selectEl) return;
+
+  KB_NAV.activeSelect = selectEl;
+  KB_NAV.dropdownIdx = Math.max(0, selectEl.selectedIndex);
+
+  popup.innerHTML = '';
+  Array.from(selectEl.options).forEach((opt, idx) => {
+    const item = document.createElement('div');
+    item.className = 'kb-dropdown-item' + (idx === KB_NAV.dropdownIdx ? ' active' : '');
+    item.textContent = opt.textContent;
+    item.dataset.idx = idx;
+    item.onmousedown = (e) => {
+      e.preventDefault();
+      commitCustomSelectDropdown(idx);
+    };
+    popup.appendChild(item);
+  });
+
+  const rect = selectEl.getBoundingClientRect();
+  popup.style.width = `${Math.max(rect.width, 220)}px`;
+  popup.style.left = `${Math.min(window.innerWidth - Math.max(rect.width, 220) - 12, Math.max(8, rect.left))}px`;
+
+  const spaceBelow = window.innerHeight - rect.bottom;
+  if (spaceBelow < 220 && rect.top > 220) {
+    popup.style.top = 'auto';
+    popup.style.bottom = `${window.innerHeight - rect.top + 4}px`;
+  } else {
+    popup.style.bottom = 'auto';
+    popup.style.top = `${rect.bottom + 4}px`;
+  }
+
+  popup.classList.add('open');
+  scrollDropdownItemIntoView();
+}
+
+function scrollDropdownItemIntoView() {
+  const popup = document.getElementById('kbDropdownPopup');
+  const items = Array.from(popup.querySelectorAll('.kb-dropdown-item'));
+  items.forEach((el, i) => el.classList.toggle('active', i === KB_NAV.dropdownIdx));
+  if (items[KB_NAV.dropdownIdx]) {
+    items[KB_NAV.dropdownIdx].scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function commitCustomSelectDropdown(idx) {
+  const selectEl = KB_NAV.activeSelect;
+  closeCustomSelectDropdown();
+  if (!selectEl) return;
+
+  selectEl.selectedIndex = idx;
+  selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+  selectEl.focus();
+}
+
+function closeCustomSelectDropdown() {
+  const popup = document.getElementById('kbDropdownPopup');
+  if (popup) popup.classList.remove('open');
+  KB_NAV.activeSelect = null;
+}
+
+/**
  * Fast DOM Synchronization on Every Scan Cycle
  */
 function syncUiVisuals() {
-  // 1. Update Ladder Instruction Symbols
   document.querySelectorAll('.inst-node').forEach(node => {
     const path = JSON.parse(node.dataset.path);
     const el = resolveElementPath(path);
@@ -2089,7 +2263,6 @@ function syncUiVisuals() {
     }
   });
 
-  // 2. Update Wires & Branches
   document.querySelectorAll('.wire-segment[data-wire-r]').forEach(seg => {
     const r = parseInt(seg.dataset.wireR, 10);
     const e = parseInt(seg.dataset.wireE, 10);
@@ -2123,7 +2296,6 @@ function syncUiVisuals() {
     }
   });
 
-  // 3. Update 1756-IB16 Field Inputs
   for (let i = 0; i < 8; i++) {
     const isClosed = PLC.physicalIn[i];
     const mode = PLC.inputModes[i];
@@ -2144,7 +2316,6 @@ function syncUiVisuals() {
     olBtn.textContent = olTripped ? 'Reset OL Relay' : 'Trip OL Relay';
   }
 
-  // 4. Update 1756-OB16E Output Module
   for (let i = 0; i < 8; i++) {
     const isOutOn = PLC.physicalOut[i];
     const slot = document.getElementById(`outSlot_${i}`);
@@ -2153,16 +2324,10 @@ function syncUiVisuals() {
     if (led) led.classList.toggle('on', isOutOn);
   }
 
-  // 5. Update Controller/Program Tag Data Tables
   renderDataTables();
-
-  // 6. Update 3-Phase Motor Mimic
   updatePlantMimic();
 }
 
-/**
- * Build 1756 Input Switches & Output LED Racks
- */
 function buildInputOutputRacks() {
   const inHost = document.getElementById('inputRackHost');
   if (inHost) {
@@ -2355,9 +2520,6 @@ function updatePlantMimic() {
   if (modeEl) modeEl.textContent = modeStr;
 }
 
-/**
- * Render Studio 5000 Program Tags (DINT & TIMER Data Types)
- */
 function renderDataTables() {
   const bHost = document.getElementById('binaryTableHost');
   if (bHost) {
@@ -2386,9 +2548,6 @@ function renderDataTables() {
   }
 }
 
-/**
- * Rung & Branch Manipulation with Strict Array Guarding
- */
 function resolveElementPath(path) {
   const rung = PLC.rungs[path.rIdx];
   if (!rung) return null;
@@ -2406,11 +2565,15 @@ function addNewRung() {
       { type: 'OTE', addr: 'Control_Bits.2', label: 'Aux_Bit' }
     ]
   });
+  KB_NAV.selectedRungIdx = PLC.rungs.length - 1;
+  KB_NAV.selectedItemIdx = 1; // Focus first instruction on the new rung
   renderLadderCanvas();
 }
 
 function removeRung(rIdx) {
   PLC.rungs.splice(rIdx, 1);
+  KB_NAV.selectedRungIdx = Math.max(0, Math.min(PLC.rungs.length - 1, rIdx));
+  KB_NAV.selectedItemIdx = 0;
   renderLadderCanvas();
 }
 
@@ -2433,7 +2596,16 @@ function promptRungComment(rIdx) {
     renderLadderCanvas();
   };
   input.onblur = save;
-  input.onkeydown = (e) => { if (e.key === 'Enter') save(); };
+  input.onkeydown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      save();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      renderLadderCanvas();
+    }
+  };
 }
 
 /**
@@ -2462,11 +2634,16 @@ function openInspector(path) {
   document.getElementById('inspPresetWrap').style.display = (el.type === 'TON') ? 'block' : 'none';
 
   modal.classList.add('open');
+  setTimeout(() => typeSel.focus(), 10);
 }
 
 function closeInspector() {
+  closeCustomSelectDropdown();
   document.getElementById('inspectorModal').classList.remove('open');
   activeEditPath = null;
+  if (document.activeElement && document.activeElement !== document.body) {
+    document.activeElement.blur();
+  }
 }
 
 function populateAddressOptions(type, selectedAddr) {
@@ -2514,9 +2691,9 @@ function applyInspectorChanges() {
   renderLadderCanvas();
 }
 
-function removeInspectedInstruction() {
-  if (!activeEditPath) return;
-  const { rIdx, eIdx, bIdx, kIdx } = activeEditPath;
+function deleteInstructionAtPath(path) {
+  if (!path) return;
+  const { rIdx, eIdx, bIdx, kIdx } = path;
   const rung = PLC.rungs[rIdx];
   if (!rung) return;
 
@@ -2536,16 +2713,22 @@ function removeInspectedInstruction() {
   } else {
     if (rung.elements.length > 1) {
       rung.elements.splice(eIdx, 1);
+    } else {
+      // Remove the rung if its sole remaining instruction is deleted
+      PLC.rungs.splice(rIdx, 1);
     }
   }
 
-  closeInspector();
   renderLadderCanvas();
 }
 
-/**
- * Mobile Tab Navigation
- */
+function removeInspectedInstruction() {
+  if (!activeEditPath) return;
+  const pathCopy = { ...activeEditPath };
+  closeInspector();
+  deleteInstructionAtPath(pathCopy);
+}
+
 function switchMobileTab(paneId, btnEl) {
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('mobile-active'));
   document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
@@ -2555,9 +2738,6 @@ function switchMobileTab(paneId, btnEl) {
   if (btnEl) btnEl.classList.add('active');
 }
 
-/**
- * Controller Mode Switch (REM RUN / REM PROG) & Continuous Task Loop
- */
 function toggleCpuRun() {
   PLC.running = !PLC.running;
   const btn = document.getElementById('btnRunToggle');
@@ -2607,16 +2787,284 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+/**
+ * Full Desktop Keyboard Navigation, Dropdown Menu Execution, and Instant Delete Handler
+ */
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') {
-    const inspectorModal = document.getElementById('inspectorModal');
-    if (inspectorModal && inspectorModal.classList.contains('open')) {
-      const activeTag = document.activeElement ? document.activeElement.tagName : '';
-      if (activeTag !== 'BUTTON') {
+  const activeEl = document.activeElement;
+  const activeTag = activeEl ? activeEl.tagName : '';
+  const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
+
+  // 1. Custom Dropdown Menu Open (ArrowUp/ArrowDown to navigate, Enter to execute & exit)
+  if (KB_NAV.activeSelect) {
+    const optionCount = KB_NAV.activeSelect.options.length;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      KB_NAV.dropdownIdx = (KB_NAV.dropdownIdx + 1) % optionCount;
+      scrollDropdownItemIntoView();
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      KB_NAV.dropdownIdx = (KB_NAV.dropdownIdx - 1 + optionCount) % optionCount;
+      scrollDropdownItemIntoView();
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const chosenIdx = KB_NAV.dropdownIdx;
+      const wasInspectorSelect = KB_NAV.activeSelect.id === 'inspType' || KB_NAV.activeSelect.id === 'inspAddr';
+      commitCustomSelectDropdown(chosenIdx);
+      // If inside Inspector, pressing Enter executes the selection and exits immediately if desired,
+      // or if on Preset dropdown, loads preset and blurs back to ladder
+      if (!wasInspectorSelect && document.activeElement) {
+        document.activeElement.blur();
+      }
+      return;
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeCustomSelectDropdown();
+      return;
+    }
+    return;
+  }
+
+  // 2. Insert Instruction Palette Modal Open
+  const insertModal = document.getElementById('insertModal');
+  if (insertModal && insertModal.classList.contains('open')) {
+    const btns = Array.from(document.querySelectorAll('#insertPaletteHost .palette-item-btn'));
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      KB_NAV.paletteIdx += (e.key === 'ArrowDown' && btns.length > 2) ? 2 : 1;
+      updatePaletteHighlight();
+      return;
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      KB_NAV.paletteIdx -= (e.key === 'ArrowUp' && btns.length > 2) ? 2 : 1;
+      updatePaletteHighlight();
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (btns[KB_NAV.paletteIdx]) {
+        btns[KB_NAV.paletteIdx].click();
+      }
+      return;
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeInsertModal();
+      return;
+    }
+    return;
+  }
+
+  // 3. Logix Instruction & Tag Inspector Modal Open
+  const inspectorModal = document.getElementById('inspectorModal');
+  if (inspectorModal && inspectorModal.classList.contains('open')) {
+    const focusables = Array.from(
+      inspectorModal.querySelectorAll('select, input, .modal-actions button')
+    ).filter(el => el.offsetParent !== null);
+
+    if (e.key === 'Delete') {
+      if (!isTextTyping) {
         e.preventDefault();
+        removeInspectedInstruction();
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeInspector();
+      return;
+    }
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (activeTag === 'INPUT' && activeEl.type === 'number') return; // Allow number increment/decrement
+      e.preventDefault();
+      const curIdx = focusables.indexOf(activeEl);
+      const dir = e.key === 'ArrowDown' ? 1 : -1;
+      const nextIdx = (curIdx + dir + focusables.length) % focusables.length;
+      focusables[nextIdx].focus();
+      return;
+    }
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (activeTag === 'BUTTON') {
+        e.preventDefault();
+        const curIdx = focusables.indexOf(activeEl);
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const nextIdx = (curIdx + dir + focusables.length) % focusables.length;
+        focusables[nextIdx].focus();
+      }
+      return;
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (activeTag === 'SELECT') {
+        openCustomSelectDropdown(activeEl);
+      } else if (activeTag === 'BUTTON' && activeEl.id !== 'btnApplyInspector') {
+        activeEl.click();
+      } else {
+        // Apply changes and exit inspector immediately
         applyInspectorChanges();
       }
+      return;
     }
+    return;
+  }
+
+  // 4. Top Menu Bar / Toolbar Focused Controls (<select> or <button>)
+  if (activeTag === 'SELECT') {
+    if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      openCustomSelectDropdown(activeEl);
+      return;
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      activeEl.blur();
+      return;
+    }
+  }
+
+  if (activeTag === 'BUTTON' && !activeEl.classList.contains('kb-nav-node')) {
+    const headerBtns = Array.from(document.querySelectorAll('header button, .sub-toolbar select, .sub-toolbar button, .ladder-toolbar button'))
+      .filter(el => el.offsetParent !== null);
+    const idx = headerBtns.indexOf(activeEl);
+    if (idx !== -1) {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        headerBtns[(idx + 1) % headerBtns.length].focus();
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        headerBtns[(idx - 1 + headerBtns.length) % headerBtns.length].focus();
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeEl.blur();
+        applyLadderKeyboardCursor();
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        activeEl.blur();
+        return;
+      }
+    }
+  }
+
+  // 5. Main Ladder Canvas Navigation (Arrow Keys, Enter to Edit/Insert, Delete to Instant-Remove)
+  if (isTextTyping) return;
+
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    const items = getRungNavItems(KB_NAV.selectedRungIdx);
+    if (items.length > 0) {
+      KB_NAV.selectedItemIdx = (KB_NAV.selectedItemIdx + 1) % items.length;
+      applyLadderKeyboardCursor();
+    }
+    return;
+  }
+
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const items = getRungNavItems(KB_NAV.selectedRungIdx);
+    if (items.length > 0) {
+      KB_NAV.selectedItemIdx = (KB_NAV.selectedItemIdx - 1 + items.length) % items.length;
+      applyLadderKeyboardCursor();
+    }
+    return;
+  }
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (PLC.rungs.length > 0) {
+      KB_NAV.selectedRungIdx = (KB_NAV.selectedRungIdx + 1) % PLC.rungs.length;
+      applyLadderKeyboardCursor();
+    }
+    return;
+  }
+
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (PLC.rungs.length > 0) {
+      if (KB_NAV.selectedRungIdx === 0) {
+        // Move focus up into the Preset Dropdown Menu in the sub-toolbar
+        const presetSel = document.getElementById('presetSelector');
+        if (presetSel) {
+          presetSel.focus();
+          return;
+        }
+      }
+      KB_NAV.selectedRungIdx = (KB_NAV.selectedRungIdx - 1 + PLC.rungs.length) % PLC.rungs.length;
+      applyLadderKeyboardCursor();
+    } else {
+      const presetSel = document.getElementById('presetSelector');
+      if (presetSel) presetSel.focus();
+    }
+    return;
+  }
+
+  if (e.key === 'Enter') {
+    const activeNode = getActiveNavNode();
+    if (activeNode) {
+      e.preventDefault();
+      if (activeNode.classList.contains('inst-node')) {
+        openInspector(JSON.parse(activeNode.dataset.path));
+      } else if (activeNode.classList.contains('wire-insert-btn')) {
+        openInsertModal(JSON.parse(activeNode.dataset.slot));
+      } else {
+        activeNode.click();
+      }
+    }
+    return;
+  }
+
+  if (e.key === 'Delete') {
+    const activeNode = getActiveNavNode();
+    if (!activeNode) return;
+    e.preventDefault();
+
+    if (activeNode.classList.contains('inst-node')) {
+      deleteInstructionAtPath(JSON.parse(activeNode.dataset.path));
+    } else if (activeNode.classList.contains('wire-insert-btn')) {
+      // If focused on a wire segment next to an instruction, delete the adjacent instruction on that rung
+      const slot = JSON.parse(activeNode.dataset.slot);
+      const rung = PLC.rungs[slot.rIdx];
+      if (rung) {
+        if (slot.bIdx !== undefined) {
+          const leg = rung.elements[slot.eIdx]?.branches?.[slot.bIdx];
+          if (leg && leg.length > 0) {
+            const targetK = Math.min(leg.length - 1, Math.max(0, slot.insertIndex - 1));
+            deleteInstructionAtPath({ rIdx: slot.rIdx, eIdx: slot.eIdx, bIdx: slot.bIdx, kIdx: targetK });
+          }
+        } else if (rung.elements.length > 0) {
+          const targetE = Math.min(rung.elements.length - 1, Math.max(0, slot.insertIndex - 1));
+          const targetEl = rung.elements[targetE];
+          if (targetEl && targetEl.type !== 'BRANCH') {
+            deleteInstructionAtPath({ rIdx: slot.rIdx, eIdx: targetE });
+          } else {
+            removeRung(slot.rIdx);
+          }
+        }
+      }
+    }
+  }
+});
+
+// Close custom dropdown if user clicks elsewhere on screen
+document.addEventListener('mousedown', function (e) {
+  const popup = document.getElementById('kbDropdownPopup');
+  if (popup && popup.classList.contains('open') && !popup.contains(e.target) && e.target !== KB_NAV.activeSelect) {
+    closeCustomSelectDropdown();
   }
 });
 
