@@ -1532,7 +1532,8 @@ const KB_NAV = {
   paletteIdx: 0,
   activeSelect: null,
   dropdownIdx: 0,
-  heldKeys: {}
+  heldKeys: {},
+  arrowNavActive: false
 };
 
 // Primary Field Input Shortcut Map (Start, Stop, OL, Reset, + Digits 4..7)
@@ -2155,12 +2156,32 @@ function buildInstructionNode(el, path) {
 }
 
 /**
- * Desktop Ladder Cursor Helpers
+ * Desktop Ladder & Button Cursor Helpers
  */
 function getRungNavItems(rIdx) {
   const rungBlock = document.querySelector(`.rung-block[data-rung-idx="${rIdx}"]`);
   if (!rungBlock) return [];
   return Array.from(rungBlock.querySelectorAll('.kb-nav-node'));
+}
+
+function getButtonNavGroup() {
+  return Array.from(
+    document.querySelectorAll('header button, .sub-toolbar button, .mobile-nav-tabs button, .ladder-toolbar button')
+  ).filter(el => el.offsetParent !== null);
+}
+
+function setHighlightedButton(btnEl) {
+  document.querySelectorAll('button.kb-focus').forEach(el => {
+    if (!el.classList.contains('kb-nav-node')) {
+      el.classList.remove('kb-focus');
+    }
+  });
+  if (btnEl) {
+    KB_NAV.arrowNavActive = true;
+    btnEl.classList.add('kb-focus');
+    btnEl.focus({ preventScroll: true });
+    btnEl.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
 }
 
 function selectNodeInNav(nodeEl) {
@@ -2170,6 +2191,7 @@ function selectNodeInNav(nodeEl) {
   const items = getRungNavItems(rIdx);
   const idx = items.indexOf(nodeEl);
   if (idx !== -1) {
+    KB_NAV.arrowNavActive = true;
     KB_NAV.selectedRungIdx = rIdx;
     KB_NAV.selectedItemIdx = idx;
     applyLadderKeyboardCursor();
@@ -3097,8 +3119,9 @@ document.addEventListener('keydown', function (e) {
     }
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (btns[KB_NAV.paletteIdx]) {
-        btns[KB_NAV.paletteIdx].click();
+      const highlightedPaletteBtn = btns.find(b => b.classList.contains('kb-focus')) || btns[KB_NAV.paletteIdx];
+      if (highlightedPaletteBtn) {
+        highlightedPaletteBtn.click();
       }
       return;
     }
@@ -3156,7 +3179,7 @@ document.addEventListener('keydown', function (e) {
       e.preventDefault();
       if (activeTag === 'SELECT') {
         openCustomSelectDropdown(activeEl);
-      } else if (activeTag === 'BUTTON' && activeEl.id !== 'btnApplyInspector') {
+      } else if (activeTag === 'BUTTON') {
         activeEl.click();
       } else {
         applyInspectorChanges();
@@ -3180,6 +3203,7 @@ document.addEventListener('keydown', function (e) {
   if (!e.ctrlKey && !e.altKey && !e.metaKey) {
     if (e.key === '1') {
       e.preventDefault();
+      KB_NAV.arrowNavActive = false;
       if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneLadder', document.getElementById('tabBtnLadder'));
       applyLadderKeyboardCursor();
@@ -3187,12 +3211,14 @@ document.addEventListener('keydown', function (e) {
     }
     if (e.key === '2') {
       e.preventDefault();
+      KB_NAV.arrowNavActive = false;
       if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneIo', document.getElementById('tabBtnIo'));
       return;
     }
     if (e.key === '3') {
       e.preventDefault();
+      KB_NAV.arrowNavActive = false;
       if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneData', document.getElementById('tabBtnData'));
       return;
@@ -3201,6 +3227,7 @@ document.addEventListener('keydown', function (e) {
     // 5. + Add Rung Shortcut (N or + / =)
     if (lowerKey === 'n' || e.key === '+' || e.key === '=') {
       e.preventDefault();
+      KB_NAV.arrowNavActive = false;
       if (activeEl && activeEl !== document.body) activeEl.blur();
       addNewRung();
       return;
@@ -3262,7 +3289,7 @@ document.addEventListener('keydown', function (e) {
     }
   }
 
-  // 10. Top Menu Bar / Toolbar Focused Controls (<select> or <button>)
+  // 10. Top Menu Bar / Toolbar Focused Controls (<select> or arrow-navigated <button>)
   if (activeTag === 'SELECT') {
     if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
@@ -3276,30 +3303,44 @@ document.addEventListener('keydown', function (e) {
     }
   }
 
-  if (activeTag === 'BUTTON' && !activeEl.classList.contains('kb-nav-node')) {
-    const headerBtns = Array.from(document.querySelectorAll('header button, .sub-toolbar select, .sub-toolbar button, .mobile-nav-tabs button, .ladder-toolbar button'))
-      .filter(el => el.offsetParent !== null);
-    const idx = headerBtns.indexOf(activeEl);
+  const highlightedBtn = document.querySelector('button.kb-focus:not(.kb-nav-node)');
+  if (KB_NAV.arrowNavActive && (highlightedBtn || (activeTag === 'BUTTON' && !activeEl.classList.contains('kb-nav-node')))) {
+    const currentBtn = highlightedBtn || activeEl;
+    const navButtons = getButtonNavGroup();
+    const idx = navButtons.indexOf(currentBtn);
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      KB_NAV.arrowNavActive = false;
+      currentBtn.classList.remove('kb-focus');
+      currentBtn.click();
+      return;
+    }
+
     if (idx !== -1) {
       if (e.key === 'ArrowRight') {
         e.preventDefault();
-        headerBtns[(idx + 1) % headerBtns.length].focus();
+        setHighlightedButton(navButtons[(idx + 1) % navButtons.length]);
         return;
       }
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        headerBtns[(idx - 1 + headerBtns.length) % headerBtns.length].focus();
+        setHighlightedButton(navButtons[(idx - 1 + navButtons.length) % navButtons.length]);
         return;
       }
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        activeEl.blur();
+        KB_NAV.arrowNavActive = false;
+        currentBtn.classList.remove('kb-focus');
+        currentBtn.blur();
         applyLadderKeyboardCursor();
         return;
       }
       if (e.key === 'Escape') {
         e.preventDefault();
-        activeEl.blur();
+        KB_NAV.arrowNavActive = false;
+        currentBtn.classList.remove('kb-focus');
+        currentBtn.blur();
         return;
       }
     }
@@ -3308,6 +3349,7 @@ document.addEventListener('keydown', function (e) {
   // 11. Main Ladder Canvas Navigation (Arrow Keys, Enter to Edit/Insert, Delete to Instant-Remove)
   if (e.key === 'ArrowRight') {
     e.preventDefault();
+    KB_NAV.arrowNavActive = true;
     const items = getRungNavItems(KB_NAV.selectedRungIdx);
     if (items.length > 0) {
       KB_NAV.selectedItemIdx = (KB_NAV.selectedItemIdx + 1) % items.length;
@@ -3318,6 +3360,7 @@ document.addEventListener('keydown', function (e) {
 
   if (e.key === 'ArrowLeft') {
     e.preventDefault();
+    KB_NAV.arrowNavActive = true;
     const items = getRungNavItems(KB_NAV.selectedRungIdx);
     if (items.length > 0) {
       KB_NAV.selectedItemIdx = (KB_NAV.selectedItemIdx - 1 + items.length) % items.length;
@@ -3328,6 +3371,7 @@ document.addEventListener('keydown', function (e) {
 
   if (e.key === 'ArrowDown') {
     e.preventDefault();
+    KB_NAV.arrowNavActive = true;
     if (PLC.rungs.length > 0) {
       KB_NAV.selectedRungIdx = (KB_NAV.selectedRungIdx + 1) % PLC.rungs.length;
       applyLadderKeyboardCursor();
@@ -3337,19 +3381,22 @@ document.addEventListener('keydown', function (e) {
 
   if (e.key === 'ArrowUp') {
     e.preventDefault();
+    KB_NAV.arrowNavActive = true;
     if (PLC.rungs.length > 0) {
       if (KB_NAV.selectedRungIdx === 0) {
-        const presetSel = document.getElementById('presetSelector');
-        if (presetSel) {
-          presetSel.focus();
+        const navButtons = getButtonNavGroup();
+        if (navButtons.length > 0) {
+          setHighlightedButton(navButtons[0]);
           return;
         }
       }
       KB_NAV.selectedRungIdx = (KB_NAV.selectedRungIdx - 1 + PLC.rungs.length) % PLC.rungs.length;
       applyLadderKeyboardCursor();
     } else {
-      const presetSel = document.getElementById('presetSelector');
-      if (presetSel) presetSel.focus();
+      const navButtons = getButtonNavGroup();
+      if (navButtons.length > 0) {
+        setHighlightedButton(navButtons[0]);
+      }
     }
     return;
   }
@@ -3358,6 +3405,7 @@ document.addEventListener('keydown', function (e) {
     const activeNode = getActiveNavNode();
     if (activeNode) {
       e.preventDefault();
+      KB_NAV.arrowNavActive = false;
       if (activeNode.classList.contains('inst-node')) {
         openInspector(JSON.parse(activeNode.dataset.path));
       } else if (activeNode.classList.contains('wire-insert-btn')) {
@@ -3426,6 +3474,10 @@ document.addEventListener('mousedown', function (e) {
   const popup = document.getElementById('kbDropdownPopup');
   if (popup && popup.classList.contains('open') && !popup.contains(e.target) && e.target !== KB_NAV.activeSelect) {
     closeCustomSelectDropdown();
+  }
+  if (e.target.closest && e.target.closest('button')) {
+    KB_NAV.arrowNavActive = false;
+    document.querySelectorAll('button.kb-focus:not(.kb-nav-node)').forEach(b => b.classList.remove('kb-focus'));
   }
 });
 
