@@ -231,6 +231,26 @@
     background-color: rgba(239, 68, 68, 0.22);
   }
 
+  button.btn-help-circle {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--sky-accent);
+    border: 1.5px solid var(--sky-accent);
+    background: var(--sky-dim);
+  }
+
+  button.btn-help-circle:hover {
+    background: var(--sky-accent);
+    color: #090d16;
+  }
+
   /* Scan Cycle & Preset Strip */
   .sub-toolbar {
     background: #0b111e;
@@ -1006,6 +1026,71 @@
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   }
 
+  .modal-sheet.shortcuts-sheet {
+    max-width: 540px;
+    max-height: 86dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shortcuts-scroll {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 4px;
+  }
+
+  .shortcut-section-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--sky-accent);
+    margin-bottom: 6px;
+  }
+
+  .shortcut-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .shortcut-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 7px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .shortcut-desc {
+    color: var(--text-primary);
+  }
+
+  .shortcut-keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .shortcut-keycap {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-strong);
+    color: var(--sky-accent);
+  }
+
   @media (max-width: 640px) {
     .modal-overlay {
       align-items: flex-end;
@@ -1025,6 +1110,7 @@
     padding-bottom: 12px;
     margin-bottom: 14px;
     border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
   }
 
   .modal-head h3 {
@@ -1159,6 +1245,7 @@
     <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
     <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
     <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
+    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: ?)" aria-label="View All Keyboard Shortcuts">?</button>
   </div>
 </header>
 
@@ -1175,7 +1262,7 @@
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove</span>
+    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove | [?] Help</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
@@ -1280,6 +1367,55 @@
 
 <!-- Custom Keyboard Dropdown Popup (for instant Arrow + Enter selection & exit) -->
 <div id="kbDropdownPopup" class="kb-dropdown-popup" role="listbox"></div>
+
+<!-- Keyboard Shortcuts Reference Modal -->
+<div id="shortcutsModal" class="modal-overlay" onclick="if(event.target===this) closeShortcutsModal()">
+  <div class="modal-sheet shortcuts-sheet">
+    <div class="modal-head">
+      <h3>Keyboard Shortcuts Reference</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeShortcutsModal()">Close</button>
+    </div>
+
+    <div class="shortcuts-scroll">
+      <div>
+        <div class="shortcut-section-title">Workspace Views &amp; Panels</div>
+        <div class="shortcut-list">
+          <div class="shortcut-row"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">?</span></span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="shortcut-section-title">Field Switches &amp; Controller Execution</div>
+        <div class="shortcut-list">
+          <div class="shortcut-row"><span class="shortcut-desc">Start Pushbutton (Local:1:I.Data.0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Stop Pushbutton NC (Local:1:I.Data.1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Overload Relay Trip / Reset (Local:1:I.Data.2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Field Reset / Reverse PB (Local:1:I.Data.3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Auxiliary Field Inputs 4 – 7</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span><span class="shortcut-keycap">5</span><span class="shortcut-keycap">6</span><span class="shortcut-keycap">7</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Step Single 50ms Scan</span><span class="shortcut-keys"><span class="shortcut-keycap">T</span></span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="shortcut-section-title">Ladder Editing &amp; Navigation</div>
+        <div class="shortcut-list">
+          <div class="shortcut-row"><span class="shortcut-desc">+ Add Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">N</span> or <span class="shortcut-keycap">+</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Insert Contact / OR Branch / Output on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">C</span> / <span class="shortcut-keycap">B</span> / <span class="shortcut-keycap">U</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Navigate Rungs, Nodes, Menus &amp; Dropdowns</span><span class="shortcut-keys"><span class="shortcut-keycap">&larr;</span><span class="shortcut-keycap">&uarr;</span><span class="shortcut-keycap">&rarr;</span><span class="shortcut-keycap">&darr;</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Open Inspector / Execute Selection &amp; Exit</span><span class="shortcut-keys"><span class="shortcut-keycap">Enter</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Delete Selected Instruction or Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">Delete</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Cancel / Close Active Menu or Modal</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Point-Specific Instruction Insertion Modal -->
 <div id="insertModal" class="modal-overlay" onclick="if(event.target===this) closeInsertModal()">
@@ -2069,6 +2205,23 @@ function getActiveNavNode() {
   }
   const items = getRungNavItems(KB_NAV.selectedRungIdx);
   return items[KB_NAV.selectedItemIdx] || null;
+}
+
+/**
+ * Keyboard Shortcuts Help Modal
+ */
+function openShortcutsModal() {
+  closeCustomSelectDropdown();
+  closeInsertModal();
+  closeInspector();
+  document.getElementById('shortcutsModal').classList.add('open');
+}
+
+function closeShortcutsModal() {
+  document.getElementById('shortcutsModal').classList.remove('open');
+  if (document.activeElement && document.activeElement !== document.body) {
+    document.activeElement.blur();
+  }
 }
 
 /**
@@ -2883,6 +3036,16 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
+  // 0. Keyboard Shortcuts Modal Open
+  const shortcutsModal = document.getElementById('shortcutsModal');
+  if (shortcutsModal && shortcutsModal.classList.contains('open')) {
+    if (e.key === 'Escape' || e.key === '?' || e.key === 'Enter') {
+      e.preventDefault();
+      closeShortcutsModal();
+    }
+    return;
+  }
+
   // 1. Custom Dropdown Menu Open (ArrowUp/ArrowDown to navigate, Enter to execute & exit)
   if (KB_NAV.activeSelect) {
     const optionCount = KB_NAV.activeSelect.options.length;
@@ -3005,6 +3168,13 @@ document.addEventListener('keydown', function (e) {
 
   // Do not trigger global hotkeys while typing text or numbers
   if (isTextTyping) return;
+
+  // Open Keyboard Shortcuts Reference Modal (?)
+  if (e.key === '?' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    e.preventDefault();
+    openShortcutsModal();
+    return;
+  }
 
   // 4. Global View Switcher Hotkeys (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags)
   if (!e.ctrlKey && !e.altKey && !e.metaKey) {
