@@ -56,7 +56,7 @@
     padding-top: var(--safe-top);
   }
 
-  /* Desktop Keyboard Focus Ring */
+  /* Desktop Keyboard Focus Ring & Active Pane Highlight */
   .kb-focus,
   button:focus-visible,
   select:focus-visible,
@@ -64,6 +64,10 @@
     outline: 2px solid var(--sky-accent) !important;
     outline-offset: 2px;
     box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.22) !important;
+  }
+
+  .pane.pane-kb-active {
+    box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.45);
   }
 
   .inst-node.kb-focus {
@@ -82,6 +86,21 @@
   .palette-item-btn.kb-focus {
     border-color: var(--sky-accent);
     background: var(--sky-dim);
+  }
+
+  .kbd-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.38);
+    color: var(--sky-accent);
+    letter-spacing: 0.2px;
+    flex-shrink: 0;
   }
 
   /* Top SCADA / Logix Header Bar */
@@ -173,7 +192,7 @@
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
     min-height: 38px;
-    padding: 0 12px;
+    padding: 0 10px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -237,7 +256,7 @@
 
   .preset-group select {
     width: 100%;
-    max-width: 360px;
+    max-width: 350px;
     min-height: 34px;
     font-size: 12px;
   }
@@ -245,7 +264,8 @@
   .scan-telemetry {
     display: flex;
     align-items: center;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
     color: var(--text-secondary);
   }
 
@@ -266,19 +286,19 @@
     font-size: 10px;
   }
 
-  /* Mobile Navigation Tabs (< 1024px) */
+  /* Workspace View Switcher Tabs (Visible on both Mobile & Desktop for 1/2/3 Pane Focus) */
   .mobile-nav-tabs {
-    display: none;
+    display: flex;
     background: var(--bg-panel);
     border-bottom: 1px solid var(--border-subtle);
-    padding: 6px 10px;
+    padding: 6px 12px;
     gap: 6px;
     flex-shrink: 0;
   }
 
   .mobile-tab {
     flex: 1;
-    min-height: 40px;
+    min-height: 34px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: 700;
@@ -408,6 +428,13 @@
     font-size: 11px;
     font-weight: 600;
     color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .io-name-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -929,10 +956,6 @@
 
   /* Responsive Breakpoint for Android Phones & Tablets */
   @media (max-width: 1023px) {
-    .mobile-nav-tabs {
-      display: flex;
-    }
-
     .workspace {
       display: flex;
       flex-direction: column;
@@ -1133,14 +1156,15 @@
       <span id="cpuLed" class="status-led run"></span>
       <span id="cpuStateLabel">REM RUN</span>
     </div>
-    <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()">Pause</button>
-    <button onclick="stepSingleScan()" title="Execute Single Continuous Task Scan">Step</button>
-    <button class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers">Reset</button>
+    <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
+    <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
+    <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
   </div>
 </header>
 
 <div class="sub-toolbar">
   <div class="preset-group">
+    <span class="kbd-tag hide-mobile" title="Shortcut: P">P</span>
     <select id="presetSelector" onchange="loadPreset(this.value)" aria-label="Routine Preset">
       <option value="blank" selected>0. Blank MainRoutine (Empty Ladder)</option>
       <option value="preset1">1. 3-Wire Start/Stop Seal-In Motor Starter</option>
@@ -1151,17 +1175,17 @@
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">KEYS: &larr;&uarr;&rarr;&darr; NAV | ENTER EDIT/EXEC | DEL REMOVE</span>
+    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
 </div>
 
-<!-- Mobile View Switcher (< 1024px) -->
+<!-- Workspace View Switcher (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags) -->
 <nav class="mobile-nav-tabs" aria-label="Workspace Views">
-  <button class="mobile-tab active" data-tab="paneLadder" onclick="switchMobileTab('paneLadder', this)">MainRoutine</button>
-  <button class="mobile-tab" data-tab="paneIo" onclick="switchMobileTab('paneIo', this)">1756 I/O &amp; Mimic</button>
-  <button class="mobile-tab" data-tab="paneData" onclick="switchMobileTab('paneData', this)">Controller Tags</button>
+  <button id="tabBtnLadder" class="mobile-tab active" data-tab="paneLadder" onclick="switchWorkspaceView('paneLadder', this)">MainRoutine <span class="kbd-tag hide-mobile">1</span></button>
+  <button id="tabBtnIo" class="mobile-tab" data-tab="paneIo" onclick="switchWorkspaceView('paneIo', this)">1756 I/O &amp; Mimic <span class="kbd-tag hide-mobile">2</span></button>
+  <button id="tabBtnData" class="mobile-tab" data-tab="paneData" onclick="switchWorkspaceView('paneData', this)">Controller Tags <span class="kbd-tag hide-mobile">3</span></button>
 </nav>
 
 <main class="workspace">
@@ -1184,14 +1208,14 @@
   </section>
 
   <!-- Center Column (Desktop) / Tab 1 (Mobile): Ladder Diagram Canvas -->
-  <section id="paneLadder" class="pane pane-center mobile-active">
+  <section id="paneLadder" class="pane pane-center mobile-active pane-kb-active">
     <div class="ladder-toolbar">
       <div class="routine-breadcrumb">
         <span>MainTask &rsaquo; MainProgram &rsaquo;</span>
         <strong>MainRoutine (Ladder Diagram)</strong>
       </div>
       <div style="display:flex; gap:6px;">
-        <button id="btnAddRungTop" onclick="addNewRung()">+ Add Rung</button>
+        <button id="btnAddRungTop" onclick="addNewRung()" title="Shortcut: N">+ Add Rung <span class="kbd-tag hide-mobile">N</span></button>
       </div>
     </div>
 
@@ -1209,7 +1233,7 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">3-Phase Motor &amp; Plant Mimic</span>
-        <button id="btnOlTrip" class="btn-danger" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="toggleOverloadTrip()">Trip OL Relay</button>
+        <button id="btnOlTrip" class="btn-danger" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="toggleOverloadTrip()" title="Shortcut: O">Trip OL Relay <span class="kbd-tag hide-mobile">O</span></button>
       </div>
 
       <div class="mimic-box">
@@ -1365,13 +1389,37 @@ const PLC = {
 let activeEditPath = null;
 let pendingInsertSlot = null;
 
-// Desktop Keyboard Navigation State
+// Desktop Keyboard Navigation & Shortcut State
 const KB_NAV = {
   selectedRungIdx: 0,
   selectedItemIdx: 0,
   paletteIdx: 0,
   activeSelect: null,
-  dropdownIdx: 0
+  dropdownIdx: 0,
+  heldKeys: {}
+};
+
+// Primary Field Input Shortcut Map (Start, Stop, OL, Reset, + Digits 4..7)
+const FIELD_INPUT_KEYMAP = {
+  's': 0, // Local:1:I.Data.0 — Start
+  'x': 1, // Local:1:I.Data.1 — Stop
+  'o': 2, // Local:1:I.Data.2 — OL Relay
+  'r': 3, // Local:1:I.Data.3 — Reset / Rev Start
+  '4': 4, // Local:1:I.Data.4
+  '5': 5, // Local:1:I.Data.5
+  '6': 6, // Local:1:I.Data.6
+  '7': 7  // Local:1:I.Data.7
+};
+
+const FIELD_INPUT_KEY_BADGES = {
+  0: 'S',
+  1: 'X',
+  2: 'O',
+  3: 'R',
+  4: '4',
+  5: '5',
+  6: '6',
+  7: '7'
 };
 
 const CONTACT_ADDRESSES = [
@@ -1837,8 +1885,8 @@ function renderLadderCanvas() {
     host.innerHTML = `
       <div class="empty-routine-prompt">
         <div style="color:var(--sky-accent); font-weight:800; font-size:13px;">EMPTY MAINROUTINE (MAINPROGRAM)</div>
-        <div>Blank Routine — Click <strong>'+ Add Rung'</strong> above or select a Circuit Preset to begin.</div>
-        <button id="btnAddFirstRung" class="btn-run kb-nav-node" style="margin-top:4px;" onclick="addNewRung()">+ Add First Rung</button>
+        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above, or press <strong>[P]</strong> to select a Circuit Preset.</div>
+        <button id="btnAddFirstRung" class="btn-run kb-nav-node" style="margin-top:4px;" onclick="addNewRung()">+ Add First Rung <span class="kbd-tag hide-mobile">N</span></button>
       </div>
     `;
     applyLadderKeyboardCursor();
@@ -2005,7 +2053,6 @@ function applyLadderKeyboardCursor() {
   const items = getRungNavItems(KB_NAV.selectedRungIdx);
   if (items.length === 0) return;
 
-  // Default to first instruction node if currently out of bounds
   if (KB_NAV.selectedItemIdx < 0) KB_NAV.selectedItemIdx = 0;
   if (KB_NAV.selectedItemIdx >= items.length) KB_NAV.selectedItemIdx = items.length - 1;
 
@@ -2313,7 +2360,7 @@ function syncUiVisuals() {
   const olBtn = document.getElementById('btnOlTrip');
   if (olBtn) {
     const olTripped = !PLC.physicalIn[2];
-    olBtn.textContent = olTripped ? 'Reset OL Relay' : 'Trip OL Relay';
+    olBtn.innerHTML = `${olTripped ? 'Reset OL Relay' : 'Trip OL Relay'} <span class="kbd-tag hide-mobile">O</span>`;
   }
 
   for (let i = 0; i < 8; i++) {
@@ -2334,6 +2381,7 @@ function buildInputOutputRacks() {
     inHost.innerHTML = '';
     for (let i = 0; i < 8; i++) {
       const mode = PLC.inputModes[i];
+      const keyHint = FIELD_INPUT_KEY_BADGES[i] || '';
       const tile = document.createElement('div');
       tile.className = 'io-tile';
       tile.id = `inTile_${i}`;
@@ -2342,7 +2390,10 @@ function buildInputOutputRacks() {
           <span class="io-tag" title="Local:1:I.Data.${i}">Local:1:I.Data.${i}</span>
           <button class="io-mode-pill" onclick="cycleSwitchMode(${i})" title="Switch Contact Type">${mode}</button>
         </div>
-        <div class="io-name">${escapeHtml(PLC.inputLabels[i])}</div>
+        <div class="io-name">
+          <span class="io-name-text">${escapeHtml(PLC.inputLabels[i])}</span>
+          ${keyHint ? `<span class="kbd-tag hide-mobile" title="Shortcut: ${keyHint}">${keyHint}</span>` : ''}
+        </div>
         <button id="inFieldBtn_${i}" class="field-btn">0 (OPEN)</button>
       `;
       inHost.appendChild(tile);
@@ -2412,6 +2463,32 @@ function bindPhysicalSwitchPointer(btnEl, idx) {
     btnEl.addEventListener('pointerdown', press);
     btnEl.addEventListener('pointerup', release);
     btnEl.addEventListener('pointercancel', release);
+  }
+}
+
+/**
+ * Keyboard Press / Release Handler for Field Inputs (Start, Stop, OL, Reset, 4-7)
+ */
+function triggerFieldInputKeyDown(idx) {
+  const mode = PLC.inputModes[idx];
+  if (mode === 'TOGGLE') {
+    PLC.physicalIn[idx] = !PLC.physicalIn[idx];
+  } else if (mode === 'MOM_NO') {
+    PLC.physicalIn[idx] = true;
+  } else if (mode === 'MOM_NC') {
+    PLC.physicalIn[idx] = false;
+  }
+  syncUiVisuals();
+}
+
+function triggerFieldInputKeyUp(idx) {
+  const mode = PLC.inputModes[idx];
+  if (mode === 'MOM_NO') {
+    PLC.physicalIn[idx] = false;
+    syncUiVisuals();
+  } else if (mode === 'MOM_NC') {
+    PLC.physicalIn[idx] = true;
+    syncUiVisuals();
   }
 }
 
@@ -2566,7 +2643,8 @@ function addNewRung() {
     ]
   });
   KB_NAV.selectedRungIdx = PLC.rungs.length - 1;
-  KB_NAV.selectedItemIdx = 1; // Focus first instruction on the new rung
+  KB_NAV.selectedItemIdx = 1;
+  switchWorkspaceView('paneLadder', document.getElementById('tabBtnLadder'));
   renderLadderCanvas();
 }
 
@@ -2714,7 +2792,6 @@ function deleteInstructionAtPath(path) {
     if (rung.elements.length > 1) {
       rung.elements.splice(eIdx, 1);
     } else {
-      // Remove the rung if its sole remaining instruction is deleted
       PLC.rungs.splice(rIdx, 1);
     }
   }
@@ -2729,12 +2806,22 @@ function removeInspectedInstruction() {
   deleteInstructionAtPath(pathCopy);
 }
 
-function switchMobileTab(paneId, btnEl) {
-  document.querySelectorAll('.pane').forEach(p => p.classList.remove('mobile-active'));
+/**
+ * Unified Workspace View Switcher (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags)
+ */
+function switchWorkspaceView(paneId, btnEl) {
+  document.querySelectorAll('.pane').forEach(p => {
+    p.classList.remove('mobile-active');
+    p.classList.remove('pane-kb-active');
+  });
   document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
 
   const target = document.getElementById(paneId);
-  if (target) target.classList.add('mobile-active');
+  if (target) {
+    target.classList.add('mobile-active');
+    target.classList.add('pane-kb-active');
+    target.scrollTop = 0;
+  }
   if (btnEl) btnEl.classList.add('active');
 }
 
@@ -2745,13 +2832,13 @@ function toggleCpuRun() {
   const lbl = document.getElementById('cpuStateLabel');
 
   if (PLC.running) {
-    btn.textContent = 'Pause';
+    btn.innerHTML = 'Pause <span class="kbd-tag hide-mobile">SPC</span>';
     btn.classList.add('btn-run');
     led.className = 'status-led run';
     lbl.textContent = 'REM RUN';
     PLC.lastFrameTime = performance.now();
   } else {
-    btn.textContent = 'Run';
+    btn.innerHTML = 'Run <span class="kbd-tag hide-mobile">SPC</span>';
     btn.classList.remove('btn-run');
     led.className = 'status-led prog';
     lbl.textContent = 'REM PROG';
@@ -2788,12 +2875,13 @@ function escapeHtml(str) {
 }
 
 /**
- * Full Desktop Keyboard Navigation, Dropdown Menu Execution, and Instant Delete Handler
+ * Full Desktop Keyboard Shortcuts, Arrow Navigation, Dropdown Execution & Instant Delete
  */
 document.addEventListener('keydown', function (e) {
   const activeEl = document.activeElement;
   const activeTag = activeEl ? activeEl.tagName : '';
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
+  const lowerKey = e.key.toLowerCase();
 
   // 1. Custom Dropdown Menu Open (ArrowUp/ArrowDown to navigate, Enter to execute & exit)
   if (KB_NAV.activeSelect) {
@@ -2815,8 +2903,6 @@ document.addEventListener('keydown', function (e) {
       const chosenIdx = KB_NAV.dropdownIdx;
       const wasInspectorSelect = KB_NAV.activeSelect.id === 'inspType' || KB_NAV.activeSelect.id === 'inspAddr';
       commitCustomSelectDropdown(chosenIdx);
-      // If inside Inspector, pressing Enter executes the selection and exits immediately if desired,
-      // or if on Preset dropdown, loads preset and blurs back to ladder
       if (!wasInspectorSelect && document.activeElement) {
         document.activeElement.blur();
       }
@@ -2883,7 +2969,7 @@ document.addEventListener('keydown', function (e) {
     }
 
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      if (activeTag === 'INPUT' && activeEl.type === 'number') return; // Allow number increment/decrement
+      if (activeTag === 'INPUT' && activeEl.type === 'number') return;
       e.preventDefault();
       const curIdx = focusables.indexOf(activeEl);
       const dir = e.key === 'ArrowDown' ? 1 : -1;
@@ -2910,7 +2996,6 @@ document.addEventListener('keydown', function (e) {
       } else if (activeTag === 'BUTTON' && activeEl.id !== 'btnApplyInspector') {
         activeEl.click();
       } else {
-        // Apply changes and exit inspector immediately
         applyInspectorChanges();
       }
       return;
@@ -2918,7 +3003,96 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 4. Top Menu Bar / Toolbar Focused Controls (<select> or <button>)
+  // Do not trigger global hotkeys while typing text or numbers
+  if (isTextTyping) return;
+
+  // 4. Global View Switcher Hotkeys (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags)
+  if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+    if (e.key === '1') {
+      e.preventDefault();
+      if (activeEl && activeEl !== document.body) activeEl.blur();
+      switchWorkspaceView('paneLadder', document.getElementById('tabBtnLadder'));
+      applyLadderKeyboardCursor();
+      return;
+    }
+    if (e.key === '2') {
+      e.preventDefault();
+      if (activeEl && activeEl !== document.body) activeEl.blur();
+      switchWorkspaceView('paneIo', document.getElementById('tabBtnIo'));
+      return;
+    }
+    if (e.key === '3') {
+      e.preventDefault();
+      if (activeEl && activeEl !== document.body) activeEl.blur();
+      switchWorkspaceView('paneData', document.getElementById('tabBtnData'));
+      return;
+    }
+
+    // 5. + Add Rung Shortcut (N or + / =)
+    if (lowerKey === 'n' || e.key === '+' || e.key === '=') {
+      e.preventDefault();
+      if (activeEl && activeEl !== document.body) activeEl.blur();
+      addNewRung();
+      return;
+    }
+
+    // 6. Reset PLC Memory & Timers (Shift + R)
+    if (lowerKey === 'r' && e.shiftKey) {
+      e.preventDefault();
+      clearPlcMemory();
+      return;
+    }
+
+    // 7. Field Switch Hotkeys: Start (S), Stop (X), OL (O), Reset (R), Inputs 4..7
+    if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, lowerKey)) {
+      e.preventDefault();
+      if (!KB_NAV.heldKeys[lowerKey]) {
+        KB_NAV.heldKeys[lowerKey] = true;
+        triggerFieldInputKeyDown(FIELD_INPUT_KEYMAP[lowerKey]);
+      }
+      return;
+    }
+
+    // 8. CPU Run/Pause (Space), Step Scan (T), Preset Dropdown (P)
+    if (e.code === 'Space' && activeTag !== 'BUTTON' && activeTag !== 'SELECT') {
+      e.preventDefault();
+      toggleCpuRun();
+      return;
+    }
+    if (lowerKey === 't') {
+      e.preventDefault();
+      stepSingleScan();
+      return;
+    }
+    if (lowerKey === 'p') {
+      e.preventDefault();
+      const presetSel = document.getElementById('presetSelector');
+      if (presetSel) {
+        presetSel.focus();
+        openCustomSelectDropdown(presetSel);
+      }
+      return;
+    }
+
+    // 9. Quick Rung Element Insertion Shortcuts (C = Contact, B = OR Branch, U = Output Coil)
+    if ((lowerKey === 'c' || lowerKey === 'b' || lowerKey === 'u') && PLC.rungs.length > 0) {
+      e.preventDefault();
+      const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
+      const rung = PLC.rungs[rIdx];
+      if (rung) {
+        if (lowerKey === 'c') {
+          openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) });
+        } else if (lowerKey === 'b') {
+          openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) }, 'BRANCH');
+        } else if (lowerKey === 'u') {
+          openInsertModal({ rIdx, insertIndex: rung.elements.length }, 'OTE');
+        }
+      }
+      return;
+    }
+  }
+
+  // 10. Top Menu Bar / Toolbar Focused Controls (<select> or <button>)
   if (activeTag === 'SELECT') {
     if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
@@ -2933,7 +3107,7 @@ document.addEventListener('keydown', function (e) {
   }
 
   if (activeTag === 'BUTTON' && !activeEl.classList.contains('kb-nav-node')) {
-    const headerBtns = Array.from(document.querySelectorAll('header button, .sub-toolbar select, .sub-toolbar button, .ladder-toolbar button'))
+    const headerBtns = Array.from(document.querySelectorAll('header button, .sub-toolbar select, .sub-toolbar button, .mobile-nav-tabs button, .ladder-toolbar button'))
       .filter(el => el.offsetParent !== null);
     const idx = headerBtns.indexOf(activeEl);
     if (idx !== -1) {
@@ -2961,9 +3135,7 @@ document.addEventListener('keydown', function (e) {
     }
   }
 
-  // 5. Main Ladder Canvas Navigation (Arrow Keys, Enter to Edit/Insert, Delete to Instant-Remove)
-  if (isTextTyping) return;
-
+  // 11. Main Ladder Canvas Navigation (Arrow Keys, Enter to Edit/Insert, Delete to Instant-Remove)
   if (e.key === 'ArrowRight') {
     e.preventDefault();
     const items = getRungNavItems(KB_NAV.selectedRungIdx);
@@ -2997,7 +3169,6 @@ document.addEventListener('keydown', function (e) {
     e.preventDefault();
     if (PLC.rungs.length > 0) {
       if (KB_NAV.selectedRungIdx === 0) {
-        // Move focus up into the Preset Dropdown Menu in the sub-toolbar
         const presetSel = document.getElementById('presetSelector');
         if (presetSel) {
           presetSel.focus();
@@ -3036,7 +3207,6 @@ document.addEventListener('keydown', function (e) {
     if (activeNode.classList.contains('inst-node')) {
       deleteInstructionAtPath(JSON.parse(activeNode.dataset.path));
     } else if (activeNode.classList.contains('wire-insert-btn')) {
-      // If focused on a wire segment next to an instruction, delete the adjacent instruction on that rung
       const slot = JSON.parse(activeNode.dataset.slot);
       const rung = PLC.rungs[slot.rIdx];
       if (rung) {
@@ -3058,6 +3228,27 @@ document.addEventListener('keydown', function (e) {
       }
     }
   }
+});
+
+// Release momentary field switches when key is released
+document.addEventListener('keyup', function (e) {
+  const lowerKey = e.key.toLowerCase();
+  if (KB_NAV.heldKeys[lowerKey]) {
+    delete KB_NAV.heldKeys[lowerKey];
+    if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, lowerKey)) {
+      triggerFieldInputKeyUp(FIELD_INPUT_KEYMAP[lowerKey]);
+    }
+  }
+});
+
+// Safety release if window loses focus while holding a momentary key
+window.addEventListener('blur', function () {
+  Object.keys(KB_NAV.heldKeys).forEach(k => {
+    delete KB_NAV.heldKeys[k];
+    if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, k)) {
+      triggerFieldInputKeyUp(FIELD_INPUT_KEYMAP[k]);
+    }
+  });
 });
 
 // Close custom dropdown if user clicks elsewhere on screen
