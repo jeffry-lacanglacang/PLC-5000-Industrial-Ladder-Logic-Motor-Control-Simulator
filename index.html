@@ -1415,7 +1415,7 @@
           <div class="shortcut-row" data-shortcut-action="nav-arrows"><span class="shortcut-desc">Navigate Rungs, Nodes, Menus &amp; Dropdowns</span><span class="shortcut-keys"><span class="shortcut-keycap">&larr;</span><span class="shortcut-keycap">&uarr;</span><span class="shortcut-keycap">&rarr;</span><span class="shortcut-keycap">&darr;</span></span></div>
           <div class="shortcut-row" data-shortcut-action="exec-enter"><span class="shortcut-desc">Open Inspector / Execute Selection &amp; Exit</span><span class="shortcut-keys"><span class="shortcut-keycap">Enter</span></span></div>
           <div class="shortcut-row" data-shortcut-action="delete-node"><span class="shortcut-desc">Delete Selected Instruction or Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">Delete</span></span></div>
-          <div class="shortcut-row" data-shortcut-action="close-modal"><span class="shortcut-desc">Cancel / Close Active Menu or Modal</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="close-modal"><span class="shortcut-desc">Deselect / Arm Apply (Inspector) or Close Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
         </div>
       </div>
     </div>
@@ -1539,7 +1539,8 @@ const KB_NAV = {
   activeSelect: null,
   dropdownIdx: 0,
   heldKeys: {},
-  arrowNavActive: false
+  arrowNavActive: false,
+  inspectorArmedForApply: false
 };
 
 // Primary Field Input Shortcut Map (Start, Stop, OL, Reset, + Digits 4..7)
@@ -3006,6 +3007,7 @@ function openInspector(path) {
   const el = resolveElementPath(path);
   if (!el) return;
 
+  KB_NAV.inspectorArmedForApply = false;
   activeEditPath = path;
   const modal = document.getElementById('inspectorModal');
   const typeSel = document.getElementById('inspType');
@@ -3030,6 +3032,7 @@ function openInspector(path) {
 
 function closeInspector() {
   closeCustomSelectDropdown();
+  KB_NAV.inspectorArmedForApply = false;
   document.getElementById('inspectorModal').classList.remove('open');
   activeEditPath = null;
   if (document.activeElement && document.activeElement !== document.body) {
@@ -3295,6 +3298,7 @@ document.addEventListener('keydown', function (e) {
     const focusables = Array.from(
       inspectorModal.querySelectorAll('select, input, .modal-actions button')
     ).filter(el => el.offsetParent !== null);
+    const applyBtn = document.getElementById('btnApplyInspector');
 
     if (e.key === 'Delete') {
       if (!isTextTyping) {
@@ -3306,13 +3310,24 @@ document.addEventListener('keydown', function (e) {
 
     if (e.key === 'Escape') {
       e.preventDefault();
-      closeInspector();
+      if (!KB_NAV.inspectorArmedForApply) {
+        KB_NAV.inspectorArmedForApply = true;
+        if (activeEl && activeEl !== document.body) {
+          activeEl.blur();
+        }
+        if (applyBtn) {
+          applyBtn.focus({ preventScroll: true });
+        }
+      } else {
+        closeInspector();
+      }
       return;
     }
 
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (activeTag === 'INPUT' && activeEl.type === 'number') return;
       e.preventDefault();
+      KB_NAV.inspectorArmedForApply = false;
       const curIdx = focusables.indexOf(activeEl);
       const dir = e.key === 'ArrowDown' ? 1 : -1;
       const nextIdx = (curIdx + dir + focusables.length) % focusables.length;
@@ -3323,6 +3338,7 @@ document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       if (activeTag === 'BUTTON') {
         e.preventDefault();
+        KB_NAV.inspectorArmedForApply = false;
         const curIdx = focusables.indexOf(activeEl);
         const dir = e.key === 'ArrowRight' ? 1 : -1;
         const nextIdx = (curIdx + dir + focusables.length) % focusables.length;
@@ -3333,7 +3349,9 @@ document.addEventListener('keydown', function (e) {
 
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (activeTag === 'SELECT') {
+      if (KB_NAV.inspectorArmedForApply || activeEl === applyBtn) {
+        applyInspectorChanges();
+      } else if (activeTag === 'SELECT') {
         openCustomSelectDropdown(activeEl);
       } else if (activeTag === 'BUTTON') {
         activeEl.click();
