@@ -88,6 +88,21 @@
     background: var(--sky-dim);
   }
 
+  .shortcut-row {
+    cursor: pointer;
+    transition: border-color 0.12s, background-color 0.12s;
+  }
+
+  .shortcut-row:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-elevated);
+  }
+
+  .shortcut-row.kb-focus {
+    border-color: var(--sky-accent) !important;
+    background: var(--sky-dim) !important;
+  }
+
   .kbd-tag {
     display: inline-block;
     font-family: var(--font-mono);
@@ -232,12 +247,14 @@
   }
 
   button.btn-help-circle {
+    width: 34px;
+    min-width: 34px;
     height: 34px;
     min-height: 34px;
-    padding: 0 10px;
-    border-radius: 17px;
+    padding: 0;
+    border-radius: 50%;
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 800;
     color: var(--sky-accent);
     border: 1.5px solid var(--sky-accent);
@@ -1243,7 +1260,7 @@
     <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
     <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
     <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
-    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: K or ?)" aria-label="View All Keyboard Shortcuts (K or ?)">Shortcuts <span class="kbd-tag hide-mobile">K</span></button>
+    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: ?)" aria-label="View All Keyboard Shortcuts">?</button>
   </div>
 </header>
 
@@ -1260,7 +1277,7 @@
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove | [K/?] Shortcuts</span>
+    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove | [?] Help</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
@@ -1378,37 +1395,42 @@
       <div>
         <div class="shortcut-section-title">Workspace Views &amp; Panels</div>
         <div class="shortcut-list">
-          <div class="shortcut-row"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">K</span><span class="shortcut-keycap">?</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="1"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="2"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="3"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="p"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="?"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">?</span></span></div>
         </div>
       </div>
 
       <div>
         <div class="shortcut-section-title">Field Switches &amp; Controller Execution</div>
         <div class="shortcut-list">
-          <div class="shortcut-row"><span class="shortcut-desc">Start Pushbutton (Local:1:I.Data.0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Stop Pushbutton NC (Local:1:I.Data.1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Overload Relay Trip / Reset (Local:1:I.Data.2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Field Reset / Reverse PB (Local:1:I.Data.3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Auxiliary Field Inputs 4 – 7</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span><span class="shortcut-keycap">5</span><span class="shortcut-keycap">6</span><span class="shortcut-keycap">7</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Step Single 50ms Scan</span><span class="shortcut-keys"><span class="shortcut-keycap">T</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="s"><span class="shortcut-desc">Start Pushbutton (Local:1:I.Data.0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="x"><span class="shortcut-desc">Stop Pushbutton NC (Local:1:I.Data.1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="o"><span class="shortcut-desc">Overload Relay Trip / Reset (Local:1:I.Data.2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="r"><span class="shortcut-desc">Field Reset / Reverse PB (Local:1:I.Data.3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="4"><span class="shortcut-desc">Auxiliary Field Input 4 (Local:1:I.Data.4)</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="5"><span class="shortcut-desc">Auxiliary Field Input 5 (Local:1:I.Data.5)</span><span class="shortcut-keys"><span class="shortcut-keycap">5</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="6"><span class="shortcut-desc">Auxiliary Field Input 6 (Local:1:I.Data.6)</span><span class="shortcut-keys"><span class="shortcut-keycap">6</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="7"><span class="shortcut-desc">Auxiliary Field Input 7 (Local:1:I.Data.7)</span><span class="shortcut-keys"><span class="shortcut-keycap">7</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="shift+r"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="space"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="t"><span class="shortcut-desc">Step Single 50ms Scan</span><span class="shortcut-keys"><span class="shortcut-keycap">T</span></span></div>
         </div>
       </div>
 
       <div>
         <div class="shortcut-section-title">Ladder Editing &amp; Navigation</div>
         <div class="shortcut-list">
-          <div class="shortcut-row"><span class="shortcut-desc">+ Add Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">N</span> or <span class="shortcut-keycap">+</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Insert Contact / OR Branch / Output on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">C</span> / <span class="shortcut-keycap">B</span> / <span class="shortcut-keycap">U</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Navigate Rungs, Nodes, Menus &amp; Dropdowns</span><span class="shortcut-keys"><span class="shortcut-keycap">&larr;</span><span class="shortcut-keycap">&uarr;</span><span class="shortcut-keycap">&rarr;</span><span class="shortcut-keycap">&darr;</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open Inspector / Execute Selection &amp; Exit</span><span class="shortcut-keys"><span class="shortcut-keycap">Enter</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Delete Selected Instruction or Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">Delete</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Cancel / Close Active Menu or Modal</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="n"><span class="shortcut-desc">+ Add Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">N</span> or <span class="shortcut-keycap">+</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="c"><span class="shortcut-desc">Insert Contact on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">C</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="b"><span class="shortcut-desc">Insert Parallel OR Branch on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">B</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="u"><span class="shortcut-desc">Insert Output Coil on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">U</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="arrowright"><span class="shortcut-desc">Navigate Rungs, Nodes, Menus &amp; Dropdowns</span><span class="shortcut-keys"><span class="shortcut-keycap">&larr;</span><span class="shortcut-keycap">&uarr;</span><span class="shortcut-keycap">&rarr;</span><span class="shortcut-keycap">&darr;</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="enter"><span class="shortcut-desc">Open Inspector / Execute Selection &amp; Exit</span><span class="shortcut-keys"><span class="shortcut-keycap">Enter</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="delete"><span class="shortcut-desc">Delete Selected Instruction or Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">Delete</span></span></div>
+          <div class="shortcut-row" data-shortcut-key="escape"><span class="shortcut-desc">Cancel / Close Active Menu or Modal</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
         </div>
       </div>
     </div>
@@ -1528,6 +1550,7 @@ const KB_NAV = {
   selectedRungIdx: 0,
   selectedItemIdx: 0,
   paletteIdx: 0,
+  shortcutIdx: 0,
   activeSelect: null,
   dropdownIdx: 0,
   heldKeys: {},
@@ -2228,13 +2251,103 @@ function getActiveNavNode() {
 }
 
 /**
- * Keyboard Shortcuts Help Modal
+ * Keyboard Shortcuts Help Modal & Arrow / Enter Activation
  */
+function bindShortcutRows() {
+  const rows = Array.from(document.querySelectorAll('#shortcutsModal .shortcut-row'));
+  rows.forEach((row, idx) => {
+    row.setAttribute('tabindex', '-1');
+    row.setAttribute('role', 'button');
+    row.onclick = (e) => {
+      e.stopPropagation();
+      setHighlightedShortcutRow(idx);
+      activateSelectedShortcutRow();
+    };
+  });
+}
+
+function getShortcutRows() {
+  return Array.from(document.querySelectorAll('#shortcutsModal .shortcut-row'));
+}
+
+function setHighlightedShortcutRow(idx) {
+  const rows = getShortcutRows();
+  if (rows.length === 0) return;
+  KB_NAV.shortcutIdx = ((idx % rows.length) + rows.length) % rows.length;
+  rows.forEach((row, i) => row.classList.toggle('kb-focus', i === KB_NAV.shortcutIdx));
+  const activeRow = rows[KB_NAV.shortcutIdx];
+  if (activeRow) {
+    activeRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+function triggerShortcutActionKey(keySpec) {
+  if (!keySpec) return;
+
+  if (keySpec === 'shift+r') {
+    clearPlcMemory();
+    return;
+  }
+
+  if (keySpec === 'space') {
+    toggleCpuRun();
+    return;
+  }
+
+  if (keySpec === '?') {
+    openShortcutsModal();
+    return;
+  }
+
+  if (keySpec === 'escape') {
+    if (document.activeElement && document.activeElement !== document.body) {
+      document.activeElement.blur();
+    }
+    return;
+  }
+
+  if (keySpec === 'arrowright' || keySpec === 'arrowleft' || keySpec === 'arrowdown' || keySpec === 'arrowup' || keySpec === 'enter' || keySpec === 'delete') {
+    const mapKey =
+      keySpec === 'arrowright' ? 'ArrowRight' :
+      keySpec === 'arrowleft' ? 'ArrowLeft' :
+      keySpec === 'arrowdown' ? 'ArrowDown' :
+      keySpec === 'arrowup' ? 'ArrowUp' :
+      keySpec === 'enter' ? 'Enter' : 'Delete';
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: mapKey, bubbles: true }));
+    return;
+  }
+
+  const lower = keySpec.toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, lower)) {
+    const inputIdx = FIELD_INPUT_KEYMAP[lower];
+    const mode = PLC.inputModes[inputIdx];
+    triggerFieldInputKeyDown(inputIdx);
+    if (mode === 'MOM_NO' || mode === 'MOM_NC') {
+      setTimeout(() => triggerFieldInputKeyUp(inputIdx), 180);
+    }
+    return;
+  }
+
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: keySpec, bubbles: true }));
+}
+
+function activateSelectedShortcutRow() {
+  const rows = getShortcutRows();
+  const row = rows[KB_NAV.shortcutIdx] || rows[0];
+  const keySpec = row ? row.dataset.shortcutKey : null;
+  closeShortcutsModal();
+  if (keySpec) {
+    setTimeout(() => triggerShortcutActionKey(keySpec), 0);
+  }
+}
+
 function openShortcutsModal() {
   closeCustomSelectDropdown();
   closeInsertModal();
   closeInspector();
+  bindShortcutRows();
   document.getElementById('shortcutsModal').classList.add('open');
+  setHighlightedShortcutRow(KB_NAV.shortcutIdx);
 }
 
 function closeShortcutsModal() {
@@ -3056,12 +3169,28 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
-  // 0. Keyboard Shortcuts Modal Open
+  // 0. Keyboard Shortcuts Modal Open: ArrowUp/ArrowDown scrolls rows, Enter activates selected key, Esc/? closes
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
-    if (e.key === 'Escape' || e.key === '?' || lowerKey === 'k' || e.key === 'Enter') {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedShortcutRow(KB_NAV.shortcutIdx + 1);
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedShortcutRow(KB_NAV.shortcutIdx - 1);
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      activateSelectedShortcutRow();
+      return;
+    }
+    if (e.key === 'Escape' || e.key === '?') {
       e.preventDefault();
       closeShortcutsModal();
+      return;
     }
     return;
   }
@@ -3190,8 +3319,8 @@ document.addEventListener('keydown', function (e) {
   // Do not trigger global hotkeys while typing text or numbers
   if (isTextTyping) return;
 
-  // Open Keyboard Shortcuts Reference Modal (K or ?)
-  if ((lowerKey === 'k' || e.key === '?') && !e.ctrlKey && !e.altKey && !e.metaKey) {
+  // Open Keyboard Shortcuts Reference Modal (?)
+  if (e.key === '?' && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
     openShortcutsModal();
     return;
