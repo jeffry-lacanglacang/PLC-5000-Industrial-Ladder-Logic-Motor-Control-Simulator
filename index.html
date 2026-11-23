@@ -232,14 +232,12 @@
   }
 
   button.btn-help-circle {
-    width: 34px;
-    min-width: 34px;
     height: 34px;
     min-height: 34px;
-    padding: 0;
-    border-radius: 50%;
+    padding: 0 10px;
+    border-radius: 17px;
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 800;
     color: var(--sky-accent);
     border: 1.5px solid var(--sky-accent);
@@ -1245,7 +1243,7 @@
     <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
     <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
     <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
-    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: ?)" aria-label="View All Keyboard Shortcuts">?</button>
+    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: K or ?)" aria-label="View All Keyboard Shortcuts (K or ?)">Shortcuts <span class="kbd-tag hide-mobile">K</span></button>
   </div>
 </header>
 
@@ -1262,7 +1260,7 @@
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove | [?] Help</span>
+    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove | [K/?] Shortcuts</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
@@ -1384,7 +1382,7 @@
           <div class="shortcut-row"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
           <div class="shortcut-row"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
           <div class="shortcut-row"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">?</span></span></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">K</span><span class="shortcut-keycap">?</span></span></div>
         </div>
       </div>
 
@@ -3061,7 +3059,7 @@ document.addEventListener('keydown', function (e) {
   // 0. Keyboard Shortcuts Modal Open
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
-    if (e.key === 'Escape' || e.key === '?' || e.key === 'Enter') {
+    if (e.key === 'Escape' || e.key === '?' || lowerKey === 'k' || e.key === 'Enter') {
       e.preventDefault();
       closeShortcutsModal();
     }
@@ -3192,8 +3190,8 @@ document.addEventListener('keydown', function (e) {
   // Do not trigger global hotkeys while typing text or numbers
   if (isTextTyping) return;
 
-  // Open Keyboard Shortcuts Reference Modal (?)
-  if (e.key === '?' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+  // Open Keyboard Shortcuts Reference Modal (K or ?)
+  if ((lowerKey === 'k' || e.key === '?') && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
     openShortcutsModal();
     return;
