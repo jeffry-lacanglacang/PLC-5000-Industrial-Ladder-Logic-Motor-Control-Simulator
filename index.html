@@ -66,6 +66,11 @@
     box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.22) !important;
   }
 
+  .shortcut-row.kb-focus {
+    background: var(--sky-dim);
+    border-color: var(--sky-accent);
+  }
+
   .pane.pane-kb-active {
     box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.45);
   }
@@ -1065,6 +1070,8 @@
     border-radius: 7px;
     padding: 6px 10px;
     font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.1s, border-color 0.1s;
   }
 
   .shortcut-desc {
@@ -1378,37 +1385,37 @@
       <div>
         <div class="shortcut-section-title">Workspace Views &amp; Panels</div>
         <div class="shortcut-list">
-          <div class="shortcut-row"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">K</span><span class="shortcut-keycap">?</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="view:1"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="view:2"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="view:3"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="preset"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="shortcuts"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">K</span><span class="shortcut-keycap">?</span></span></div>
         </div>
       </div>
 
       <div>
         <div class="shortcut-section-title">Field Switches &amp; Controller Execution</div>
         <div class="shortcut-list">
-          <div class="shortcut-row"><span class="shortcut-desc">Start Pushbutton (Local:1:I.Data.0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Stop Pushbutton NC (Local:1:I.Data.1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Overload Relay Trip / Reset (Local:1:I.Data.2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Field Reset / Reverse PB (Local:1:I.Data.3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Auxiliary Field Inputs 4 – 7</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span><span class="shortcut-keycap">5</span><span class="shortcut-keycap">6</span><span class="shortcut-keycap">7</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Step Single 50ms Scan</span><span class="shortcut-keys"><span class="shortcut-keycap">T</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:0"><span class="shortcut-desc">Start Pushbutton (Local:1:I.Data.0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:1"><span class="shortcut-desc">Stop Pushbutton NC (Local:1:I.Data.1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:2"><span class="shortcut-desc">Overload Relay Trip / Reset (Local:1:I.Data.2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:3"><span class="shortcut-desc">Field Reset / Reverse PB (Local:1:I.Data.3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:4-7"><span class="shortcut-desc">Auxiliary Field Inputs 4 – 7</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span><span class="shortcut-keycap">5</span><span class="shortcut-keycap">6</span><span class="shortcut-keycap">7</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="reset-mem"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="run-toggle"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="step-scan"><span class="shortcut-desc">Step Single 50ms Scan</span><span class="shortcut-keys"><span class="shortcut-keycap">T</span></span></div>
         </div>
       </div>
 
       <div>
         <div class="shortcut-section-title">Ladder Editing &amp; Navigation</div>
         <div class="shortcut-list">
-          <div class="shortcut-row"><span class="shortcut-desc">+ Add Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">N</span> or <span class="shortcut-keycap">+</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Insert Contact / OR Branch / Output on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">C</span> / <span class="shortcut-keycap">B</span> / <span class="shortcut-keycap">U</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Navigate Rungs, Nodes, Menus &amp; Dropdowns</span><span class="shortcut-keys"><span class="shortcut-keycap">&larr;</span><span class="shortcut-keycap">&uarr;</span><span class="shortcut-keycap">&rarr;</span><span class="shortcut-keycap">&darr;</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Open Inspector / Execute Selection &amp; Exit</span><span class="shortcut-keys"><span class="shortcut-keycap">Enter</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Delete Selected Instruction or Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">Delete</span></span></div>
-          <div class="shortcut-row"><span class="shortcut-desc">Cancel / Close Active Menu or Modal</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="add-rung"><span class="shortcut-desc">+ Add Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">N</span> or <span class="shortcut-keycap">+</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="insert-cbu"><span class="shortcut-desc">Insert Contact / OR Branch / Output on Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">C</span> / <span class="shortcut-keycap">B</span> / <span class="shortcut-keycap">U</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="nav-arrows"><span class="shortcut-desc">Navigate Rungs, Nodes, Menus &amp; Dropdowns</span><span class="shortcut-keys"><span class="shortcut-keycap">&larr;</span><span class="shortcut-keycap">&uarr;</span><span class="shortcut-keycap">&rarr;</span><span class="shortcut-keycap">&darr;</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="exec-enter"><span class="shortcut-desc">Open Inspector / Execute Selection &amp; Exit</span><span class="shortcut-keys"><span class="shortcut-keycap">Enter</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="delete-node"><span class="shortcut-desc">Delete Selected Instruction or Rung</span><span class="shortcut-keys"><span class="shortcut-keycap">Delete</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="close-modal"><span class="shortcut-desc">Cancel / Close Active Menu or Modal</span><span class="shortcut-keys"><span class="shortcut-keycap">Esc</span></span></div>
         </div>
       </div>
     </div>
@@ -1528,6 +1535,7 @@ const KB_NAV = {
   selectedRungIdx: 0,
   selectedItemIdx: 0,
   paletteIdx: 0,
+  shortcutsIdx: 0,
   activeSelect: null,
   dropdownIdx: 0,
   heldKeys: {},
@@ -2228,17 +2236,149 @@ function getActiveNavNode() {
 }
 
 /**
- * Keyboard Shortcuts Help Modal
+ * Keyboard Shortcuts Help Modal & Arrow/Enter Menu Navigation
  */
+function getShortcutRows() {
+  return Array.from(document.querySelectorAll('#shortcutsModal .shortcut-row'));
+}
+
+function updateShortcutsSelection(nextIdx) {
+  const rows = getShortcutRows();
+  if (rows.length === 0) return;
+  KB_NAV.shortcutsIdx = ((nextIdx % rows.length) + rows.length) % rows.length;
+  rows.forEach((row, idx) => {
+    const isSelected = idx === KB_NAV.shortcutsIdx;
+    row.classList.toggle('kb-focus', isSelected);
+    if (isSelected) {
+      row.scrollIntoView({ block: 'nearest' });
+    }
+  });
+}
+
+function executeShortcutRowAction(rowEl) {
+  if (!rowEl) {
+    closeShortcutsModal();
+    return;
+  }
+  const action = rowEl.dataset.shortcutAction || '';
+  closeShortcutsModal();
+
+  if (action.startsWith('view:')) {
+    const viewNum = action.split(':')[1];
+    if (viewNum === '1') switchWorkspaceView('paneLadder', document.getElementById('tabBtnLadder'));
+    else if (viewNum === '2') switchWorkspaceView('paneIo', document.getElementById('tabBtnIo'));
+    else if (viewNum === '3') switchWorkspaceView('paneData', document.getElementById('tabBtnData'));
+    return;
+  }
+
+  if (action === 'preset') {
+    const presetSel = document.getElementById('presetSelector');
+    if (presetSel) {
+      presetSel.focus();
+      openCustomSelectDropdown(presetSel);
+    }
+    return;
+  }
+
+  if (action === 'shortcuts') {
+    return;
+  }
+
+  if (action.startsWith('input:')) {
+    const target = action.split(':')[1];
+    const idx = target === '4-7' ? 4 : parseInt(target, 10);
+    if (!isNaN(idx)) {
+      const mode = PLC.inputModes[idx];
+      if (mode === 'TOGGLE') {
+        PLC.physicalIn[idx] = !PLC.physicalIn[idx];
+        syncUiVisuals();
+      } else {
+        triggerFieldInputKeyDown(idx);
+        setTimeout(() => triggerFieldInputKeyUp(idx), 160);
+      }
+    }
+    return;
+  }
+
+  if (action === 'reset-mem') {
+    clearPlcMemory();
+    return;
+  }
+
+  if (action === 'run-toggle') {
+    toggleCpuRun();
+    return;
+  }
+
+  if (action === 'step-scan') {
+    stepSingleScan();
+    return;
+  }
+
+  if (action === 'add-rung') {
+    addNewRung();
+    return;
+  }
+
+  if (action === 'insert-cbu') {
+    if (PLC.rungs.length > 0) {
+      const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
+      const rung = PLC.rungs[rIdx];
+      if (rung) {
+        openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) });
+      }
+    }
+    return;
+  }
+
+  if (action === 'nav-arrows') {
+    KB_NAV.arrowNavActive = true;
+    applyLadderKeyboardCursor();
+    return;
+  }
+
+  if (action === 'exec-enter') {
+    const activeNode = getActiveNavNode();
+    if (activeNode) {
+      if (activeNode.classList.contains('inst-node')) {
+        openInspector(JSON.parse(activeNode.dataset.path));
+      } else if (activeNode.classList.contains('wire-insert-btn')) {
+        openInsertModal(JSON.parse(activeNode.dataset.slot));
+      } else {
+        activeNode.click();
+      }
+    }
+    return;
+  }
+
+  if (action === 'delete-node') {
+    const activeNode = getActiveNavNode();
+    if (activeNode && activeNode.classList.contains('inst-node')) {
+      deleteInstructionAtPath(JSON.parse(activeNode.dataset.path));
+    }
+    return;
+  }
+}
+
 function openShortcutsModal() {
   closeCustomSelectDropdown();
   closeInsertModal();
   closeInspector();
   document.getElementById('shortcutsModal').classList.add('open');
+
+  const rows = getShortcutRows();
+  rows.forEach((row, idx) => {
+    row.onclick = () => {
+      KB_NAV.shortcutsIdx = idx;
+      executeShortcutRowAction(row);
+    };
+  });
+  updateShortcutsSelection(0);
 }
 
 function closeShortcutsModal() {
   document.getElementById('shortcutsModal').classList.remove('open');
+  getShortcutRows().forEach(row => row.classList.remove('kb-focus'));
   if (document.activeElement && document.activeElement !== document.body) {
     document.activeElement.blur();
   }
@@ -3056,12 +3196,30 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
-  // 0. Keyboard Shortcuts Modal Open
+  // 0. Keyboard Shortcuts Modal Open: ArrowUp/ArrowDown to scroll & select, Enter to execute, Esc to close
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
-    if (e.key === 'Escape' || e.key === '?' || lowerKey === 'k' || e.key === 'Enter') {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      updateShortcutsSelection(KB_NAV.shortcutsIdx + 1);
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      updateShortcutsSelection(KB_NAV.shortcutsIdx - 1);
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const rows = getShortcutRows();
+      const selectedRow = rows[KB_NAV.shortcutsIdx] || rows[0];
+      executeShortcutRowAction(selectedRow);
+      return;
+    }
+    if (e.key === 'Escape' || e.key === '?' || lowerKey === 'k') {
       e.preventDefault();
       closeShortcutsModal();
+      return;
     }
     return;
   }
