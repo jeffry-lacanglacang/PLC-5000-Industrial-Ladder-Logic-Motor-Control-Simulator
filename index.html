@@ -404,8 +404,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 10px;
   }
 
@@ -475,13 +474,6 @@
     text-overflow: ellipsis;
   }
 
-  .io-controls-mini {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    flex-shrink: 0;
-  }
-
   .io-mode-pill {
     min-height: 22px;
     padding: 0 5px;
@@ -490,18 +482,6 @@
     border-radius: 5px;
     background: var(--bg-card);
     color: var(--text-secondary);
-    flex-shrink: 0;
-  }
-
-  .io-cfg-btn {
-    min-height: 22px;
-    padding: 0 5px;
-    font-size: 9px;
-    font-family: var(--font-mono);
-    border-radius: 5px;
-    background: rgba(56, 189, 248, 0.14);
-    border-color: rgba(56, 189, 248, 0.45);
-    color: var(--sky-accent);
     flex-shrink: 0;
   }
 
@@ -1063,28 +1043,98 @@
     text-overflow: ellipsis;
   }
 
-  /* Persistent Mobile Quick-Control Dock */
+  /* Persistent Bottom Quick-Control Dock (Configurable on Both Desktop & Mobile) */
   .mobile-quick-dock {
-    display: none;
+    display: flex;
     background: var(--bg-panel);
     border-top: 1px solid var(--border-strong);
-    padding: 8px 10px calc(8px + var(--safe-bottom)) 10px;
+    padding: 7px 10px calc(7px + var(--safe-bottom)) 10px;
     gap: 6px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     flex-shrink: 0;
     z-index: 25;
   }
 
+  .mobile-quick-dock.dock-hidden {
+    display: none !important;
+  }
+
+  .dock-buttons-strip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
   .dock-btn {
     flex: 1;
-    min-height: 44px;
+    min-width: 82px;
+    min-height: 42px;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
-    padding: 0 6px;
+    padding: 4px 8px;
     border-radius: 8px;
+    background: #1e293b;
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    line-height: 1.15;
     touch-action: none;
+  }
+
+  .dock-btn-main {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .dock-btn-addr {
+    font-size: 9px;
+    font-weight: 600;
+    opacity: 0.78;
+    white-space: nowrap;
+  }
+
+  .dock-btn.closed {
+    background: #059669;
+    border-color: #34d399;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  }
+
+  .dock-btn.nc-tripped {
+    background: #dc2626;
+    border-color: #f87171;
+    color: #fff;
+  }
+
+  .dock-edit-btn {
+    flex-shrink: 0;
+    min-height: 42px;
+    padding: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 8px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid var(--sky-accent);
+    color: var(--sky-accent);
+    white-space: nowrap;
+  }
+
+  .dock-edit-btn:hover {
+    background: rgba(56, 189, 248, 0.26);
   }
 
   /* Responsive Breakpoint for Android Phones & Tablets */
@@ -1101,10 +1151,6 @@
     }
 
     .pane.mobile-active {
-      display: flex;
-    }
-
-    .mobile-quick-dock {
       display: flex;
     }
 
@@ -1140,7 +1186,7 @@
   }
 
   .modal-sheet.wide-sheet {
-    max-width: 660px;
+    max-width: 720px;
     max-height: 88dvh;
     display: flex;
     flex-direction: column;
@@ -1151,7 +1197,7 @@
     padding-right: 4px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
   }
 
   .section-head-with-btn {
@@ -1165,6 +1211,12 @@
   .custom-io-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .custom-dock-list {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
   }
 
@@ -1186,15 +1238,11 @@
     font-size: 11px;
   }
 
-  .custom-io-item.highlighted-target {
-    border-color: var(--sky-accent);
-    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
-  }
-
   .custom-io-row {
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-wrap: wrap;
   }
 
   .custom-io-item input,
@@ -1209,6 +1257,17 @@
     font-size: 11px;
     flex: 1;
     min-width: 0;
+  }
+
+  .mini-icon-btn {
+    min-height: 30px;
+    min-width: 30px;
+    padding: 0 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 6px;
+    flex-shrink: 0;
   }
 
   .modal-sheet.shortcuts-sheet {
@@ -1431,6 +1490,7 @@
     <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
     <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
     <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
+    <button id="btnDockToggle" class="btn-accent" onclick="toggleQuickDockBar()" title="Show or Hide Bottom Quick-Control Dock (Shortcut: D)">Dock <span class="kbd-tag hide-mobile">D</span></button>
     <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: K or ?)" aria-label="View All Keyboard Shortcuts (K or ?)">Shortcuts <span class="kbd-tag hide-mobile">K</span></button>
   </div>
 </header>
@@ -1449,7 +1509,7 @@
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Reset | [←↑→↓] Nav | [Enter] Exec | [Del] Remove | [K/?] Shortcuts</span>
+    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Rev/Reset | [D] Dock | [←↑→↓] Nav | [Enter] Exec | [K/?] Shortcuts</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
@@ -1468,13 +1528,13 @@
     <div class="card">
       <div class="card-header">
         <span id="inputRackTitle" class="card-title">1756-IB16 Inputs (Local:1:I.Data.0–7)</span>
-        <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-          <button id="btnMatchPlcPbs" class="btn-run" style="min-height:26px; padding:0 7px; font-size:10px;" onclick="matchPhysicalSwitchesToPlcPbs()" title="Configure physical switches to match PLC PB instructions">Match PLC PBs</button>
+        <div style="display:flex; align-items:center; gap:6px;">
           <button id="btnEditBlankIo" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Edit I/O</button>
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--sky-accent);">HOLD / TAP</span>
         </div>
       </div>
       <div id="blankIoBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Customize 1756 I/O tags, PB modes &amp; states.</span>
+        <span><strong>Blank Routine:</strong> Customize 1756 I/O addresses, modes &amp; dock buttons.</span>
         <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Configure</button>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
@@ -1498,6 +1558,7 @@
       </div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button id="btnBlankCustomizeBar" class="btn-accent" onclick="openBlankIoModal()">Edit 1756 I/O</button>
+        <button id="btnDockCustomizeBar" class="btn-accent" onclick="openQuickDockModal()">Edit Dock</button>
         <button id="btnBlankMimicBar" class="btn-accent" onclick="openBlankMimicModal()">Edit Mimic</button>
         <button id="btnBlankTagsBar" class="btn-accent" onclick="openBlankTagsModal()">Edit Tags</button>
         <button id="btnAddRungTop" onclick="addNewRung()" title="Shortcut: N">+ Add Rung <span class="kbd-tag hide-mobile">N</span></button>
@@ -1578,27 +1639,51 @@
   </section>
 </main>
 
-<!-- Persistent Android / Mobile Quick-Control Dock -->
+<!-- Persistent Configurable Bottom Quick-Control Dock -->
 <div class="mobile-quick-dock" id="mobileQuickDock"></div>
 
 <!-- Custom Keyboard Dropdown Popup -->
 <div id="kbDropdownPopup" class="kb-dropdown-popup" role="listbox"></div>
 
+<!-- Quick-Control Dock Editor Modal -->
+<div id="quickDockModal" class="modal-overlay" onclick="if(event.target===this) closeQuickDockModal()">
+  <div class="modal-sheet wide-sheet">
+    <div class="modal-head">
+      <h3>Edit Bottom Quick-Control Dock &amp; 1756 Mapping</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeQuickDockModal()">Close</button>
+    </div>
+
+    <div class="modal-scroll-body">
+      <div class="custom-banner" style="margin-bottom:0;">
+        <span>Map each bottom button (e.g., <strong>Start, Stop, OL, Rev</strong>) to any <strong>1756 I/O address</strong>, contact type, or shortcut key.</span>
+        <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px; flex-shrink:0;" onclick="addQuickDockItem()">+ Add Dock Button</button>
+      </div>
+
+      <div id="quickDockEditorList" class="custom-dock-list"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" onclick="resetQuickDockDefaults()">Sync / Reset from 1756 I/O</button>
+      <button type="button" id="btnSaveQuickDock" class="btn-run" onclick="applyQuickDockChanges()">Save Dock Buttons</button>
+    </div>
+  </div>
+</div>
+
 <!-- 1756 I/O Customization Modal -->
 <div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Configure Physical Switches &amp; 1756 I/O</h3>
+      <h3>Customize 1756 I/O Modules, Addresses &amp; KM Channels</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
     </div>
 
     <div class="modal-scroll-body">
       <div>
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-IB16 Physical Switches &amp; PB Config</span>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button type="button" class="btn-run" style="min-height:28px; padding:0 9px; font-size:10px;" onclick="syncModalInputsToPlcPbs()">Match PLC PBs</button>
-            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add Input</button>
+          <span class="shortcut-section-title">1756-IB16 Digital Inputs (Address, Alias, Mode &amp; State)</span>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="closeBlankIoModal(); openQuickDockModal();">Edit Bottom Dock</button>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add 1756 Input</button>
           </div>
         </div>
         <div id="blankInputEditorList" class="custom-io-list"></div>
@@ -1606,15 +1691,15 @@
 
       <div>
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-OB16E Outputs &amp; KM Contactors</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add Output / KM</button>
+          <span class="shortcut-section-title">1756-OB16E Outputs &amp; KM Contactors (Address &amp; Alias)</span>
+          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add 1756 Output</button>
         </div>
         <div id="blankOutputEditorList" class="custom-io-list"></div>
       </div>
     </div>
 
     <div class="modal-actions">
-      <button type="button" onclick="resetBlankIoDefaults()">Reset I/O Defaults</button>
+      <button type="button" onclick="resetBlankIoDefaults()">Reset 1756 I/O Defaults</button>
       <button type="button" id="btnSaveBlankIo" class="btn-run" onclick="applyBlankIoChanges()">Save 1756 I/O</button>
     </div>
   </div>
@@ -1725,6 +1810,7 @@
           <div class="shortcut-row" data-shortcut-action="view:1"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
           <div class="shortcut-row" data-shortcut-action="view:2"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
           <div class="shortcut-row" data-shortcut-action="view:3"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="toggle-dock"><span class="shortcut-desc">Show / Hide Bottom Quick-Control Dock</span><span class="shortcut-keys"><span class="shortcut-keycap">D</span></span></div>
           <div class="shortcut-row" data-shortcut-action="preset"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
           <div class="shortcut-row" data-shortcut-action="shortcuts"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">K</span><span class="shortcut-keycap">?</span></span></div>
         </div>
@@ -1733,10 +1819,10 @@
       <div>
         <div class="shortcut-section-title">Field Switches &amp; Controller Execution</div>
         <div class="shortcut-list">
-          <div class="shortcut-row" data-shortcut-action="input:0"><span class="shortcut-desc">Start Pushbutton (Local:1:I.Data.0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
-          <div class="shortcut-row" data-shortcut-action="input:1"><span class="shortcut-desc">Stop Pushbutton NC (Local:1:I.Data.1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
-          <div class="shortcut-row" data-shortcut-action="input:2"><span class="shortcut-desc">Overload Relay Trip / Reset (Local:1:I.Data.2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
-          <div class="shortcut-row" data-shortcut-action="input:3"><span class="shortcut-desc">Field Reset / Reverse PB (Local:1:I.Data.3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:0"><span class="shortcut-desc">Start Pushbutton (1756 Input 0)</span><span class="shortcut-keys"><span class="shortcut-keycap">S</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:1"><span class="shortcut-desc">Stop Pushbutton NC (1756 Input 1)</span><span class="shortcut-keys"><span class="shortcut-keycap">X</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:2"><span class="shortcut-desc">Overload Relay Trip / Reset (1756 Input 2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="input:3"><span class="shortcut-desc">Field Reset / Reverse PB (1756 Input 3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
           <div class="shortcut-row" data-shortcut-action="input:4-7"><span class="shortcut-desc">Auxiliary Field Inputs 4 – 7</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span><span class="shortcut-keycap">5</span><span class="shortcut-keycap">6</span><span class="shortcut-keycap">7</span></span></div>
           <div class="shortcut-row" data-shortcut-action="reset-mem"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
           <div class="shortcut-row" data-shortcut-action="run-toggle"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
@@ -1826,8 +1912,19 @@ const PLC = {
   fixedStepMs: 50,
   rotorDeg: 0,
   presetId: 'blank',
+  dockVisible: true,
 
   physicalIn: Array(8).fill(false),
+  inputAddresses: [
+    'Local:1:I.Data.0',
+    'Local:1:I.Data.1',
+    'Local:1:I.Data.2',
+    'Local:1:I.Data.3',
+    'Local:1:I.Data.4',
+    'Local:1:I.Data.5',
+    'Local:1:I.Data.6',
+    'Local:1:I.Data.7'
+  ],
   inputModes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
   inputLabels: [
     'Start_PB',
@@ -1843,6 +1940,16 @@ const PLC = {
   I: Array(8).fill(false),
   O: Array(8).fill(false),
   physicalOut: Array(8).fill(false),
+  outputAddresses: [
+    'Local:2:O.Data.0',
+    'Local:2:O.Data.1',
+    'Local:2:O.Data.2',
+    'Local:2:O.Data.3',
+    'Local:2:O.Data.4',
+    'Local:2:O.Data.5',
+    'Local:2:O.Data.6',
+    'Local:2:O.Data.7'
+  ],
   outputLabels: [
     'Main_KM1',
     'Star_Rev_KM2',
@@ -1870,6 +1977,14 @@ const PLC = {
     'Timer_2': { EN: false, TT: false, DN: false, PRE: 4000, ACC: 0, label: 'Step_Timer' },
     'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0, label: 'Pulse_Timer' }
   },
+
+  // Configurable Bottom Quick-Control Dock Buttons (e.g., Start, Stop, OL, Rev)
+  quickDockItems: [
+    { id: 'dock_0', addr: 'Local:1:I.Data.0', label: 'Start', mode: 'MOM_NO', key: 'S' },
+    { id: 'dock_1', addr: 'Local:1:I.Data.1', label: 'Stop', mode: 'MOM_NC', key: 'X' },
+    { id: 'dock_2', addr: 'Local:1:I.Data.2', label: 'OL', mode: 'TOGGLE', key: 'O' },
+    { id: 'dock_3', addr: 'Local:1:I.Data.3', label: 'Rev', mode: 'MOM_NO', key: 'R' }
+  ],
 
   blankMimic: {
     driveMode: 'AUTO',
@@ -1903,8 +2018,8 @@ const KB_NAV = {
   modalArmedForApply: false
 };
 
-// Primary Field Input Shortcut Map (Start, Stop, OL, Reset, + Digits 4..7)
-const FIELD_INPUT_KEYMAP = {
+// Default Fallback Field Input Shortcut Map (Start, Stop, OL, Reset/Rev, + Digits 4..7)
+const DEFAULT_FIELD_INPUT_KEYMAP = {
   's': 0,
   'x': 1,
   'o': 2,
@@ -1926,6 +2041,44 @@ const FIELD_INPUT_KEY_BADGES = {
   7: '7'
 };
 
+function getInputAddress(idx) {
+  return PLC.inputAddresses[idx] || `Local:1:I.Data.${idx}`;
+}
+
+function getOutputAddress(idx) {
+  return PLC.outputAddresses[idx] || `Local:2:O.Data.${idx}`;
+}
+
+function findInputIndexByAddress(addr) {
+  if (!addr) return -1;
+  const exactIdx = PLC.inputAddresses.indexOf(addr);
+  if (exactIdx !== -1) return exactIdx;
+  if (addr.startsWith('Local:1:I.Data.')) {
+    const parsed = parseInt(addr.slice(15), 10);
+    if (!isNaN(parsed) && parsed >= 0 && parsed < PLC.physicalIn.length) return parsed;
+  }
+  return -1;
+}
+
+function findOutputIndexByAddress(addr) {
+  if (!addr) return -1;
+  const exactIdx = PLC.outputAddresses.indexOf(addr);
+  if (exactIdx !== -1) return exactIdx;
+  if (addr.startsWith('Local:2:O.Data.')) {
+    const parsed = parseInt(addr.slice(15), 10);
+    if (!isNaN(parsed) && parsed >= 0 && parsed < PLC.physicalOut.length) return parsed;
+  }
+  return -1;
+}
+
+function getAddressShortPoint(addr) {
+  if (!addr) return '';
+  const dotMatch = addr.match(/(\.\d+)$/);
+  if (dotMatch) return dotMatch[1];
+  const parts = addr.split(':');
+  return parts[parts.length - 1] || addr;
+}
+
 function getInputCount() {
   return PLC.physicalIn.length;
 }
@@ -1944,32 +2097,30 @@ function getTimerKeys() {
 
 function getContactAddresses() {
   const list = [];
-  for (let i = 0; i < getInputCount(); i++) list.push(`Local:1:I.Data.${i}`);
-  for (let i = 0; i < getOutputCount(); i++) list.push(`Local:2:O.Data.${i}`);
+  for (let i = 0; i < getInputCount(); i++) list.push(getInputAddress(i));
+  for (let i = 0; i < getOutputCount(); i++) list.push(getOutputAddress(i));
   for (let i = 0; i < getBitCount(); i++) list.push(`Control_Bits.${i}`);
   getTimerKeys().forEach(tKey => {
     list.push(`${tKey}.DN`, `${tKey}.TT`, `${tKey}.EN`);
   });
-  return list;
+  return Array.from(new Set(list));
 }
 
 function getCoilAddresses() {
   const list = [];
-  for (let i = 0; i < getOutputCount(); i++) list.push(`Local:2:O.Data.${i}`);
+  for (let i = 0; i < getOutputCount(); i++) list.push(getOutputAddress(i));
   for (let i = 0; i < getBitCount(); i++) list.push(`Control_Bits.${i}`);
-  return list;
+  return Array.from(new Set(list));
 }
 
 function getDefaultLabelForAddress(addr) {
   if (!addr) return '';
-  if (addr.startsWith('Local:1:I.Data.')) {
-    const idx = parseInt(addr.slice(15), 10);
-    return PLC.inputLabels[idx] || '';
-  }
-  if (addr.startsWith('Local:2:O.Data.')) {
-    const idx = parseInt(addr.slice(15), 10);
-    return PLC.outputLabels[idx] || '';
-  }
+  const inIdx = findInputIndexByAddress(addr);
+  if (inIdx !== -1) return PLC.inputLabels[inIdx] || '';
+
+  const outIdx = findOutputIndexByAddress(addr);
+  if (outIdx !== -1) return PLC.outputLabels[outIdx] || '';
+
   if (addr.startsWith('Control_Bits.')) {
     const idx = parseInt(addr.slice(13), 10);
     return PLC.controlBitLabels[idx] || '';
@@ -1983,14 +2134,12 @@ function getDefaultLabelForAddress(addr) {
 
 function getBit(addr) {
   if (!addr) return false;
-  if (addr.startsWith('Local:1:I.Data.')) {
-    const idx = parseInt(addr.slice(15), 10);
-    return !!PLC.I[idx];
-  }
-  if (addr.startsWith('Local:2:O.Data.')) {
-    const idx = parseInt(addr.slice(15), 10);
-    return !!PLC.O[idx];
-  }
+  const inIdx = findInputIndexByAddress(addr);
+  if (inIdx !== -1) return !!PLC.I[inIdx];
+
+  const outIdx = findOutputIndexByAddress(addr);
+  if (outIdx !== -1) return !!PLC.O[outIdx];
+
   if (addr.startsWith('Control_Bits.')) {
     const idx = parseInt(addr.slice(13), 10);
     return !!PLC.Control_Bits[idx];
@@ -2006,89 +2155,98 @@ function getBit(addr) {
 
 function setBit(addr, state) {
   if (!addr) return;
-  if (addr.startsWith('Local:2:O.Data.')) {
-    const idx = parseInt(addr.slice(15), 10);
-    if (idx >= 0 && idx < PLC.O.length) PLC.O[idx] = !!state;
-  } else if (addr.startsWith('Control_Bits.')) {
+  const outIdx = findOutputIndexByAddress(addr);
+  if (outIdx !== -1) {
+    if (outIdx >= 0 && outIdx < PLC.O.length) PLC.O[outIdx] = !!state;
+    return;
+  }
+  if (addr.startsWith('Control_Bits.')) {
     const idx = parseInt(addr.slice(13), 10);
     if (idx >= 0 && idx < PLC.Control_Bits.length) PLC.Control_Bits[idx] = !!state;
   }
 }
 
-/**
- * Inspect PLC PB instructions across all rungs to derive desired physical switch configs
- */
-function inferPlcPbConfigs() {
-  const configs = {};
+function getUniversalAddressState(addr) {
+  if (!addr) return false;
+  const inIdx = findInputIndexByAddress(addr);
+  if (inIdx !== -1) return !!PLC.physicalIn[inIdx];
 
-  function inspectInstruction(el) {
-    if (!el || (el.type !== 'XIC' && el.type !== 'XIO')) return;
-    if (!el.addr || !el.addr.startsWith('Local:1:I.Data.')) return;
-    const idx = parseInt(el.addr.slice(15), 10);
-    if (isNaN(idx) || idx < 0 || idx >= PLC.physicalIn.length) return;
+  const outIdx = findOutputIndexByAddress(addr);
+  if (outIdx !== -1) return !!PLC.physicalOut[outIdx];
 
-    const combinedText = `${el.label || ''} ${PLC.inputLabels[idx] || ''}`.toLowerCase();
-    const isSelector = /\b(sw|sel|auto|man|prox|sens|lim|jam|mode)\b/.test(combinedText);
-    const isNcPb = /\b(nc|stop|estop|ol|trip|fault)\b/.test(combinedText);
-
-    if (!configs[idx]) {
-      if (isSelector) {
-        configs[idx] = { mode: 'TOGGLE', restingState: !!PLC.physicalIn[idx], label: el.label || PLC.inputLabels[idx] };
-      } else if (el.type === 'XIO' && isNcPb) {
-        // XIO on an NC pushbutton: resting closed (1), pressed opens (0) -> MOM_NC
-        configs[idx] = { mode: 'MOM_NC', restingState: true, label: el.label || PLC.inputLabels[idx] };
-      } else if (el.type === 'XIC' && isNcPb) {
-        // XIC on an NC pushbutton: resting closed (1), pressed opens (0) -> MOM_NC
-        configs[idx] = { mode: 'MOM_NC', restingState: true, label: el.label || PLC.inputLabels[idx] };
-      } else {
-        // Standard NO Pushbutton: resting open (0), pressed closes (1) -> MOM_NO
-        configs[idx] = { mode: 'MOM_NO', restingState: false, label: el.label || PLC.inputLabels[idx] };
-      }
-    }
+  if (addr.startsWith('Control_Bits.')) {
+    const idx = parseInt(addr.slice(13), 10);
+    return !!PLC.Control_Bits[idx];
   }
-
-  PLC.rungs.forEach(rung => {
-    (rung.elements || []).forEach(el => {
-      if (el.type === 'BRANCH') {
-        (el.branches || []).forEach(leg => (leg || []).forEach(inspectInstruction));
-      } else {
-        inspectInstruction(el);
-      }
-    });
-  });
-
-  return configs;
+  return getBit(addr);
 }
 
-function matchPhysicalSwitchesToPlcPbs() {
-  const inferred = inferPlcPbConfigs();
-  const keys = Object.keys(inferred);
-  keys.forEach(k => {
-    const idx = parseInt(k, 10);
-    const cfg = inferred[idx];
-    PLC.inputModes[idx] = cfg.mode;
-    PLC.physicalIn[idx] = cfg.restingState;
-    if (cfg.label) {
-      PLC.inputLabels[idx] = cfg.label;
-    }
-  });
-
-  buildInputOutputRacks();
-  buildMobileQuickDock();
-  syncUiVisuals();
-
-  const btn = document.getElementById('btnMatchPlcPbs');
-  if (btn) {
-    const orig = btn.textContent;
-    btn.textContent = keys.length > 0 ? `Matched ${keys.length} PB` : 'No PBs Found';
-    setTimeout(() => { btn.textContent = orig; }, 1200);
+function setUniversalAddressState(addr, state) {
+  if (!addr) return;
+  const inIdx = findInputIndexByAddress(addr);
+  if (inIdx !== -1) {
+    PLC.physicalIn[inIdx] = !!state;
+    return;
   }
+  const outIdx = findOutputIndexByAddress(addr);
+  if (outIdx !== -1) {
+    PLC.O[outIdx] = !!state;
+    PLC.physicalOut[outIdx] = !!state;
+    return;
+  }
+  if (addr.startsWith('Control_Bits.')) {
+    const idx = parseInt(addr.slice(13), 10);
+    if (idx >= 0 && idx < PLC.Control_Bits.length) {
+      PLC.Control_Bits[idx] = !!state;
+    }
+  }
+}
+
+function syncQuickDockFromCurrentIo(preserveCustomExtra) {
+  const defaultDockLabels = ['Start', 'Stop', 'OL', 'Rev'];
+  const baseCount = Math.min(4, PLC.physicalIn.length);
+  const newItems = [];
+
+  for (let i = 0; i < baseCount; i++) {
+    const addr = getInputAddress(i);
+    const mode = PLC.inputModes[i] || 'MOM_NO';
+    const rawLbl = (PLC.inputLabels[i] || '').split('_')[0] || defaultDockLabels[i] || `In_${i}`;
+    newItems.push({
+      id: `dock_${i}`,
+      addr,
+      label: rawLbl,
+      mode,
+      key: FIELD_INPUT_KEY_BADGES[i] || ''
+    });
+  }
+
+  if (preserveCustomExtra && Array.isArray(PLC.quickDockItems)) {
+    PLC.quickDockItems.slice(baseCount).forEach((extra, extraIdx) => {
+      newItems.push({
+        id: extra.id || `dock_${baseCount + extraIdx}`,
+        addr: extra.addr,
+        label: extra.label,
+        mode: extra.mode || 'MOM_NO',
+        key: extra.key || ''
+      });
+    });
+  }
+
+  PLC.quickDockItems = newItems;
 }
 
 const PRESETS = {
   blank: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
     initIn: [false, true, true, false, false, false, false, true],
+    inAddresses: [
+      'Local:1:I.Data.0', 'Local:1:I.Data.1', 'Local:1:I.Data.2', 'Local:1:I.Data.3',
+      'Local:1:I.Data.4', 'Local:1:I.Data.5', 'Local:1:I.Data.6', 'Local:1:I.Data.7'
+    ],
+    outAddresses: [
+      'Local:2:O.Data.0', 'Local:2:O.Data.1', 'Local:2:O.Data.2', 'Local:2:O.Data.3',
+      'Local:2:O.Data.4', 'Local:2:O.Data.5', 'Local:2:O.Data.6', 'Local:2:O.Data.7'
+    ],
     inLabels: ['Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Rev_Reset_PB', 'Prox_Sensor', 'Jam_Sim_Sw', 'Aux_PB', 'EStop_OK'],
     outLabels: ['Main_KM1', 'Star_Rev_KM2', 'Delta_KM3', 'Fault_Horn', 'Run_Pilot', 'Conv_Belt', 'Diverter_Sol', 'Ready_Pilot'],
     bitLabels: ['Sys_Run', 'Fault_Latch', 'Aux_Bit_2', 'Aux_Bit_3', 'Step_1_Flag', 'Step_2_Flag', 'Auto_Mode', 'Alarm_Ack'],
@@ -2315,6 +2473,13 @@ function loadPreset(id) {
   PLC.physicalIn = [...p.initIn];
   PLC.inputLabels = [...p.inLabels];
   PLC.outputLabels = [...p.outLabels];
+  PLC.inputAddresses = p.inAddresses
+    ? [...p.inAddresses]
+    : p.inLabels.map((_, idx) => `Local:1:I.Data.${idx}`);
+  PLC.outputAddresses = p.outAddresses
+    ? [...p.outAddresses]
+    : p.outLabels.map((_, idx) => `Local:2:O.Data.${idx}`);
+
   PLC.I = Array(PLC.physicalIn.length).fill(false);
   PLC.O = Array(PLC.outputLabels.length).fill(false);
   PLC.physicalOut = Array(PLC.outputLabels.length).fill(false);
@@ -2350,6 +2515,8 @@ function loadPreset(id) {
       'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0, label: 'Timer_3' }
     };
   }
+
+  syncQuickDockFromCurrentIo(false);
 
   KB_NAV.selectedRungIdx = 0;
   KB_NAV.selectedItemIdx = 0;
@@ -2558,11 +2725,12 @@ function renderLadderCanvas() {
     host.innerHTML = `
       <div class="empty-routine-prompt">
         <div style="color:var(--sky-accent); font-weight:800; font-size:13px;">EMPTY MAINROUTINE (MAINPROGRAM)</div>
-        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above, or customize <strong>1756 I/O, Mimic &amp; Tags</strong> directly.</div>
+        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above, or customize <strong>1756 I/O, Bottom Dock, Mimic &amp; Tags</strong> directly.</div>
         <div class="empty-quick-actions">
           <button id="btnAddFirstRung" class="btn-run kb-nav-node" onclick="addNewRung()">+ Add First Rung <span class="kbd-tag hide-mobile">N</span></button>
+          <button type="button" class="btn-accent" onclick="openBlankIoModal()">Customize 1756 I/O</button>
+          <button type="button" class="btn-accent" onclick="openQuickDockModal()">Customize Bottom Dock</button>
           ${isBlank ? `
-            <button type="button" class="btn-accent" onclick="openBlankIoModal()">Customize 1756 I/O</button>
             <button type="button" class="btn-accent" onclick="openBlankMimicModal()">Customize Mimic</button>
             <button type="button" class="btn-accent" onclick="openBlankTagsModal()">Customize Bits &amp; Timers</button>
           ` : ''}
@@ -2699,9 +2867,237 @@ function buildInstructionNode(el, path) {
 }
 
 /**
- * Customization Modals (1756 I/O, Mimic, Control_Bits & TIMER Tags)
+ * Quick-Control Bottom Dock Modal (Add, Edit, Reorder, Remove Buttons & 1756 Addresses)
  */
-function openBlankIoModal(highlightInputIdx) {
+let draftQuickDockItems = [];
+
+function toggleQuickDockBar() {
+  PLC.dockVisible = !PLC.dockVisible;
+  const dock = document.getElementById('mobileQuickDock');
+  if (dock) {
+    dock.classList.toggle('dock-hidden', !PLC.dockVisible);
+  }
+}
+
+function getAllDockTargetAddresses() {
+  const list = [];
+  for (let i = 0; i < PLC.physicalIn.length; i++) {
+    list.push({
+      addr: getInputAddress(i),
+      tag: `${getInputAddress(i)} (${PLC.inputLabels[i] || `Input_${i}`})`
+    });
+  }
+  for (let i = 0; i < PLC.physicalOut.length; i++) {
+    list.push({
+      addr: getOutputAddress(i),
+      tag: `${getOutputAddress(i)} (${PLC.outputLabels[i] || `Output_${i}`})`
+    });
+  }
+  for (let i = 0; i < PLC.Control_Bits.length; i++) {
+    list.push({
+      addr: `Control_Bits.${i}`,
+      tag: `Control_Bits.${i} (${PLC.controlBitLabels[i] || `Bit_${i}`})`
+    });
+  }
+  return list;
+}
+
+function openQuickDockModal() {
+  draftQuickDockItems = JSON.parse(JSON.stringify(PLC.quickDockItems));
+  renderQuickDockEditorList();
+  KB_NAV.modalArmedForApply = false;
+  document.getElementById('quickDockModal').classList.add('open');
+  setTimeout(() => {
+    const firstInput = document.querySelector('#quickDockEditorList input');
+    if (firstInput) firstInput.focus();
+  }, 15);
+}
+
+function closeQuickDockModal() {
+  closeCustomSelectDropdown();
+  KB_NAV.modalArmedForApply = false;
+  document.getElementById('quickDockModal').classList.remove('open');
+  if (document.activeElement && document.activeElement !== document.body) {
+    document.activeElement.blur();
+  }
+}
+
+function captureDraftQuickDockFromDom() {
+  const rows = Array.from(document.querySelectorAll('#quickDockEditorList .custom-io-item'));
+  if (rows.length === 0) return;
+  draftQuickDockItems = rows.map((row, idx) => {
+    const labelVal = (row.querySelector('.dock-edit-label')?.value || '').trim();
+    const addrSelVal = row.querySelector('.dock-edit-addr-select')?.value || '';
+    const customAddrVal = (row.querySelector('.dock-edit-addr-custom')?.value || '').trim();
+    const modeVal = row.querySelector('.dock-edit-mode')?.value || 'MOM_NO';
+    const keyVal = (row.querySelector('.dock-edit-key')?.value || '').trim().toUpperCase().slice(0, 1);
+
+    const resolvedAddr = addrSelVal === '__CUSTOM__'
+      ? (customAddrVal || getInputAddress(0))
+      : (addrSelVal || getInputAddress(0));
+
+    return {
+      id: row.dataset.dockId || `dock_${idx}`,
+      addr: resolvedAddr,
+      label: labelVal || (getDefaultLabelForAddress(resolvedAddr).split('_')[0] || `Btn_${idx}`),
+      mode: modeVal,
+      key: keyVal
+    };
+  });
+}
+
+function renderQuickDockEditorList() {
+  const host = document.getElementById('quickDockEditorList');
+  if (!host) return;
+  host.innerHTML = '';
+
+  const targetPool = getAllDockTargetAddresses();
+
+  if (draftQuickDockItems.length === 0) {
+    host.innerHTML = `<div class="custom-io-item" style="text-align:center; color:var(--text-secondary);">No dock buttons configured. Click <strong>'+ Add Dock Button'</strong> above to add one.</div>`;
+    return;
+  }
+
+  draftQuickDockItems.forEach((item, idx) => {
+    const matchesPool = targetPool.some(t => t.addr === item.addr);
+    let optionsHtml = targetPool.map(t =>
+      `<option value="${escapeHtml(t.addr)}" ${t.addr === item.addr ? 'selected' : ''}>${escapeHtml(t.tag)}</option>`
+    ).join('');
+    optionsHtml += `<option value="__CUSTOM__" ${!matchesPool ? 'selected' : ''}>Custom 1756 I/O Address...</option>`;
+
+    const card = document.createElement('div');
+    card.className = 'custom-io-item';
+    card.dataset.dockId = item.id || `dock_${idx}`;
+    card.innerHTML = `
+      <div class="custom-io-row">
+        <strong style="color:var(--sky-accent); min-width:54px;">BTN #${idx + 1}</strong>
+        <input type="text" class="dock-edit-label" maxlength="16" value="${escapeHtml(item.label)}" placeholder="Label (e.g. Start, Stop, OL, Rev)">
+        <input type="text" class="dock-edit-key" maxlength="1" style="max-width:56px; text-align:center;" value="${escapeHtml(item.key || '')}" placeholder="Key" title="Single Keyboard Shortcut Letter/Digit">
+        <button type="button" class="mini-icon-btn" onclick="moveQuickDockItem(${idx}, -1)" title="Move Left / Up" ${idx === 0 ? 'disabled' : ''}>&uarr;</button>
+        <button type="button" class="mini-icon-btn" onclick="moveQuickDockItem(${idx}, 1)" title="Move Right / Down" ${idx === draftQuickDockItems.length - 1 ? 'disabled' : ''}>&darr;</button>
+        <button type="button" class="mini-icon-btn btn-danger" onclick="removeQuickDockItem(${idx})" title="Remove Dock Button">&times;</button>
+      </div>
+      <div class="custom-io-row">
+        <select class="dock-edit-addr-select" onchange="handleDockSelectChange(this, ${idx})">${optionsHtml}</select>
+        <input type="text" class="dock-edit-addr-custom" maxlength="28" style="display:${!matchesPool ? 'block' : 'none'};" value="${escapeHtml(!matchesPool ? item.addr : '')}" placeholder="e.g. Local:3:I.Data.0">
+        <select class="dock-edit-mode" style="max-width:110px;">
+          <option value="MOM_NO" ${item.mode === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
+          <option value="MOM_NC" ${item.mode === 'MOM_NC' ? 'selected' : ''}>MOM_NC</option>
+          <option value="TOGGLE" ${item.mode === 'TOGGLE' ? 'selected' : ''}>TOGGLE</option>
+        </select>
+      </div>
+    `;
+    host.appendChild(card);
+  });
+}
+
+function handleDockSelectChange(selectEl, idx) {
+  captureDraftQuickDockFromDom();
+  const row = selectEl.closest('.custom-io-item');
+  const customInput = row?.querySelector('.dock-edit-addr-custom');
+  const labelInput = row?.querySelector('.dock-edit-label');
+  const modeSelect = row?.querySelector('.dock-edit-mode');
+
+  if (selectEl.value === '__CUSTOM__') {
+    if (customInput) {
+      customInput.style.display = 'block';
+      customInput.focus();
+    }
+  } else {
+    if (customInput) customInput.style.display = 'none';
+    const chosenAddr = selectEl.value;
+    const inIdx = findInputIndexByAddress(chosenAddr);
+    if (inIdx !== -1 && modeSelect) {
+      modeSelect.value = PLC.inputModes[inIdx] || 'MOM_NO';
+    }
+    const alias = getDefaultLabelForAddress(chosenAddr);
+    if (alias && labelInput) {
+      labelInput.value = alias.split('_')[0];
+    }
+  }
+}
+
+function addQuickDockItem() {
+  captureDraftQuickDockFromDom();
+  const nextIdx = draftQuickDockItems.length;
+  const targetInIdx = nextIdx % Math.max(1, PLC.physicalIn.length);
+  const addr = getInputAddress(targetInIdx);
+  const rawAlias = (PLC.inputLabels[targetInIdx] || `Btn_${nextIdx}`).split('_')[0];
+  draftQuickDockItems.push({
+    id: `dock_${Date.now()}_${nextIdx}`,
+    addr,
+    label: rawAlias,
+    mode: PLC.inputModes[targetInIdx] || 'MOM_NO',
+    key: FIELD_INPUT_KEY_BADGES[targetInIdx] || ''
+  });
+  renderQuickDockEditorList();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#quickDockEditorList .dock-edit-label');
+    const lastInp = inputs[inputs.length - 1];
+    if (lastInp) {
+      lastInp.focus();
+      lastInp.scrollIntoView({ block: 'nearest' });
+    }
+  }, 15);
+}
+
+function moveQuickDockItem(idx, delta) {
+  captureDraftQuickDockFromDom();
+  const targetIdx = idx + delta;
+  if (targetIdx < 0 || targetIdx >= draftQuickDockItems.length) return;
+  const temp = draftQuickDockItems[idx];
+  draftQuickDockItems[idx] = draftQuickDockItems[targetIdx];
+  draftQuickDockItems[targetIdx] = temp;
+  renderQuickDockEditorList();
+}
+
+function removeQuickDockItem(idx) {
+  captureDraftQuickDockFromDom();
+  draftQuickDockItems.splice(idx, 1);
+  renderQuickDockEditorList();
+}
+
+function resetQuickDockDefaults() {
+  syncQuickDockFromCurrentIo(false);
+  draftQuickDockItems = JSON.parse(JSON.stringify(PLC.quickDockItems));
+  renderQuickDockEditorList();
+}
+
+function applyQuickDockChanges() {
+  captureDraftQuickDockFromDom();
+
+  // If a custom 1756 input address was typed into a dock item that doesn't exist yet, auto-register it as a 1756 input channel
+  draftQuickDockItems.forEach(item => {
+    const existsIn = findInputIndexByAddress(item.addr) !== -1;
+    const existsOut = findOutputIndexByAddress(item.addr) !== -1;
+    const existsBit = item.addr.startsWith('Control_Bits.');
+    if (!existsIn && !existsOut && !existsBit && item.addr) {
+      PLC.inputAddresses.push(item.addr);
+      PLC.inputLabels.push(item.label || `Custom_${PLC.physicalIn.length}`);
+      PLC.inputModes.push(item.mode || 'MOM_NO');
+      PLC.physicalIn.push(item.mode === 'MOM_NC');
+      PLC.I.push(false);
+    } else if (existsIn) {
+      const inIdx = findInputIndexByAddress(item.addr);
+      PLC.inputModes[inIdx] = item.mode;
+    }
+  });
+
+  PLC.quickDockItems = JSON.parse(JSON.stringify(draftQuickDockItems));
+  PLC.dockVisible = true;
+  const dock = document.getElementById('mobileQuickDock');
+  if (dock) dock.classList.remove('dock-hidden');
+
+  closeQuickDockModal();
+  buildInputOutputRacks();
+  buildMobileQuickDock();
+  syncUiVisuals();
+}
+
+/**
+ * 1756 I/O Customization Modal (Addresses, Aliases, Modes, States + Add/Remove)
+ */
+function openBlankIoModal() {
   const inHost = document.getElementById('blankInputEditorList');
   const outHost = document.getElementById('blankOutputEditorList');
   inHost.innerHTML = '';
@@ -2709,20 +3105,24 @@ function openBlankIoModal(highlightInputIdx) {
 
   for (let i = 0; i < PLC.physicalIn.length; i++) {
     const item = document.createElement('div');
-    item.className = 'custom-io-item' + (highlightInputIdx === i ? ' highlighted-target' : '');
+    item.className = 'custom-io-item';
     item.dataset.inIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
-        <strong style="color:var(--sky-accent);">I.${i}</strong>
-        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(PLC.inputLabels[i] || `Input_${i}`)}" placeholder="Input / PB Label">
+        <strong style="color:var(--sky-accent);">IN #${i}</strong>
+        <input type="text" id="editInAddr_${i}" maxlength="26" value="${escapeHtml(getInputAddress(i))}" placeholder="1756 Input Address">
+        ${PLC.physicalIn.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomInputChannel(${i})" title="Remove Input">&times;</button>` : ''}
       </div>
       <div class="custom-io-row">
-        <select id="editInMode_${i}" title="Pushbutton / Switch Mode">
-          <option value="MOM_NO" ${PLC.inputModes[i] === 'MOM_NO' ? 'selected' : ''}>NO PB (MOM_NO)</option>
-          <option value="MOM_NC" ${PLC.inputModes[i] === 'MOM_NC' ? 'selected' : ''}>NC PB (MOM_NC)</option>
-          <option value="TOGGLE" ${PLC.inputModes[i] === 'TOGGLE' ? 'selected' : ''}>Selector (TOGGLE)</option>
+        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(PLC.inputLabels[i] || `Input_${i}`)}" placeholder="Alias / Label">
+      </div>
+      <div class="custom-io-row">
+        <select id="editInMode_${i}">
+          <option value="MOM_NO" ${PLC.inputModes[i] === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
+          <option value="MOM_NC" ${PLC.inputModes[i] === 'MOM_NC' ? 'selected' : ''}>MOM_NC</option>
+          <option value="TOGGLE" ${PLC.inputModes[i] === 'TOGGLE' ? 'selected' : ''}>TOGGLE</option>
         </select>
-        <select id="editInState_${i}" title="Resting / Current Switch State">
+        <select id="editInState_${i}">
           <option value="0" ${!PLC.physicalIn[i] ? 'selected' : ''}>State: 0</option>
           <option value="1" ${PLC.physicalIn[i] ? 'selected' : ''}>State: 1</option>
         </select>
@@ -2737,7 +3137,11 @@ function openBlankIoModal(highlightInputIdx) {
     item.dataset.outIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
-        <strong style="color:var(--power-green);">O.${i}</strong>
+        <strong style="color:var(--power-green);">OUT #${i}</strong>
+        <input type="text" id="editOutAddr_${i}" maxlength="26" value="${escapeHtml(getOutputAddress(i))}" placeholder="1756 Output Address">
+        ${PLC.physicalOut.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomOutputChannel(${i})" title="Remove Output">&times;</button>` : ''}
+      </div>
+      <div class="custom-io-row">
         <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(PLC.outputLabels[i] || `Output_${i}`)}" placeholder="Output / KM Label">
       </div>
     `;
@@ -2747,42 +3151,43 @@ function openBlankIoModal(highlightInputIdx) {
   KB_NAV.modalArmedForApply = false;
   document.getElementById('blankIoModal').classList.add('open');
   setTimeout(() => {
-    const targetId = typeof highlightInputIdx === 'number' ? `editInMode_${highlightInputIdx}` : 'editInLabel_0';
-    const focusTarget = document.getElementById(targetId) || document.getElementById('editInLabel_0');
-    if (focusTarget) {
-      focusTarget.focus();
-      focusTarget.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
-}
-
-function syncModalInputsToPlcPbs() {
-  const inferred = inferPlcPbConfigs();
-  Object.keys(inferred).forEach(k => {
-    const idx = parseInt(k, 10);
-    const cfg = inferred[idx];
-    const modeEl = document.getElementById(`editInMode_${idx}`);
-    const stateEl = document.getElementById(`editInState_${idx}`);
-    const lblEl = document.getElementById(`editInLabel_${idx}`);
-    if (modeEl) modeEl.value = cfg.mode;
-    if (stateEl) stateEl.value = cfg.restingState ? '1' : '0';
-    if (lblEl && cfg.label) lblEl.value = cfg.label;
-  });
+    const firstInp = document.getElementById('editInLabel_0');
+    if (firstInp) firstInp.focus();
+  }, 10);
 }
 
 function addCustomInputChannel() {
   const idx = PLC.physicalIn.length;
   PLC.physicalIn.push(false);
+  PLC.inputAddresses.push(`Local:1:I.Data.${idx}`);
   PLC.inputModes.push('MOM_NO');
-  PLC.inputLabels.push(`Aux_PB_${idx}`);
+  PLC.inputLabels.push(`Aux_In_${idx}`);
   PLC.I.push(false);
-  openBlankIoModal(idx);
+  openBlankIoModal();
+  setTimeout(() => {
+    const el = document.getElementById(`editInLabel_${idx}`);
+    if (el) {
+      el.focus();
+      el.scrollIntoView({ block: 'nearest' });
+    }
+  }, 15);
+}
+
+function removeCustomInputChannel(idx) {
+  if (PLC.physicalIn.length <= 1) return;
+  PLC.physicalIn.splice(idx, 1);
+  PLC.inputAddresses.splice(idx, 1);
+  PLC.inputModes.splice(idx, 1);
+  PLC.inputLabels.splice(idx, 1);
+  PLC.I.splice(idx, 1);
+  openBlankIoModal();
 }
 
 function addCustomOutputChannel() {
   const idx = PLC.physicalOut.length;
   PLC.physicalOut.push(false);
   PLC.O.push(false);
+  PLC.outputAddresses.push(`Local:2:O.Data.${idx}`);
   PLC.outputLabels.push(`KM_Aux_${idx}`);
   openBlankIoModal();
   setTimeout(() => {
@@ -2792,6 +3197,15 @@ function addCustomOutputChannel() {
       el.scrollIntoView({ block: 'nearest' });
     }
   }, 15);
+}
+
+function removeCustomOutputChannel(idx) {
+  if (PLC.physicalOut.length <= 1) return;
+  PLC.physicalOut.splice(idx, 1);
+  PLC.O.splice(idx, 1);
+  PLC.outputAddresses.splice(idx, 1);
+  PLC.outputLabels.splice(idx, 1);
+  openBlankIoModal();
 }
 
 function closeBlankIoModal() {
@@ -2806,12 +3220,15 @@ function closeBlankIoModal() {
 function resetBlankIoDefaults() {
   const def = PRESETS.blank;
   PLC.physicalIn = [...def.initIn];
+  PLC.inputAddresses = [...def.inAddresses];
   PLC.inputModes = [...def.modes];
   PLC.inputLabels = [...def.inLabels];
+  PLC.outputAddresses = [...def.outAddresses];
   PLC.outputLabels = [...def.outLabels];
   PLC.I = Array(def.initIn.length).fill(false);
   PLC.O = Array(def.outLabels.length).fill(false);
   PLC.physicalOut = Array(def.outLabels.length).fill(false);
+  syncQuickDockFromCurrentIo(false);
   openBlankIoModal();
 }
 
@@ -2819,30 +3236,56 @@ function applyBlankIoChanges() {
   const inCount = document.querySelectorAll('#blankInputEditorList .custom-io-item').length;
   const outCount = document.querySelectorAll('#blankOutputEditorList .custom-io-item').length;
 
+  const prevInAddrs = [...PLC.inputAddresses];
+  const prevOutAddrs = [...PLC.outputAddresses];
+
   const nextIn = [];
+  const nextInAddrs = [];
   const nextModes = [];
   const nextInLabels = [];
   for (let i = 0; i < inCount; i++) {
+    const addrVal = (document.getElementById(`editInAddr_${i}`)?.value || '').trim() || `Local:1:I.Data.${i}`;
     const lblVal = (document.getElementById(`editInLabel_${i}`)?.value || '').trim();
     const modeVal = document.getElementById(`editInMode_${i}`)?.value || 'MOM_NO';
     const stVal = document.getElementById(`editInState_${i}`)?.value === '1';
+    nextInAddrs.push(addrVal);
     nextInLabels.push(lblVal || `Input_${i}`);
     nextModes.push(modeVal);
     nextIn.push(stVal);
   }
 
+  const nextOutAddrs = [];
   const nextOutLabels = [];
   for (let i = 0; i < outCount; i++) {
+    const addrVal = (document.getElementById(`editOutAddr_${i}`)?.value || '').trim() || `Local:2:O.Data.${i}`;
     const outVal = (document.getElementById(`editOutLabel_${i}`)?.value || '').trim();
+    nextOutAddrs.push(addrVal);
     nextOutLabels.push(outVal || `Output_${i}`);
   }
 
+  // Keep any matching quick dock items synchronized with renamed 1756 addresses & labels
+  PLC.quickDockItems.forEach(item => {
+    const oldInIdx = prevInAddrs.indexOf(item.addr);
+    if (oldInIdx !== -1 && oldInIdx < nextInAddrs.length) {
+      item.addr = nextInAddrs[oldInIdx];
+      item.mode = nextModes[oldInIdx];
+      item.label = nextInLabels[oldInIdx].split('_')[0];
+    }
+    const oldOutIdx = prevOutAddrs.indexOf(item.addr);
+    if (oldOutIdx !== -1 && oldOutIdx < nextOutAddrs.length) {
+      item.addr = nextOutAddrs[oldOutIdx];
+      item.label = nextOutLabels[oldOutIdx].split('_')[0];
+    }
+  });
+
   PLC.physicalIn = nextIn;
+  PLC.inputAddresses = nextInAddrs;
   PLC.inputModes = nextModes;
   PLC.inputLabels = nextInLabels;
   PLC.I = Array(inCount).fill(false);
 
   const prevOut = PLC.physicalOut;
+  PLC.outputAddresses = nextOutAddrs;
   PLC.outputLabels = nextOutLabels;
   PLC.O = Array(outCount).fill(false).map((_, idx) => !!prevOut[idx]);
   PLC.physicalOut = Array(outCount).fill(false).map((_, idx) => !!prevOut[idx]);
@@ -2878,7 +3321,7 @@ function renderMimicLampsEditor() {
   PLC.blankMimic.lamps.forEach((lamp, idx) => {
     let bitOpts = '';
     for (let b = 0; b < PLC.outputLabels.length; b++) {
-      bitOpts += `<option value="${b}" ${lamp.bitIndex === b ? 'selected' : ''}>O.Data.${b} (${escapeHtml(PLC.outputLabels[b])})</option>`;
+      bitOpts += `<option value="${b}" ${lamp.bitIndex === b ? 'selected' : ''}>${escapeHtml(getOutputAddress(b))} (${escapeHtml(PLC.outputLabels[b])})</option>`;
     }
     const row = document.createElement('div');
     row.className = 'custom-io-item';
@@ -3373,6 +3816,11 @@ function executeShortcutRowAction(rowEl) {
     return;
   }
 
+  if (action === 'toggle-dock') {
+    toggleQuickDockBar();
+    return;
+  }
+
   if (action === 'preset') {
     const presetSel = document.getElementById('presetSelector');
     if (presetSel) {
@@ -3466,6 +3914,7 @@ function openShortcutsModal() {
   closeCustomSelectDropdown();
   closeInsertModal();
   closeInspector();
+  closeQuickDockModal();
   closeBlankIoModal();
   closeBlankMimicModal();
   closeBlankTagsModal();
@@ -3555,11 +4004,11 @@ function updatePaletteHighlight() {
 function createDefaultInstruction(type) {
   switch (type) {
     case 'XIC':
-      return { type: 'XIC', addr: 'Local:1:I.Data.0', label: PLC.inputLabels[0] || 'Start_PB' };
+      return { type: 'XIC', addr: getInputAddress(0), label: PLC.inputLabels[0] || 'Start_PB' };
     case 'XIO':
-      return { type: 'XIO', addr: 'Local:1:I.Data.1', label: PLC.inputLabels[1] || 'Stop_NC' };
+      return { type: 'XIO', addr: getInputAddress(1), label: PLC.inputLabels[1] || 'Stop_NC' };
     case 'OTE':
-      return { type: 'OTE', addr: 'Local:2:O.Data.0', label: PLC.outputLabels[0] || 'Output_Bit' };
+      return { type: 'OTE', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Output_Bit' };
     case 'OTL':
       return { type: 'OTL', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Latch_Bit' };
     case 'OTU':
@@ -3572,12 +4021,12 @@ function createDefaultInstruction(type) {
       return {
         type: 'BRANCH',
         branches: [
-          [{ type: 'XIC', addr: 'Local:1:I.Data.0', label: PLC.inputLabels[0] || 'Path_A' }],
-          [{ type: 'XIC', addr: 'Local:2:O.Data.0', label: PLC.outputLabels[0] || 'Path_B' }]
+          [{ type: 'XIC', addr: getInputAddress(0), label: PLC.inputLabels[0] || 'Path_A' }],
+          [{ type: 'XIC', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Path_B' }]
         ]
       };
     default:
-      return { type: 'XIC', addr: 'Local:1:I.Data.0', label: 'New_Tag' };
+      return { type: 'XIC', addr: getInputAddress(0), label: 'New_Tag' };
   }
 }
 
@@ -3633,7 +4082,7 @@ function wrapInspectedInBranch() {
     type: 'BRANCH',
     branches: [
       [existing],
-      [{ type: 'XIC', addr: 'Local:2:O.Data.0', label: PLC.outputLabels[0] || 'Seal_In' }]
+      [{ type: 'XIC', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Seal_In' }]
     ]
   };
   closeInspector();
@@ -3777,6 +4226,15 @@ function syncUiVisuals() {
     }
   }
 
+  // Synchronize Bottom Quick-Control Dock Buttons Live State
+  PLC.quickDockItems.forEach((item, idx) => {
+    const dBtn = document.getElementById(`dockBtn_${idx}`);
+    if (!dBtn) return;
+    const isClosed = getUniversalAddressState(item.addr);
+    dBtn.classList.toggle('closed', isClosed);
+    dBtn.classList.toggle('nc-tripped', item.mode === 'MOM_NC' && !isClosed);
+  });
+
   const olBtn = document.getElementById('btnOlTrip');
   if (olBtn) {
     const olTripped = !PLC.physicalIn[2];
@@ -3798,41 +4256,44 @@ function syncUiVisuals() {
 function buildInputOutputRacks() {
   const inTitle = document.getElementById('inputRackTitle');
   if (inTitle) {
-    inTitle.textContent = `1756-IB16 Inputs (Local:1:I.Data.0–${Math.max(0, PLC.physicalIn.length - 1)})`;
+    const firstIn = getInputAddress(0);
+    const lastIn = getInputAddress(Math.max(0, PLC.physicalIn.length - 1));
+    inTitle.textContent = `1756-IB16 Inputs (${firstIn} .. ${getAddressShortPoint(lastIn)})`;
   }
 
   const outTitle = document.getElementById('outputRackTitle');
   if (outTitle) {
-    outTitle.textContent = `1756-OB16E Outputs (Local:2:O.Data.0–${Math.max(0, PLC.physicalOut.length - 1)})`;
+    const firstOut = getOutputAddress(0);
+    const lastOut = getOutputAddress(Math.max(0, PLC.physicalOut.length - 1));
+    outTitle.textContent = `1756-OB16E Outputs (${firstOut} .. ${getAddressShortPoint(lastOut)})`;
   }
 
   const inHost = document.getElementById('inputRackHost');
   if (inHost) {
     inHost.innerHTML = '';
     for (let i = 0; i < PLC.physicalIn.length; i++) {
+      const addrStr = getInputAddress(i);
       const mode = PLC.inputModes[i];
-      const keyHint = FIELD_INPUT_KEY_BADGES[i] || '';
+      const dockMatch = PLC.quickDockItems.find(d => d.addr === addrStr);
+      const keyHint = dockMatch && dockMatch.key ? dockMatch.key : (FIELD_INPUT_KEY_BADGES[i] || '');
       const tile = document.createElement('div');
       tile.className = 'io-tile';
       tile.id = `inTile_${i}`;
       tile.innerHTML = `
         <div class="io-tile-top">
-          <span class="io-tag" title="Local:1:I.Data.${i}">Local:1:I.Data.${i}</span>
-          <div class="io-controls-mini">
-            <button class="io-mode-pill" onclick="cycleSwitchMode(${i})" title="Cycle NO/NC/Toggle Mode">${mode}</button>
-            <button class="io-cfg-btn" onclick="openBlankIoModal(${i})" title="Reconfigure PB / Switch">PB</button>
-          </div>
+          <span class="io-tag" title="${escapeHtml(addrStr)}">${escapeHtml(addrStr)}</span>
+          <button class="io-mode-pill" onclick="cycleSwitchMode(${i})" title="Switch Contact Type">${mode}</button>
         </div>
         <div class="io-name">
           <span class="io-name-text">${escapeHtml(PLC.inputLabels[i])}</span>
-          ${keyHint ? `<span class="kbd-tag hide-mobile" title="Shortcut: ${keyHint}">${keyHint}</span>` : ''}
+          ${keyHint ? `<span class="kbd-tag hide-mobile" title="Shortcut: ${escapeHtml(keyHint)}">${escapeHtml(keyHint)}</span>` : ''}
         </div>
         <button id="inFieldBtn_${i}" class="field-btn">0 (OPEN)</button>
       `;
       inHost.appendChild(tile);
 
       const btn = tile.querySelector(`#inFieldBtn_${i}`);
-      bindPhysicalSwitchPointer(btn, i);
+      bindUniversalSwitchPointer(btn, addrStr, mode);
     }
   }
 
@@ -3840,12 +4301,13 @@ function buildInputOutputRacks() {
   if (outHost) {
     outHost.innerHTML = '';
     for (let i = 0; i < PLC.physicalOut.length; i++) {
+      const addrStr = getOutputAddress(i);
       const slot = document.createElement('div');
       slot.className = 'out-slot';
       slot.id = `outSlot_${i}`;
       slot.innerHTML = `
         <div style="min-width:0; overflow:hidden;">
-          <div style="font-weight:800; color:var(--sky-accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Local:2:O.Data.${i}</div>
+          <div style="font-weight:800; color:var(--sky-accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(addrStr)}">${escapeHtml(addrStr)}</div>
           <div style="font-size:9px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(PLC.outputLabels[i])}</div>
         </div>
         <div id="outLed_${i}" class="led-indicator"></div>
@@ -3855,13 +4317,11 @@ function buildInputOutputRacks() {
   }
 }
 
-function bindPhysicalSwitchPointer(btnEl, idx) {
-  const mode = PLC.inputModes[idx];
-
+function bindUniversalSwitchPointer(btnEl, addr, mode) {
   if (mode === 'TOGGLE') {
     btnEl.addEventListener('pointerdown', (e) => {
       e.preventDefault();
-      PLC.physicalIn[idx] = !PLC.physicalIn[idx];
+      setUniversalAddressState(addr, !getUniversalAddressState(addr));
       syncUiVisuals();
     });
   } else if (mode === 'MOM_NO') {
@@ -3870,11 +4330,11 @@ function bindPhysicalSwitchPointer(btnEl, idx) {
       if (btnEl.setPointerCapture) {
         try { btnEl.setPointerCapture(e.pointerId); } catch (_) {}
       }
-      PLC.physicalIn[idx] = true;
+      setUniversalAddressState(addr, true);
       syncUiVisuals();
     };
     const release = () => {
-      PLC.physicalIn[idx] = false;
+      setUniversalAddressState(addr, false);
       syncUiVisuals();
     };
     btnEl.addEventListener('pointerdown', press);
@@ -3886,11 +4346,11 @@ function bindPhysicalSwitchPointer(btnEl, idx) {
       if (btnEl.setPointerCapture) {
         try { btnEl.setPointerCapture(e.pointerId); } catch (_) {}
       }
-      PLC.physicalIn[idx] = false;
+      setUniversalAddressState(addr, false);
       syncUiVisuals();
     };
     const release = () => {
-      PLC.physicalIn[idx] = true;
+      setUniversalAddressState(addr, true);
       syncUiVisuals();
     };
     btnEl.addEventListener('pointerdown', press);
@@ -3899,29 +4359,37 @@ function bindPhysicalSwitchPointer(btnEl, idx) {
   }
 }
 
+function triggerUniversalSwitchKeyDown(addr, mode) {
+  if (mode === 'TOGGLE') {
+    setUniversalAddressState(addr, !getUniversalAddressState(addr));
+  } else if (mode === 'MOM_NO') {
+    setUniversalAddressState(addr, true);
+  } else if (mode === 'MOM_NC') {
+    setUniversalAddressState(addr, false);
+  }
+  syncUiVisuals();
+}
+
+function triggerUniversalSwitchKeyUp(addr, mode) {
+  if (mode === 'MOM_NO') {
+    setUniversalAddressState(addr, false);
+    syncUiVisuals();
+  } else if (mode === 'MOM_NC') {
+    setUniversalAddressState(addr, true);
+    syncUiVisuals();
+  }
+}
+
 function triggerFieldInputKeyDown(idx) {
   const mode = PLC.inputModes[idx];
   if (!mode) return;
-  if (mode === 'TOGGLE') {
-    PLC.physicalIn[idx] = !PLC.physicalIn[idx];
-  } else if (mode === 'MOM_NO') {
-    PLC.physicalIn[idx] = true;
-  } else if (mode === 'MOM_NC') {
-    PLC.physicalIn[idx] = false;
-  }
-  syncUiVisuals();
+  triggerUniversalSwitchKeyDown(getInputAddress(idx), mode);
 }
 
 function triggerFieldInputKeyUp(idx) {
   const mode = PLC.inputModes[idx];
   if (!mode) return;
-  if (mode === 'MOM_NO') {
-    PLC.physicalIn[idx] = false;
-    syncUiVisuals();
-  } else if (mode === 'MOM_NC') {
-    PLC.physicalIn[idx] = true;
-    syncUiVisuals();
-  }
+  triggerUniversalSwitchKeyUp(getInputAddress(idx), mode);
 }
 
 function cycleSwitchMode(idx) {
@@ -3929,6 +4397,12 @@ function cycleSwitchMode(idx) {
   const next = sequence[(sequence.indexOf(PLC.inputModes[idx]) + 1) % sequence.length];
   PLC.inputModes[idx] = next;
   PLC.physicalIn[idx] = (next === 'MOM_NC');
+
+  const addr = getInputAddress(idx);
+  PLC.quickDockItems.forEach(d => {
+    if (d.addr === addr) d.mode = next;
+  });
+
   buildInputOutputRacks();
   buildMobileQuickDock();
   syncUiVisuals();
@@ -3938,15 +4412,39 @@ function buildMobileQuickDock() {
   const dock = document.getElementById('mobileQuickDock');
   if (!dock) return;
   dock.innerHTML = '';
+  dock.classList.toggle('dock-hidden', !PLC.dockVisible);
 
-  const quickIndices = [0, 1, 2, 3].filter(i => i < PLC.physicalIn.length);
-  quickIndices.forEach(idx => {
+  const strip = document.createElement('div');
+  strip.className = 'dock-buttons-strip';
+
+  PLC.quickDockItems.forEach((item, idx) => {
     const btn = document.createElement('button');
+    btn.type = 'button';
     btn.className = 'dock-btn';
-    btn.textContent = `${PLC.inputLabels[idx].split('_')[0]} (.${idx})`;
-    bindPhysicalSwitchPointer(btn, idx);
-    dock.appendChild(btn);
+    btn.id = `dockBtn_${idx}`;
+    btn.title = `${item.label} → ${item.addr} [${item.mode}]${item.key ? ` (Key: ${item.key})` : ''}`;
+
+    const shortPt = getAddressShortPoint(item.addr);
+    btn.innerHTML = `
+      <span class="dock-btn-main">
+        <span>${escapeHtml(item.label)} (${escapeHtml(shortPt)})</span>
+        ${item.key ? `<span class="kbd-tag hide-mobile">${escapeHtml(item.key)}</span>` : ''}
+      </span>
+      <span class="dock-btn-addr">${escapeHtml(item.addr)} · ${escapeHtml(item.mode)}</span>
+    `;
+    bindUniversalSwitchPointer(btn, item.addr, item.mode);
+    strip.appendChild(btn);
   });
+
+  dock.appendChild(strip);
+
+  const editBtn = document.createElement('button');
+  editBtn.type = 'button';
+  editBtn.className = 'dock-edit-btn';
+  editBtn.textContent = 'Edit Dock';
+  editBtn.title = 'Customize Bottom Dock Buttons & 1756 I/O Addresses';
+  editBtn.onclick = () => openQuickDockModal();
+  dock.appendChild(editBtn);
 }
 
 function toggleOverloadTrip() {
@@ -3961,7 +4459,7 @@ function buildMimicLamps() {
   if (PLC.presetId === 'blank') {
     host.innerHTML = PLC.blankMimic.lamps.map((lamp, idx) => `
       <div class="pilot-row">
-        <span>Local:2:O.Data.${lamp.bitIndex} (${escapeHtml(lamp.label)})</span>
+        <span>${escapeHtml(getOutputAddress(lamp.bitIndex))} (${escapeHtml(lamp.label)})</span>
         <span id="lamp${idx}" class="lamp-dot ${lamp.color}"></span>
       </div>
     `).join('');
@@ -3969,10 +4467,10 @@ function buildMimicLamps() {
   }
 
   host.innerHTML = `
-    <div class="pilot-row"><span>Local:2:O.Data.0 (${escapeHtml(PLC.outputLabels[0] || 'Out_0')})</span><span id="lamp0" class="lamp-dot green"></span></div>
-    <div class="pilot-row"><span>Local:2:O.Data.1 (${escapeHtml(PLC.outputLabels[1] || 'Out_1')})</span><span id="lamp1" class="lamp-dot amber"></span></div>
-    <div class="pilot-row"><span>Local:2:O.Data.2 (${escapeHtml(PLC.outputLabels[2] || 'Out_2')})</span><span id="lamp2" class="lamp-dot blue"></span></div>
-    <div class="pilot-row"><span>Local:2:O.Data.3 (${escapeHtml(PLC.outputLabels[3] || 'Out_3')})</span><span id="lamp3" class="lamp-dot red"></span></div>
+    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(0))} (${escapeHtml(PLC.outputLabels[0] || 'Out_0')})</span><span id="lamp0" class="lamp-dot green"></span></div>
+    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(1))} (${escapeHtml(PLC.outputLabels[1] || 'Out_1')})</span><span id="lamp1" class="lamp-dot amber"></span></div>
+    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(2))} (${escapeHtml(PLC.outputLabels[2] || 'Out_2')})</span><span id="lamp2" class="lamp-dot blue"></span></div>
+    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(3))} (${escapeHtml(PLC.outputLabels[3] || 'Out_3')})</span><span id="lamp3" class="lamp-dot red"></span></div>
   `;
 }
 
@@ -4187,7 +4685,7 @@ function addNewRung() {
   PLC.rungs.push({
     comment: `Rung ${PLC.rungs.length}: Auxiliary Control Logic`,
     elements: [
-      { type: 'XIC', addr: 'Local:1:I.Data.0', label: PLC.inputLabels[0] || 'Cond_In' },
+      { type: 'XIC', addr: getInputAddress(0), label: PLC.inputLabels[0] || 'Cond_In' },
       { type: 'OTE', addr: 'Control_Bits.2', label: PLC.controlBitLabels[2] || 'Aux_Bit' }
     ]
   });
@@ -4284,6 +4782,10 @@ function populateAddressOptions(type, selectedAddr) {
     pool = getCoilAddresses();
   } else if (type === 'TON') {
     pool = getTimerKeys();
+  }
+
+  if (selectedAddr && !pool.includes(selectedAddr)) {
+    pool = [selectedAddr, ...pool];
   }
 
   pool.forEach(addr => {
@@ -4450,6 +4952,7 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
+  // 1. Custom Dropdown Menu Open (works for Preset selector & all Modals)
   if (KB_NAV.activeSelect) {
     const optionCount = KB_NAV.activeSelect.options.length;
     if (e.key === 'ArrowDown') {
@@ -4482,6 +4985,13 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
+  // Inspector-style modals: Quick Dock, I/O, Mimic, Tags
+  const quickDockModal = document.getElementById('quickDockModal');
+  if (quickDockModal && quickDockModal.classList.contains('open')) {
+    handleInspectorStyleModalKeydown(e, quickDockModal, applyQuickDockChanges, closeQuickDockModal);
+    return;
+  }
+
   const blankIoModal = document.getElementById('blankIoModal');
   if (blankIoModal && blankIoModal.classList.contains('open')) {
     handleInspectorStyleModalKeydown(e, blankIoModal, applyBlankIoChanges, closeBlankIoModal);
@@ -4500,6 +5010,7 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
+  // 0. Keyboard Shortcuts Modal Open
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
     if (e.key === 'ArrowDown') {
@@ -4527,6 +5038,7 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
+  // 2. Insert Instruction Palette Modal Open
   const insertModal = document.getElementById('insertModal');
   if (insertModal && insertModal.classList.contains('open')) {
     const btns = Array.from(document.querySelectorAll('#insertPaletteHost .palette-item-btn'));
@@ -4558,6 +5070,7 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
+  // 3. Logix Instruction & Tag Inspector Modal Open
   const inspectorModal = document.getElementById('inspectorModal');
   if (inspectorModal && inspectorModal.classList.contains('open')) {
     handleInspectorStyleModalKeydown(e, inspectorModal, applyInspectorChanges, closeInspector, removeInspectedInstruction);
@@ -4596,6 +5109,12 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
+    if (lowerKey === 'd') {
+      e.preventDefault();
+      toggleQuickDockBar();
+      return;
+    }
+
     if (lowerKey === 'n' || e.key === '+' || e.key === '=') {
       e.preventDefault();
       KB_NAV.arrowNavActive = false;
@@ -4610,11 +5129,23 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, lowerKey)) {
+    // Check custom dock item shortcut keys first, then default field input keys
+    const customDockMatch = PLC.quickDockItems.find(d => d.key && d.key.toLowerCase() === lowerKey);
+    if (customDockMatch) {
       e.preventDefault();
       if (!KB_NAV.heldKeys[lowerKey]) {
-        KB_NAV.heldKeys[lowerKey] = true;
-        triggerFieldInputKeyDown(FIELD_INPUT_KEYMAP[lowerKey]);
+        KB_NAV.heldKeys[lowerKey] = { type: 'DOCK', addr: customDockMatch.addr, mode: customDockMatch.mode };
+        triggerUniversalSwitchKeyDown(customDockMatch.addr, customDockMatch.mode);
+      }
+      return;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(DEFAULT_FIELD_INPUT_KEYMAP, lowerKey)) {
+      e.preventDefault();
+      if (!KB_NAV.heldKeys[lowerKey]) {
+        const idx = DEFAULT_FIELD_INPUT_KEYMAP[lowerKey];
+        KB_NAV.heldKeys[lowerKey] = { type: 'FIELD', idx };
+        triggerFieldInputKeyDown(idx);
       }
       return;
     }
@@ -4813,22 +5344,29 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+function releaseHeldShortcutEntry(heldEntry) {
+  if (!heldEntry) return;
+  if (heldEntry.type === 'DOCK') {
+    triggerUniversalSwitchKeyUp(heldEntry.addr, heldEntry.mode);
+  } else if (heldEntry.type === 'FIELD') {
+    triggerFieldInputKeyUp(heldEntry.idx);
+  }
+}
+
 document.addEventListener('keyup', function (e) {
   const lowerKey = e.key.toLowerCase();
   if (KB_NAV.heldKeys[lowerKey]) {
+    const heldEntry = KB_NAV.heldKeys[lowerKey];
     delete KB_NAV.heldKeys[lowerKey];
-    if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, lowerKey)) {
-      triggerFieldInputKeyUp(FIELD_INPUT_KEYMAP[lowerKey]);
-    }
+    releaseHeldShortcutEntry(heldEntry);
   }
 });
 
 window.addEventListener('blur', function () {
   Object.keys(KB_NAV.heldKeys).forEach(k => {
+    const heldEntry = KB_NAV.heldKeys[k];
     delete KB_NAV.heldKeys[k];
-    if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, k)) {
-      triggerFieldInputKeyUp(FIELD_INPUT_KEYMAP[k]);
-    }
+    releaseHeldShortcutEntry(heldEntry);
   });
 });
 
@@ -4850,4 +5388,4 @@ window.onload = function () {
 };
 </script>
 </body>
-</html>
+  </html>
