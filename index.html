@@ -17,11 +17,11 @@
     --text-muted: #64748b;
     --power-green: #10b981;
     --power-green-dim: rgba(16, 185, 129, 0.16);
-    --power-green-glow: rgba(16, 185, 129, 0.45);
+    --power-green-glow: rgba(16, 185, 129, 0.48);
     --amber-warn: #f59e0b;
     --amber-dim: rgba(245, 158, 11, 0.16);
     --crimson-fault: #ef4444;
-    --crimson-dim: rgba(239, 68, 68, 0.16);
+    --crimson-dim: rgba(239, 68, 68, 0.18);
     --sky-accent: #38bdf8;
     --sky-dim: rgba(56, 189, 248, 0.14);
     --rail-hot: #ef4444;
@@ -54,6 +54,19 @@
     display: flex;
     flex-direction: column;
     padding-top: var(--safe-top);
+  }
+
+  /* Focus / Decluttered Mode */
+  body.focus-mode .kb-hint-badge,
+  body.focus-mode .custom-banner,
+  body.focus-mode .kbd-tag {
+    display: none !important;
+  }
+
+  @media (min-width: 1024px) {
+    body.focus-mode .workspace {
+      grid-template-columns: 280px 1fr 300px;
+    }
   }
 
   /* Desktop Keyboard Focus Ring & Active Pane Highlight */
@@ -170,6 +183,12 @@
     font-weight: 700;
   }
 
+  .cpu-status-pill.faulted {
+    border-color: var(--crimson-fault);
+    background: var(--crimson-dim);
+    color: #fecaca;
+  }
+
   .status-led {
     width: 9px;
     height: 9px;
@@ -188,6 +207,17 @@
     box-shadow: 0 0 8px var(--amber-warn);
   }
 
+  .status-led.fault {
+    background: var(--crimson-fault);
+    box-shadow: 0 0 10px var(--crimson-fault);
+    animation: pulseFault 0.8s infinite alternate;
+  }
+
+  @keyframes pulseFault {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+  }
+
   button, select {
     font-family: var(--font-sans);
     font-size: 12px;
@@ -196,7 +226,7 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
-    min-height: 38px;
+    min-height: 36px;
     padding: 0 10px;
     cursor: pointer;
     display: inline-flex;
@@ -252,7 +282,7 @@
     padding: 0 10px;
     border-radius: 17px;
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     color: var(--sky-accent);
     border: 1.5px solid var(--sky-accent);
@@ -262,6 +292,26 @@
   button.btn-help-circle:hover {
     background: var(--sky-accent);
     color: #090d16;
+  }
+
+  /* Major Fault Banner */
+  .major-fault-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: linear-gradient(90deg, rgba(153, 27, 27, 0.92), rgba(127, 29, 29, 0.95));
+    border-bottom: 1px solid #f87171;
+    padding: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #fef2f2;
+    flex-shrink: 0;
+    z-index: 19;
+  }
+
+  .major-fault-banner.open {
+    display: flex;
   }
 
   /* Scan Cycle & Preset Strip */
@@ -583,6 +633,18 @@
     background: rgba(245, 158, 11, 0.12);
   }
 
+  .out-role-badge.star {
+    color: var(--amber-warn);
+    border-color: rgba(245, 158, 11, 0.45);
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .out-role-badge.delta {
+    color: var(--sky-accent);
+    border-color: rgba(56, 189, 248, 0.45);
+    background: rgba(56, 189, 248, 0.12);
+  }
+
   .out-role-badge.pilot-green {
     color: var(--power-green);
     border-color: rgba(16, 185, 129, 0.45);
@@ -696,11 +758,18 @@
 
   .rung-block {
     position: relative;
-    margin-bottom: 20px;
-    padding: 6px 16px;
+    margin-bottom: 18px;
+    padding: 8px 16px;
     border-left: 4px solid var(--rail-hot);
     border-right: 4px solid var(--rail-neutral);
+    border-radius: 4px;
+    transition: background-color 0.12s;
     min-width: 680px;
+  }
+
+  .rung-block.rung-energized {
+    background: rgba(16, 185, 129, 0.045);
+    border-right-color: var(--power-green);
   }
 
   .empty-routine-prompt {
@@ -756,6 +825,12 @@
     flex-shrink: 0;
   }
 
+  .rung-block.rung-energized .rung-tag {
+    border-color: var(--power-green);
+    color: var(--power-green);
+    background: var(--power-green-dim);
+  }
+
   .rung-comment-text {
     font-family: var(--font-mono);
     font-size: 11px;
@@ -799,12 +874,13 @@
     background-color: var(--border-subtle);
     flex: 1;
     min-width: 6px;
-    transition: background-color 0.08s, box-shadow 0.08s;
+    transition: background-color 0.08s, box-shadow 0.08s, height 0.08s;
   }
 
   .wire-segment.hot .wire-line {
+    height: 4px;
     background-color: var(--power-green);
-    box-shadow: 0 0 8px var(--power-green-glow);
+    box-shadow: 0 0 9px var(--power-green-glow);
   }
 
   .wire-insert-btn {
@@ -888,7 +964,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 112px;
+    min-width: 116px;
     min-height: 68px;
     padding: 4px 6px;
     border-radius: 8px;
@@ -903,6 +979,10 @@
     border-color: var(--sky-accent);
   }
 
+  .inst-node.power-passing {
+    background-color: rgba(16, 185, 129, 0.06);
+  }
+
   .inst-addr {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -910,7 +990,7 @@
     color: var(--text-primary);
     margin-bottom: 3px;
     text-align: center;
-    max-width: 124px;
+    max-width: 132px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -921,7 +1001,7 @@
     font-size: 15px;
     font-weight: 800;
     letter-spacing: 1px;
-    min-width: 72px;
+    min-width: 74px;
     height: 30px;
     padding: 0 8px;
     border-radius: 6px;
@@ -938,7 +1018,7 @@
     color: var(--power-green);
     border-color: var(--power-green);
     background: var(--power-green-dim);
-    box-shadow: 0 0 10px var(--power-green-glow);
+    box-shadow: 0 0 11px var(--power-green-glow);
   }
 
   .inst-symbol.timing {
@@ -950,7 +1030,7 @@
   .inst-symbol.timer-block {
     flex-direction: column;
     height: auto;
-    min-width: 124px;
+    min-width: 130px;
     padding: 5px 8px;
     font-size: 11px;
     line-height: 1.35;
@@ -963,12 +1043,13 @@
     font-size: 10px;
     color: var(--text-secondary);
     margin-top: 2px;
+    gap: 6px;
   }
 
   .inst-sublabel {
     font-size: 10px;
     color: var(--text-secondary);
-    max-width: 112px;
+    max-width: 120px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1259,13 +1340,13 @@
     border: 1px solid var(--border-strong);
     border-radius: 14px;
     width: 100%;
-    max-width: 440px;
+    max-width: 460px;
     padding: 18px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   }
 
   .modal-sheet.wide-sheet {
-    max-width: 760px;
+    max-width: 780px;
     max-height: 88dvh;
     display: flex;
     flex-direction: column;
@@ -1486,13 +1567,15 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+    max-height: 62dvh;
+    overflow-y: auto;
   }
 
   .palette-item-btn {
     flex-direction: column;
     align-items: flex-start;
-    padding: 10px 12px;
-    min-height: 58px;
+    padding: 9px 11px;
+    min-height: 54px;
     background: var(--bg-card);
     border: 1px solid var(--border-strong);
     text-align: left;
@@ -1562,17 +1645,26 @@
   </div>
 
   <div class="header-actions">
-    <div class="cpu-status-pill">
+    <div id="cpuStatusPill" class="cpu-status-pill">
       <span id="cpuLed" class="status-led run"></span>
       <span id="cpuStateLabel">REM RUN</span>
     </div>
     <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
     <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
-    <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
+    <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags, Faults & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
+    <button id="btnFocusToggle" onclick="toggleFocusMode()" title="Toggle Decluttered Focus View (Shortcut: F)">Focus <span class="kbd-tag hide-mobile">F</span></button>
     <button id="btnDockToggle" class="btn-accent" onclick="toggleQuickDockBar()" title="Show or Hide Bottom Quick-Control Dock (Shortcut: D)">Dock <span class="kbd-tag hide-mobile">D</span></button>
-    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: K or ?)" aria-label="View All Keyboard Shortcuts (K or ?)">Shortcuts <span class="kbd-tag hide-mobile">K</span></button>
+    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: K or ?)" aria-label="View All Keyboard Shortcuts">Shortcuts <span class="kbd-tag hide-mobile">K</span></button>
   </div>
 </header>
+
+<div id="majorFaultBanner" class="major-fault-banner" role="alert">
+  <div>
+    <strong>[MAJOR HARDWARE / INTERLOCK FAULT — TYPE 04 CODE 20]</strong>
+    <span id="majorFaultReason">Simultaneous conflicting contactors energized.</span>
+  </div>
+  <button type="button" class="btn-run" style="min-height:30px; padding:0 10px; font-size:11px;" onclick="clearControllerFault()">Clear Fault &amp; Reset</button>
+</div>
 
 <div class="sub-toolbar">
   <div class="preset-group">
@@ -1582,19 +1674,19 @@
       <option value="preset1">1. 3-Wire Start/Stop Seal-In Motor Starter</option>
       <option value="preset2">2. Forward / Reverse Interlocked Starter</option>
       <option value="preset3">3. Star-Delta Reduced-Voltage Starter</option>
-      <option value="preset4">4. Automated Conveyor + Latching Fault Alarm</option>
+      <option value="preset4">4. Automated Conveyor + Latching Fault &amp; Batch Counter</option>
     </select>
     <span id="blankModeBadge" class="blank-mode-pill">BLANK ROUTINE</span>
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [S] Start | [X] Stop | [O] OL | [R] Rev/Reset | [D] Dock | [←↑→↓] Nav | [Enter] Exec | [K/?] Shortcuts</span>
+    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [F] Focus | [S/X/O/R] Field I/O | [←↑→↓] Nav | [Enter] Edit | [K/?] Shortcuts</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
 </div>
 
-<!-- Workspace View Switcher (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags) -->
+<!-- Workspace View Switcher -->
 <nav class="mobile-nav-tabs" aria-label="Workspace Views">
   <button id="tabBtnLadder" class="mobile-tab active" data-tab="paneLadder" onclick="switchWorkspaceView('paneLadder', this)">MainRoutine <span class="kbd-tag hide-mobile">1</span></button>
   <button id="tabBtnIo" class="mobile-tab" data-tab="paneIo" onclick="switchWorkspaceView('paneIo', this)">1756 I/O &amp; Mimic <span class="kbd-tag hide-mobile">2</span></button>
@@ -1602,7 +1694,7 @@
 </nav>
 
 <main class="workspace">
-  <!-- Left Column (Desktop) / Tab 2 (Mobile): 1756 Field Inputs & Outputs -->
+  <!-- Left Column: 1756 Field Inputs & Outputs -->
   <section id="paneIo" class="pane pane-left">
     <div class="card">
       <div class="card-header">
@@ -1613,7 +1705,7 @@
         </div>
       </div>
       <div id="blankIoBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Edit 1756 I/O addresses, contactor directions &amp; pilot colors via <strong>Edit I/O</strong>.</span>
+        <span><strong>Blank Routine:</strong> Edit 1756 I/O addresses, contactor roles &amp; pilot colors via <strong>Edit I/O</strong>.</span>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
     </div>
@@ -1627,7 +1719,7 @@
     </div>
   </section>
 
-  <!-- Center Column (Desktop) / Tab 1 (Mobile): Ladder Diagram Canvas -->
+  <!-- Center Column: Ladder Diagram Canvas -->
   <section id="paneLadder" class="pane pane-center mobile-active pane-kb-active">
     <div class="ladder-toolbar">
       <div class="routine-breadcrumb">
@@ -1651,7 +1743,7 @@
     </div>
   </section>
 
-  <!-- Right Column (Desktop) / Tab 3 (Mobile): 3-Phase Motor Mimic & Controller Tags -->
+  <!-- Right Column: 3-Phase Motor Mimic & Controller Tags -->
   <section id="paneData" class="pane pane-right">
     <div class="card">
       <div class="card-header">
@@ -1663,7 +1755,7 @@
       </div>
 
       <div id="blankMimicBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Motor speed &amp; pilot lamps update live from 1756 outputs or via <strong>Edit Mimic</strong>.</span>
+        <span><strong>Blank Routine:</strong> Motor speed, interlock protection &amp; pilot lamps update live from 1756 outputs.</span>
       </div>
 
       <div class="mimic-box">
@@ -1702,13 +1794,14 @@
 
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Program Tags: TIMER Structures</span>
-        <button id="btnEditBlankTimers" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('timers')">Edit Timers</button>
+        <span class="card-title">Program Tags: TIMER &amp; COUNTER</span>
+        <button id="btnEditBlankTimers" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('timers')">Edit Tags</button>
       </div>
       <div id="blankTimersBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Adjust .PRE presets &amp; aliases via <strong>Edit Timers</strong>.</span>
+        <span><strong>Blank Routine:</strong> Adjust .PRE presets &amp; aliases via <strong>Edit Tags</strong>.</span>
       </div>
       <div id="timerTableHost"></div>
+      <div id="counterTableHost"></div>
     </div>
   </section>
 </main>
@@ -1747,7 +1840,7 @@
 <div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Edit 1756 I/O Modules, Contactors (FWD/REV) &amp; Pilot Lights</h3>
+      <h3>Edit 1756 I/O Modules, Contactors (FWD/REV/STAR/DELTA) &amp; Pilot Lights</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
     </div>
 
@@ -1762,7 +1855,7 @@
 
       <div id="blankOutputEditorSection">
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-OB16E Outputs — Contactors (Forward / Reverse) &amp; Pilot Lights (Color)</span>
+          <span class="shortcut-section-title">1756-OB16E Outputs — Contactors (Forward / Reverse / Star / Delta) &amp; Pilot Lights</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add 1756 Output</button>
         </div>
         <div id="blankOutputEditorList" class="custom-io-list"></div>
@@ -1788,7 +1881,7 @@
       <div class="field-group">
         <label for="mimicDriveMode">Motor Behavior Source</label>
         <select id="mimicDriveMode" onchange="toggleCustomMimicFields()">
-          <option value="AUTO">Auto (Follow 1756-OB16E Contactors &amp; Faults)</option>
+          <option value="AUTO">Auto (Follow 1756-OB16E Contactors &amp; Interlock Protection)</option>
           <option value="CUSTOM">Manual / Custom Mimic Override</option>
         </select>
       </div>
@@ -1833,11 +1926,11 @@
   </div>
 </div>
 
-<!-- Control_Bits & TIMER Tags Customization Modal -->
+<!-- Control_Bits, TIMER & COUNTER Tags Customization Modal -->
 <div id="blankTagsModal" class="modal-overlay" onclick="if(event.target===this) closeBlankTagsModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Edit Control_Bits &amp; TIMER Tags</h3>
+      <h3>Edit Control_Bits, TIMER &amp; COUNTER Tags</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankTagsModal()">Close</button>
     </div>
 
@@ -1852,10 +1945,18 @@
 
       <div id="blankTimersEditorSection">
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">TIMER Structures — Presets (.PRE ms), Aliases &amp; Bits</span>
+          <span class="shortcut-section-title">TIMER Structures (TON / TOF / RTO) — Presets (.PRE ms)</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomTimerTag()">+ Add Timer</button>
         </div>
         <div id="blankTimersEditorList" class="custom-io-list"></div>
+      </div>
+
+      <div id="blankCountersEditorSection">
+        <div class="section-head-with-btn">
+          <span class="shortcut-section-title">COUNTER Structures (CTU / CTD) — Presets (.PRE)</span>
+          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomCounterTag()">+ Add Counter</button>
+        </div>
+        <div id="blankCountersEditorList" class="custom-io-list"></div>
       </div>
     </div>
 
@@ -1881,6 +1982,7 @@
           <div class="shortcut-row" data-shortcut-action="view:1"><span class="shortcut-desc">MainRoutine (Ladder Diagram)</span><span class="shortcut-keys"><span class="shortcut-keycap">1</span></span></div>
           <div class="shortcut-row" data-shortcut-action="view:2"><span class="shortcut-desc">1756 I/O &amp; Mimic</span><span class="shortcut-keys"><span class="shortcut-keycap">2</span></span></div>
           <div class="shortcut-row" data-shortcut-action="view:3"><span class="shortcut-desc">Controller Tags</span><span class="shortcut-keys"><span class="shortcut-keycap">3</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="toggle-focus"><span class="shortcut-desc">Toggle Decluttered Focus View</span><span class="shortcut-keys"><span class="shortcut-keycap">F</span></span></div>
           <div class="shortcut-row" data-shortcut-action="toggle-dock"><span class="shortcut-desc">Show / Hide Bottom Quick-Control Dock</span><span class="shortcut-keys"><span class="shortcut-keycap">D</span></span></div>
           <div class="shortcut-row" data-shortcut-action="preset"><span class="shortcut-desc">Open Routine Preset Menu</span><span class="shortcut-keys"><span class="shortcut-keycap">P</span></span></div>
           <div class="shortcut-row" data-shortcut-action="shortcuts"><span class="shortcut-desc">Open / Close Shortcut Key List</span><span class="shortcut-keys"><span class="shortcut-keycap">K</span><span class="shortcut-keycap">?</span></span></div>
@@ -1895,7 +1997,7 @@
           <div class="shortcut-row" data-shortcut-action="input:2"><span class="shortcut-desc">Overload Relay Trip / Reset (1756 Input 2)</span><span class="shortcut-keys"><span class="shortcut-keycap">O</span></span></div>
           <div class="shortcut-row" data-shortcut-action="input:3"><span class="shortcut-desc">Field Reset / Reverse PB (1756 Input 3)</span><span class="shortcut-keys"><span class="shortcut-keycap">R</span></span></div>
           <div class="shortcut-row" data-shortcut-action="input:4-7"><span class="shortcut-desc">Auxiliary Field Inputs 4 – 7</span><span class="shortcut-keys"><span class="shortcut-keycap">4</span><span class="shortcut-keycap">5</span><span class="shortcut-keycap">6</span><span class="shortcut-keycap">7</span></span></div>
-          <div class="shortcut-row" data-shortcut-action="reset-mem"><span class="shortcut-desc">Reset PLC Memory &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
+          <div class="shortcut-row" data-shortcut-action="reset-mem"><span class="shortcut-desc">Reset PLC Memory, Faults &amp; Timers</span><span class="shortcut-keys"><span class="shortcut-keycap">Shift</span> + <span class="shortcut-keycap">R</span></span></div>
           <div class="shortcut-row" data-shortcut-action="run-toggle"><span class="shortcut-desc">Run / Pause CPU Continuous Task</span><span class="shortcut-keys"><span class="shortcut-keycap">Space</span></span></div>
           <div class="shortcut-row" data-shortcut-action="step-scan"><span class="shortcut-desc">Step Single 50ms Scan</span><span class="shortcut-keys"><span class="shortcut-keycap">T</span></span></div>
         </div>
@@ -1940,10 +2042,19 @@
       <select id="inspType" onchange="handleInspectorTypeChange()">
         <option value="XIC">XIC — Examine If Closed | |</option>
         <option value="XIO">XIO — Examine If Open |/|</option>
+        <option value="ONS">ONS — One-Shot Rising [ONS]</option>
         <option value="OTE">OTE — Output Energize ( )</option>
         <option value="OTL">OTL — Output Latch (L)</option>
         <option value="OTU">OTU — Output Unlatch (U)</option>
         <option value="TON">TON — Timer On-Delay [TON]</option>
+        <option value="TOF">TOF — Timer Off-Delay [TOF]</option>
+        <option value="RTO">RTO — Retentive Timer On [RTO]</option>
+        <option value="CTU">CTU — Count Up [CTU]</option>
+        <option value="CTD">CTD — Count Down [CTD]</option>
+        <option value="RES">RES — Timer / Counter Reset (RES)</option>
+        <option value="EQU">EQU — Equal Compare [EQU]</option>
+        <option value="GRT">GRT — Greater Than Compare [GRT]</option>
+        <option value="LES">LES — Less Than Compare [LES]</option>
       </select>
     </div>
 
@@ -1953,8 +2064,8 @@
     </div>
 
     <div class="field-group" id="inspPresetWrap" style="display:none;">
-      <label for="inspPreset">Preset (.PRE in ms)</label>
-      <input type="number" id="inspPreset" min="100" max="60000" step="100" value="3000">
+      <label id="inspPresetLabel" for="inspPreset">Preset (.PRE)</label>
+      <input type="number" id="inspPreset" min="-32768" max="60000" step="1" value="3000">
     </div>
 
     <div class="field-group">
@@ -1973,9 +2084,14 @@
 <script>
 /**
  * Studio 5000 Logix Designer — ControlLogix Ladder Logic & Motor Control Simulator
+ * Includes:
+ *  - Hardware & Interlock Fault Protection (Phase-to-Phase Short & Star-Delta Dead-Time Guard)
+ *  - Expanded Logix Instructions (XIC, XIO, ONS, OTE, OTL, OTU, TON, TOF, RTO, CTU, CTD, RES, EQU, GRT, LES)
+ *  - Live Power-Flow Highlighting & Decluttered Focus Mode
  */
 
 const VALID_LAMP_COLORS = ['green', 'amber', 'blue', 'red'];
+const VALID_CONTACTOR_ROLES = ['FORWARD', 'REVERSE', 'STAR', 'DELTA', 'NONE'];
 
 function createDefaultOutputConfigs(labels) {
   return (labels || []).map((lbl, idx) => {
@@ -1990,6 +2106,8 @@ function createDefaultOutputConfigs(labels) {
     }
     let direction = 'FORWARD';
     if (/rev/i.test(str)) direction = 'REVERSE';
+    else if (/star/i.test(str)) direction = 'STAR';
+    else if (/delta/i.test(str)) direction = 'DELTA';
     else if (/spare|aux|fan|brake|pump|gate|sol|diverter/i.test(str) && idx > 2) direction = 'NONE';
     return { deviceType: 'CONTACTOR', direction, color: 'green' };
   });
@@ -1999,13 +2117,16 @@ function normalizeOutputConfig(cfg, fallbackLabel, idx) {
   const fallback = createDefaultOutputConfigs([fallbackLabel || `Output_${idx}`])[0];
   if (!cfg || typeof cfg !== 'object') return fallback;
   const deviceType = cfg.deviceType === 'PILOT' ? 'PILOT' : 'CONTACTOR';
-  const direction = ['FORWARD', 'REVERSE', 'NONE'].includes(cfg.direction) ? cfg.direction : fallback.direction;
+  const direction = VALID_CONTACTOR_ROLES.includes(cfg.direction) ? cfg.direction : fallback.direction;
   const color = VALID_LAMP_COLORS.includes(cfg.color) ? cfg.color : fallback.color;
   return { deviceType, direction, color };
 }
 
 const PLC = {
   running: true,
+  majorFault: false,
+  majorFaultReason: '',
+  focusMode: false,
   scanCount: 0,
   lastFrameTime: performance.now(),
   scanAccumulator: 0,
@@ -2013,6 +2134,10 @@ const PLC = {
   rotorDeg: 0,
   presetId: 'blank',
   dockVisible: true,
+
+  // Star-Delta dead-time tracking (minimum 250ms transition window)
+  starOpenedAtScan: -100,
+  wasStarEnergized: false,
 
   physicalIn: Array(8).fill(false),
   inputAddresses: [
@@ -2063,7 +2188,7 @@ const PLC = {
   outputConfigs: [
     { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
     { deviceType: 'CONTACTOR', direction: 'REVERSE', color: 'amber' },
-    { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'blue' },
+    { deviceType: 'CONTACTOR', direction: 'DELTA', color: 'blue' },
     { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
     { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
     { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
@@ -2081,11 +2206,16 @@ const PLC = {
     'Auto_Mode',
     'Alarm_Ack'
   ],
+  oneshotStorage: {},
   timers: {
     'Timer_0': { EN: false, TT: false, DN: false, PRE: 3000, ACC: 0, label: 'Start_Delay' },
     'Timer_1': { EN: false, TT: false, DN: false, PRE: 2000, ACC: 0, label: 'Seq_Timer' },
     'Timer_2': { EN: false, TT: false, DN: false, PRE: 4000, ACC: 0, label: 'Step_Timer' },
     'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0, label: 'Pulse_Timer' }
+  },
+  counters: {
+    'Counter_0': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 5, ACC: 0, label: 'Batch_Count' },
+    'Counter_1': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 10, ACC: 0, label: 'Cycle_Count' }
   },
 
   quickDockItems: [
@@ -2209,6 +2339,10 @@ function getTimerKeys() {
   return Object.keys(PLC.timers);
 }
 
+function getCounterKeys() {
+  return Object.keys(PLC.counters);
+}
+
 function getContactAddresses() {
   const list = [];
   for (let i = 0; i < getInputCount(); i++) list.push(getInputAddress(i));
@@ -2216,6 +2350,9 @@ function getContactAddresses() {
   for (let i = 0; i < getBitCount(); i++) list.push(`Control_Bits.${i}`);
   getTimerKeys().forEach(tKey => {
     list.push(`${tKey}.DN`, `${tKey}.TT`, `${tKey}.EN`);
+  });
+  getCounterKeys().forEach(cKey => {
+    list.push(`${cKey}.DN`, `${cKey}.CU`, `${cKey}.CD`);
   });
   return Array.from(new Set(list));
 }
@@ -2225,6 +2362,17 @@ function getCoilAddresses() {
   for (let i = 0; i < getOutputCount(); i++) list.push(getOutputAddress(i));
   for (let i = 0; i < getBitCount(); i++) list.push(`Control_Bits.${i}`);
   return Array.from(new Set(list));
+}
+
+function getCompareAddresses() {
+  const list = [];
+  getCounterKeys().forEach(cKey => list.push(`${cKey}.ACC`));
+  getTimerKeys().forEach(tKey => list.push(`${tKey}.ACC`));
+  return list;
+}
+
+function getResetAddresses() {
+  return [...getTimerKeys(), ...getCounterKeys()];
 }
 
 function getDefaultLabelForAddress(addr) {
@@ -2242,6 +2390,10 @@ function getDefaultLabelForAddress(addr) {
   if (addr.startsWith('Timer_')) {
     const tKey = addr.split('.')[0];
     return PLC.timers[tKey]?.label || '';
+  }
+  if (addr.startsWith('Counter_')) {
+    const cKey = addr.split('.')[0];
+    return PLC.counters[cKey]?.label || '';
   }
   return '';
 }
@@ -2264,7 +2416,30 @@ function getBit(addr) {
     if (!tObj) return false;
     return !!tObj[bitProp || 'DN'];
   }
+  if (addr.startsWith('Counter_')) {
+    const [cKey, bitProp] = addr.split('.');
+    const cObj = PLC.counters[cKey];
+    if (!cObj) return false;
+    return !!cObj[bitProp || 'DN'];
+  }
   return false;
+}
+
+function getNumericValue(addr) {
+  if (!addr) return 0;
+  if (addr.startsWith('Timer_')) {
+    const [tKey, prop] = addr.split('.');
+    const tObj = PLC.timers[tKey];
+    if (!tObj) return 0;
+    return Number(tObj[prop || 'ACC'] || 0);
+  }
+  if (addr.startsWith('Counter_')) {
+    const [cKey, prop] = addr.split('.');
+    const cObj = PLC.counters[cKey];
+    if (!cObj) return 0;
+    return Number(cObj[prop || 'ACC'] || 0);
+  }
+  return 0;
 }
 
 function setBit(addr, state) {
@@ -2399,7 +2574,7 @@ const PRESETS = {
     outConfigs: [
       { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
       { deviceType: 'CONTACTOR', direction: 'REVERSE', color: 'amber' },
-      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'blue' },
+      { deviceType: 'CONTACTOR', direction: 'DELTA', color: 'blue' },
       { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
       { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
       { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
@@ -2526,8 +2701,8 @@ const PRESETS = {
     outLabels: ['Main_KM1', 'Star_KM2', 'Delta_KM3', 'OL_Fault', 'Delta_Pilot', 'Lube_Pump', 'Cool_Fan', 'Ready_Pilot'],
     outConfigs: [
       { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
-      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'amber' },
-      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'blue' },
+      { deviceType: 'CONTACTOR', direction: 'STAR', color: 'amber' },
+      { deviceType: 'CONTACTOR', direction: 'DELTA', color: 'blue' },
       { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
       { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
       { deviceType: 'CONTACTOR', direction: 'NONE', color: 'blue' },
@@ -2567,10 +2742,18 @@ const PRESETS = {
         ]
       },
       {
-        comment: 'Rung 3: Delta Contactor KM3 (Energized after Timer_0.DN, interlocked with Star)',
+        comment: 'Rung 3: 300ms Arc-Extinguishing Dead-Time Timer before Delta Closure',
+        elements: [
+          { type: 'XIC', addr: 'Timer_0.DN', label: 'YD_Done' },
+          { type: 'XIO', addr: 'Local:2:O.Data.1', label: 'Star_Opened' },
+          { type: 'TON', addr: 'Timer_3', preset: 300, label: 'Dead_Time' }
+        ]
+      },
+      {
+        comment: 'Rung 4: Delta Contactor KM3 (Energized after 300ms Dead-Time, interlocked with Star)',
         elements: [
           { type: 'XIC', addr: 'Local:2:O.Data.0', label: 'KM1_Run' },
-          { type: 'XIC', addr: 'Timer_0.DN', label: 'Tmr_Done' },
+          { type: 'XIC', addr: 'Timer_3.DN', label: 'DeadTmr_DN' },
           { type: 'XIO', addr: 'Local:2:O.Data.1', label: 'KM2_Intlk' },
           { type: 'OTE', addr: 'Local:2:O.Data.2', label: 'Delta_KM3' }
         ]
@@ -2578,7 +2761,7 @@ const PRESETS = {
     ]
   },
   preset4: {
-    modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
+    modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'MOM_NO', 'MOM_NO', 'TOGGLE'],
     initIn: [false, true, true, false, false, false, false, true],
     inLabels: ['Sys_Start', 'Stop_PB_NC', 'OL_Relay_NC', 'Fault_Reset', 'Jam_Sensor', 'Part_Prox', 'Jog_PB', 'EStop_OK'],
     outLabels: ['Main_Belt', 'Feed_Conv', 'Diverter', 'Fault_Horn', 'Sys_Run_Lt', 'Reject_Sol', 'Air_Gate', 'Ready_Pilot'],
@@ -2625,7 +2808,16 @@ const PRESETS = {
         ]
       },
       {
-        comment: 'Rung 3: Jam Sensor (Local:1:I.Data.4) Latches Fault Bit Control_Bits.1 & Alarm Horn',
+        comment: 'Rung 3: Part Proximity (Input 5) Counts Up Batch_Count (PRE: 5) -> Diverter Solenoid',
+        elements: [
+          { type: 'XIC', addr: 'Control_Bits.0', label: 'Sys_Run' },
+          { type: 'XIC', addr: 'Local:1:I.Data.5', label: 'Part_Prox' },
+          { type: 'CTU', addr: 'Counter_0', preset: 5, label: 'Batch_Count' },
+          { type: 'OTE', addr: 'Local:2:O.Data.2', label: 'Diverter' }
+        ]
+      },
+      {
+        comment: 'Rung 4: Jam Sensor (Input 4) Latches Fault Bit; Reset PB (Input 3) Clears Fault & Counter',
         elements: [
           { type: 'XIC', addr: 'Local:1:I.Data.4', label: 'Jam_Sens' },
           { type: 'OTL', addr: 'Control_Bits.1', label: 'Fault_Latch' },
@@ -2633,11 +2825,12 @@ const PRESETS = {
         ]
       },
       {
-        comment: 'Rung 4: Fault Reset Pushbutton (Local:1:I.Data.3) Unlatches Fault Bit Control_Bits.1',
+        comment: 'Rung 5: Reset Pushbutton (Input 3) Unlatches Fault & Resets Batch Counter',
         elements: [
           { type: 'XIC', addr: 'Local:1:I.Data.3', label: 'Fault_Rst' },
           { type: 'XIO', addr: 'Local:1:I.Data.4', label: 'Jam_Clear' },
-          { type: 'OTU', addr: 'Control_Bits.1', label: 'Fault_Latch' }
+          { type: 'OTU', addr: 'Control_Bits.1', label: 'Fault_Latch' },
+          { type: 'RES', addr: 'Counter_0', label: 'Rst_Batch' }
         ]
       }
     ]
@@ -2707,9 +2900,14 @@ function loadPreset(id) {
       'Timer_0': { EN: false, TT: false, DN: false, PRE: 3000, ACC: 0, label: 'Timer_0' },
       'Timer_1': { EN: false, TT: false, DN: false, PRE: 2000, ACC: 0, label: 'Timer_1' },
       'Timer_2': { EN: false, TT: false, DN: false, PRE: 4000, ACC: 0, label: 'Timer_2' },
-      'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0, label: 'Timer_3' }
+      'Timer_3': { EN: false, TT: false, DN: false, PRE: 300, ACC: 0, label: 'Dead_Time' }
     };
   }
+
+  PLC.counters = {
+    'Counter_0': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 5, ACC: 0, label: 'Batch_Count' },
+    'Counter_1': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 10, ACC: 0, label: 'Cycle_Count' }
+  };
 
   syncMimicLampsFromOutputConfigs(false);
   syncQuickDockFromCurrentIo(false);
@@ -2726,15 +2924,97 @@ function loadPreset(id) {
   syncUiVisuals();
 }
 
+function triggerMajorFault(reason) {
+  if (PLC.majorFault) return;
+  PLC.majorFault = true;
+  PLC.majorFaultReason = reason;
+  PLC.running = false;
+  PLC.O.fill(false);
+  PLC.physicalOut.fill(false);
+
+  const banner = document.getElementById('majorFaultBanner');
+  const reasonEl = document.getElementById('majorFaultReason');
+  if (reasonEl) reasonEl.textContent = reason;
+  if (banner) banner.classList.add('open');
+
+  syncCpuStatusPill();
+  syncUiVisuals();
+}
+
+function clearControllerFault() {
+  PLC.majorFault = false;
+  PLC.majorFaultReason = '';
+  PLC.starOpenedAtScan = -100;
+  PLC.wasStarEnergized = false;
+
+  const banner = document.getElementById('majorFaultBanner');
+  if (banner) banner.classList.remove('open');
+
+  clearPlcMemory();
+  if (!PLC.running) {
+    toggleCpuRun();
+  } else {
+    syncCpuStatusPill();
+  }
+}
+
+function syncCpuStatusPill() {
+  const pill = document.getElementById('cpuStatusPill');
+  const btn = document.getElementById('btnRunToggle');
+  const led = document.getElementById('cpuLed');
+  const lbl = document.getElementById('cpuStateLabel');
+  if (!pill || !btn || !led || !lbl) return;
+
+  if (PLC.majorFault) {
+    pill.classList.add('faulted');
+    led.className = 'status-led fault';
+    lbl.textContent = 'MAJOR FAULT';
+    btn.innerHTML = 'Faulted <span class="kbd-tag hide-mobile">SPC</span>';
+    btn.classList.remove('btn-run');
+    return;
+  }
+
+  pill.classList.remove('faulted');
+  if (PLC.running) {
+    btn.innerHTML = 'Pause <span class="kbd-tag hide-mobile">SPC</span>';
+    btn.classList.add('btn-run');
+    led.className = 'status-led run';
+    lbl.textContent = 'REM RUN';
+  } else {
+    btn.innerHTML = 'Run <span class="kbd-tag hide-mobile">SPC</span>';
+    btn.classList.remove('btn-run');
+    led.className = 'status-led prog';
+    lbl.textContent = 'REM PROG';
+  }
+}
+
 function clearPlcMemory() {
+  PLC.majorFault = false;
+  PLC.majorFaultReason = '';
+  PLC.starOpenedAtScan = -100;
+  PLC.wasStarEnergized = false;
+  const banner = document.getElementById('majorFaultBanner');
+  if (banner) banner.classList.remove('open');
+
   PLC.O.fill(false);
   PLC.physicalOut.fill(false);
   PLC.Control_Bits.fill(false);
+  PLC.oneshotStorage = {};
+
   Object.values(PLC.timers).forEach(t => {
     t.EN = false;
     t.TT = false;
     t.DN = false;
     t.ACC = 0;
+  });
+
+  Object.values(PLC.counters).forEach(c => {
+    c.CU = false;
+    c.CD = false;
+    c.DN = false;
+    c.OV = false;
+    c.UN = false;
+    c.ACC = 0;
   });
 
   const activePreset = PRESETS[PLC.presetId];
@@ -2749,10 +3029,55 @@ function clearPlcMemory() {
   PLC.scanCount = 0;
   const scanBadge = document.getElementById('scanCycleTag');
   if (scanBadge) scanBadge.textContent = 'SCAN: 0';
+  syncCpuStatusPill();
   syncUiVisuals();
 }
 
+function validateHardwareInterlocks() {
+  if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') return null;
+
+  let fwdActive = false;
+  let revActive = false;
+  let starActive = false;
+  let deltaActive = false;
+
+  for (let i = 0; i < PLC.O.length; i++) {
+    if (!PLC.O[i]) continue;
+    const cfg = getOutputConfig(i);
+    if (cfg.deviceType === 'CONTACTOR') {
+      if (cfg.direction === 'FORWARD') fwdActive = true;
+      else if (cfg.direction === 'REVERSE') revActive = true;
+      else if (cfg.direction === 'STAR') starActive = true;
+      else if (cfg.direction === 'DELTA') deltaActive = true;
+    }
+  }
+
+  // 1. Phase-to-phase short circuit check (Forward + Reverse energized simultaneously)
+  if (fwdActive && revActive) {
+    return 'L1/L3 Phase-to-Phase Short Circuit: FORWARD and REVERSE contactors energized simultaneously!';
+  }
+
+  // 2. Star-Delta simultaneous short check
+  if (starActive && deltaActive) {
+    return 'Star-Delta Busbar Short Circuit: STAR (Y) and DELTA (Δ) contactors energized simultaneously!';
+  }
+
+  // 3. Star-Delta arc-extinguishing dead-time check (min 250ms = 5 scans at 50ms)
+  if (PLC.wasStarEnergized && !starActive) {
+    PLC.starOpenedAtScan = PLC.scanCount;
+  }
+  if (deltaActive && !PLC.wasStarEnergized && (PLC.scanCount - PLC.starOpenedAtScan) < 5 && PLC.starOpenedAtScan >= 0) {
+    const elapsedMs = (PLC.scanCount - PLC.starOpenedAtScan) * PLC.fixedStepMs;
+    return `Star-Delta Arc Transition Fault: Delta closed only ${elapsedMs}ms after Star opened (min 250ms dead-time required).`;
+  }
+  PLC.wasStarEnergized = starActive;
+
+  return null;
+}
+
 function executePlcScan(dtMs) {
+  if (PLC.majorFault) return;
+
   const clampedDt = Math.min(100, Math.max(0, dtMs));
   const inLen = PLC.physicalIn.length;
   const outLen = PLC.physicalOut.length;
@@ -2761,14 +3086,24 @@ function executePlcScan(dtMs) {
   if (PLC.O.length !== outLen) PLC.O = Array(outLen).fill(false);
   if (PLC.physicalOut.length !== outLen) PLC.physicalOut = Array(outLen).fill(false);
 
+  // 1. Input Scan
   for (let i = 0; i < inLen; i++) {
     PLC.I[i] = !!PLC.physicalIn[i];
   }
 
+  // 2. Program Logic Execution
   for (let r = 0; r < PLC.rungs.length; r++) {
-    solveRung(PLC.rungs[r], clampedDt);
+    solveRung(PLC.rungs[r], clampedDt, r);
   }
 
+  // 3. Hardware & Interlock Safety Validation
+  const faultMsg = validateHardwareInterlocks();
+  if (faultMsg) {
+    triggerMajorFault(faultMsg);
+    return;
+  }
+
+  // 4. Output Update
   for (let i = 0; i < outLen; i++) {
     PLC.physicalOut[i] = !!PLC.O[i];
   }
@@ -2780,7 +3115,7 @@ function executePlcScan(dtMs) {
   syncUiVisuals();
 }
 
-function solveRung(rung, dtMs) {
+function solveRung(rung, dtMs, rIdx) {
   let rungPower = true;
 
   for (let i = 0; i < rung.elements.length; i++) {
@@ -2793,7 +3128,7 @@ function solveRung(rung, dtMs) {
         let pathPower = rungPower;
         const pathList = el.branches[b];
         for (let k = 0; k < pathList.length; k++) {
-          pathPower = solveInstruction(pathList[k], pathPower, dtMs);
+          pathPower = solveInstruction(pathList[k], pathPower, dtMs, `${rIdx}_${i}_${b}_${k}`);
         }
         if (pathPower) branchContinuity = true;
       }
@@ -2801,12 +3136,13 @@ function solveRung(rung, dtMs) {
       rungPower = branchContinuity;
       el.outPower = rungPower;
     } else {
-      rungPower = solveInstruction(el, rungPower, dtMs);
+      rungPower = solveInstruction(el, rungPower, dtMs, `${rIdx}_${i}`);
     }
   }
+  rung.energized = rungPower;
 }
 
-function solveInstruction(el, inPower, dtMs) {
+function solveInstruction(el, inPower, dtMs, uid) {
   el.inPower = inPower;
   let outPower = inPower;
 
@@ -2823,6 +3159,15 @@ function solveInstruction(el, inPower, dtMs) {
       outPower = inPower && !bitVal;
       break;
     }
+    case 'ONS': {
+      const key = el.addr || `ONS_${uid}`;
+      const prev = !!PLC.oneshotStorage[key];
+      const pulse = inPower && !prev;
+      PLC.oneshotStorage[key] = inPower;
+      el.energized = pulse;
+      outPower = pulse;
+      break;
+    }
     case 'OTE': {
       setBit(el.addr, inPower);
       el.energized = inPower;
@@ -2830,17 +3175,13 @@ function solveInstruction(el, inPower, dtMs) {
       break;
     }
     case 'OTL': {
-      if (inPower) {
-        setBit(el.addr, true);
-      }
+      if (inPower) setBit(el.addr, true);
       el.energized = getBit(el.addr);
       outPower = inPower;
       break;
     }
     case 'OTU': {
-      if (inPower) {
-        setBit(el.addr, false);
-      }
+      if (inPower) setBit(el.addr, false);
       el.energized = inPower;
       outPower = inPower;
       break;
@@ -2848,14 +3189,10 @@ function solveInstruction(el, inPower, dtMs) {
     case 'TON': {
       const t = PLC.timers[el.addr];
       if (t) {
-        if (typeof el.preset === 'number' && el.preset >= 100) {
-          t.PRE = el.preset;
-        }
+        if (typeof el.preset === 'number' && el.preset >= 100) t.PRE = el.preset;
         if (inPower) {
           t.EN = true;
-          if (t.ACC < t.PRE) {
-            t.ACC = Math.min(t.PRE, t.ACC + dtMs);
-          }
+          if (t.ACC < t.PRE) t.ACC = Math.min(t.PRE, t.ACC + dtMs);
           t.DN = t.ACC >= t.PRE;
           t.TT = t.EN && !t.DN;
         } else {
@@ -2868,6 +3205,128 @@ function solveInstruction(el, inPower, dtMs) {
         el.timing = t.TT;
       }
       outPower = inPower;
+      break;
+    }
+    case 'TOF': {
+      const t = PLC.timers[el.addr];
+      if (t) {
+        if (typeof el.preset === 'number' && el.preset >= 100) t.PRE = el.preset;
+        if (inPower) {
+          t.EN = true;
+          t.DN = true;
+          t.TT = false;
+          t.ACC = 0;
+        } else {
+          if (t.EN || t.TT) {
+            t.EN = false;
+            if (t.ACC < t.PRE) {
+              t.ACC = Math.min(t.PRE, t.ACC + dtMs);
+              t.TT = true;
+              t.DN = true;
+            } else {
+              t.TT = false;
+              t.DN = false;
+            }
+          }
+        }
+        el.energized = t.DN;
+        el.timing = t.TT;
+      }
+      outPower = inPower;
+      break;
+    }
+    case 'RTO': {
+      const t = PLC.timers[el.addr];
+      if (t) {
+        if (typeof el.preset === 'number' && el.preset >= 100) t.PRE = el.preset;
+        if (inPower) {
+          t.EN = true;
+          if (t.ACC < t.PRE) t.ACC = Math.min(t.PRE, t.ACC + dtMs);
+          t.DN = t.ACC >= t.PRE;
+          t.TT = t.EN && !t.DN;
+        } else {
+          t.EN = false;
+          t.TT = false;
+          t.DN = t.ACC >= t.PRE;
+        }
+        el.energized = t.DN;
+        el.timing = t.TT;
+      }
+      outPower = inPower;
+      break;
+    }
+    case 'CTU': {
+      const c = PLC.counters[el.addr];
+      if (c) {
+        if (typeof el.preset === 'number') c.PRE = el.preset;
+        if (inPower && !c.CU) {
+          c.ACC += 1;
+        }
+        c.CU = inPower;
+        c.DN = c.ACC >= c.PRE;
+        el.energized = c.DN;
+        el.timing = inPower && !c.DN;
+      }
+      outPower = inPower;
+      break;
+    }
+    case 'CTD': {
+      const c = PLC.counters[el.addr];
+      if (c) {
+        if (typeof el.preset === 'number') c.PRE = el.preset;
+        if (inPower && !c.CD) {
+          c.ACC -= 1;
+        }
+        c.CD = inPower;
+        c.DN = c.ACC >= c.PRE;
+        el.energized = c.DN;
+        el.timing = inPower && !c.DN;
+      }
+      outPower = inPower;
+      break;
+    }
+    case 'RES': {
+      if (inPower) {
+        if (PLC.timers[el.addr]) {
+          const t = PLC.timers[el.addr];
+          t.EN = false;
+          t.TT = false;
+          t.DN = false;
+          t.ACC = 0;
+        } else if (PLC.counters[el.addr]) {
+          const c = PLC.counters[el.addr];
+          c.CU = false;
+          c.CD = false;
+          c.DN = false;
+          c.ACC = 0;
+        }
+      }
+      el.energized = inPower;
+      outPower = inPower;
+      break;
+    }
+    case 'EQU': {
+      const val = getNumericValue(el.addr);
+      const cmp = Number(el.preset ?? 0);
+      const match = val === cmp;
+      el.energized = match;
+      outPower = inPower && match;
+      break;
+    }
+    case 'GRT': {
+      const val = getNumericValue(el.addr);
+      const cmp = Number(el.preset ?? 0);
+      const match = val > cmp;
+      el.energized = match;
+      outPower = inPower && match;
+      break;
+    }
+    case 'LES': {
+      const val = getNumericValue(el.addr);
+      const cmp = Number(el.preset ?? 0);
+      const match = val < cmp;
+      el.energized = match;
+      outPower = inPower && match;
       break;
     }
   }
@@ -2895,7 +3354,7 @@ function createWireSegment(slotSpec, wireMeta) {
   insertBtn.className = 'wire-insert-btn kb-nav-node';
   insertBtn.type = 'button';
   insertBtn.textContent = '+';
-  insertBtn.title = 'Insert Contact, OR Branch, or Output Here';
+  insertBtn.title = 'Insert Contact, OR Branch, Timer, Counter, or Output Here';
   insertBtn.dataset.slot = JSON.stringify(slotSpec);
   insertBtn.onclick = (e) => {
     e.stopPropagation();
@@ -3027,20 +3486,46 @@ function buildInstructionNode(el, path) {
     symMarkup = `<div class="inst-symbol" data-sym>| |</div>`;
   } else if (el.type === 'XIO') {
     symMarkup = `<div class="inst-symbol" data-sym>|/|</div>`;
+  } else if (el.type === 'ONS') {
+    symMarkup = `<div class="inst-symbol" data-sym>[ONS]</div>`;
   } else if (el.type === 'OTE') {
     symMarkup = `<div class="inst-symbol" data-sym>( )</div>`;
   } else if (el.type === 'OTL') {
     symMarkup = `<div class="inst-symbol" data-sym>(L)</div>`;
   } else if (el.type === 'OTU') {
     symMarkup = `<div class="inst-symbol" data-sym>(U)</div>`;
-  } else if (el.type === 'TON') {
+  } else if (el.type === 'RES') {
+    symMarkup = `<div class="inst-symbol" data-sym>(RES)</div>`;
+  } else if (el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') {
     const t = PLC.timers[el.addr] || { PRE: el.preset || 3000, ACC: 0 };
     symMarkup = `
       <div class="inst-symbol timer-block" data-sym>
-        <div style="font-weight:800; color:var(--sky-accent);">TON ${el.addr}</div>
+        <div style="font-weight:800; color:var(--sky-accent);">${el.type} ${el.addr}</div>
         <div class="timer-readout">
           <span>PRE:${t.PRE}</span>
           <span data-acc>ACC:${Math.round(t.ACC)}</span>
+        </div>
+      </div>
+    `;
+  } else if (el.type === 'CTU' || el.type === 'CTD') {
+    const c = PLC.counters[el.addr] || { PRE: el.preset || 5, ACC: 0 };
+    symMarkup = `
+      <div class="inst-symbol timer-block" data-sym>
+        <div style="font-weight:800; color:var(--sky-accent);">${el.type} ${el.addr}</div>
+        <div class="timer-readout">
+          <span>PRE:${c.PRE}</span>
+          <span data-acc>ACC:${Math.round(c.ACC)}</span>
+        </div>
+      </div>
+    `;
+  } else if (el.type === 'EQU' || el.type === 'GRT' || el.type === 'LES') {
+    const liveVal = Math.round(getNumericValue(el.addr));
+    symMarkup = `
+      <div class="inst-symbol timer-block" data-sym>
+        <div style="font-weight:800; color:var(--sky-accent);">${el.type}</div>
+        <div class="timer-readout">
+          <span data-acc>A:${liveVal}</span>
+          <span>B:${el.preset ?? 0}</span>
         </div>
       </div>
     `;
@@ -3056,8 +3541,15 @@ function buildInstructionNode(el, path) {
 }
 
 /**
- * Quick-Control Bottom Dock Modal (Add, Edit, Reorder, Remove Buttons & 1756 Addresses)
+ * Focus Mode & Quick-Control Bottom Dock
  */
+function toggleFocusMode() {
+  PLC.focusMode = !PLC.focusMode;
+  document.body.classList.toggle('focus-mode', PLC.focusMode);
+  const btn = document.getElementById('btnFocusToggle');
+  if (btn) btn.classList.toggle('btn-accent', PLC.focusMode);
+}
+
 let draftQuickDockItems = [];
 
 function toggleQuickDockBar() {
@@ -3283,7 +3775,7 @@ function applyQuickDockChanges() {
 }
 
 /**
- * 1756 I/O Customization Modal — Contactor Forward/Reverse & Pilot Light Color Options
+ * 1756 I/O Customization Modal
  */
 let draftBlankIo = {
   inputs: [],
@@ -3331,6 +3823,12 @@ function getAllAvailableControllerProgramTags() {
     pushTag(`${tKey}.DN`, 'TIMER Bit', `${tAlias}.DN`);
     pushTag(`${tKey}.TT`, 'TIMER Bit', `${tAlias}.TT`);
     pushTag(`${tKey}.EN`, 'TIMER Bit', `${tAlias}.EN`);
+  });
+
+  getCounterKeys().forEach(cKey => {
+    const cAlias = PLC.counters[cKey]?.label || cKey;
+    pushTag(`${cKey}.DN`, 'COUNTER Bit', `${cAlias}.DN`);
+    pushTag(`${cKey}.CU`, 'COUNTER Bit', `${cAlias}.CU`);
   });
 
   return catalog;
@@ -3467,9 +3965,11 @@ function renderBlankIoEditorLists() {
           <option value="PILOT" ${isPilot ? 'selected' : ''}>Pilot Light</option>
         </select>
         <select id="editOutDir_${i}" style="display:${!isPilot ? 'block' : 'none'};" onchange="handleOutputDirectionChange(${i}, this.value)">
-          <option value="FORWARD" ${outp.direction === 'FORWARD' ? 'selected' : ''}>Dir: Forward (CW)</option>
-          <option value="REVERSE" ${outp.direction === 'REVERSE' ? 'selected' : ''}>Dir: Reverse (CCW)</option>
-          <option value="NONE" ${outp.direction === 'NONE' ? 'selected' : ''}>Dir: Auxiliary</option>
+          <option value="FORWARD" ${outp.direction === 'FORWARD' ? 'selected' : ''}>Role: Forward (CW)</option>
+          <option value="REVERSE" ${outp.direction === 'REVERSE' ? 'selected' : ''}>Role: Reverse (CCW)</option>
+          <option value="STAR" ${outp.direction === 'STAR' ? 'selected' : ''}>Role: Star (Y)</option>
+          <option value="DELTA" ${outp.direction === 'DELTA' ? 'selected' : ''}>Role: Delta (Δ)</option>
+          <option value="NONE" ${outp.direction === 'NONE' ? 'selected' : ''}>Role: Auxiliary</option>
         </select>
         <select id="editOutColor_${i}" style="display:${isPilot ? 'block' : 'none'};" onchange="handleOutputPilotColorChange(${i}, this.value)">
           <option value="green" ${outp.color === 'green' ? 'selected' : ''}>Color: Green</option>
@@ -3486,7 +3986,7 @@ function renderBlankIoEditorLists() {
 function isGenericOrAutoOutputLabel(label) {
   const s = String(label || '').trim();
   if (!s) return true;
-  return /^(Output_\d+|KM_Aux_\d+|Spare_Out\d*|Fwd_KM\d+|Rev_KM\d+|Main_KM\d+|Green_Pilot|Amber_Pilot|Blue_Pilot|Red_Pilot|Run_Pilot|Fault_Pilot)$/i.test(s);
+  return /^(Output_\d+|KM_Aux_\d+|Spare_Out\d*|Fwd_KM\d+|Rev_KM\d+|Star_KM\d+|Delta_KM\d+|Main_KM\d+|Green_Pilot|Amber_Pilot|Blue_Pilot|Red_Pilot|Run_Pilot|Fault_Pilot)$/i.test(s);
 }
 
 function handleOutputDeviceTypeChange(idx, newDeviceType) {
@@ -3502,9 +4002,11 @@ function handleOutputDeviceTypeChange(idx, newDeviceType) {
       item.label = `${capColor}_Pilot`;
     }
   } else {
-    if (!['FORWARD', 'REVERSE', 'NONE'].includes(item.direction)) item.direction = 'FORWARD';
+    if (!VALID_CONTACTOR_ROLES.includes(item.direction)) item.direction = 'FORWARD';
     if (isGenericOrAutoOutputLabel(item.label)) {
       if (item.direction === 'REVERSE') item.label = `Rev_KM${idx + 1}`;
+      else if (item.direction === 'STAR') item.label = `Star_KM${idx + 1}`;
+      else if (item.direction === 'DELTA') item.label = `Delta_KM${idx + 1}`;
       else if (item.direction === 'FORWARD') item.label = `Fwd_KM${idx + 1}`;
       else item.label = `KM_Aux_${idx}`;
     }
@@ -3522,6 +4024,8 @@ function handleOutputDirectionChange(idx, newDir) {
   item.direction = newDir;
   if (isGenericOrAutoOutputLabel(item.label)) {
     if (newDir === 'REVERSE') item.label = `Rev_KM${idx + 1}`;
+    else if (newDir === 'STAR') item.label = `Star_KM${idx + 1}`;
+    else if (newDir === 'DELTA') item.label = `Delta_KM${idx + 1}`;
     else if (newDir === 'FORWARD') item.label = `Fwd_KM${idx + 1}`;
     else item.label = `KM_Aux_${idx}`;
   }
@@ -3900,8 +4404,10 @@ function applyBlankMimicChanges() {
 function openBlankTagsModal(focusSection) {
   const bitsHost = document.getElementById('blankBitsEditorList');
   const timersHost = document.getElementById('blankTimersEditorList');
+  const countersHost = document.getElementById('blankCountersEditorList');
   bitsHost.innerHTML = '';
   timersHost.innerHTML = '';
+  countersHost.innerHTML = '';
 
   for (let i = 0; i < PLC.Control_Bits.length; i++) {
     const row = document.createElement('div');
@@ -3935,18 +4441,28 @@ function openBlankTagsModal(focusSection) {
         <span style="color:var(--text-secondary);">.ACC</span>
         <input type="number" id="editTmrAcc_${tKey}" min="0" max="60000" step="50" value="${Math.round(t.ACC)}">
       </div>
-      <div class="custom-io-row">
-        <select id="editTmrDn_${tKey}">
-          <option value="0" ${!t.DN ? 'selected' : ''}>.DN = 0</option>
-          <option value="1" ${t.DN ? 'selected' : ''}>.DN = 1</option>
-        </select>
-        <select id="editTmrTt_${tKey}">
-          <option value="0" ${!t.TT ? 'selected' : ''}>.TT = 0</option>
-          <option value="1" ${t.TT ? 'selected' : ''}>.TT = 1</option>
-        </select>
-      </div>
     `;
     timersHost.appendChild(row);
+  });
+
+  getCounterKeys().forEach(cKey => {
+    const c = PLC.counters[cKey];
+    const row = document.createElement('div');
+    row.className = 'custom-io-item';
+    row.dataset.counterKey = cKey;
+    row.innerHTML = `
+      <div class="custom-io-row">
+        <strong style="color:var(--sky-accent);">${cKey}</strong>
+        <input type="text" id="editCntLabel_${cKey}" maxlength="18" value="${escapeHtml(c.label || cKey)}" placeholder="Counter Alias">
+      </div>
+      <div class="custom-io-row">
+        <span style="color:var(--text-secondary);">.PRE</span>
+        <input type="number" id="editCntPre_${cKey}" min="-32768" max="32767" step="1" value="${c.PRE}">
+        <span style="color:var(--text-secondary);">.ACC</span>
+        <input type="number" id="editCntAcc_${cKey}" min="-32768" max="32767" step="1" value="${Math.round(c.ACC)}">
+      </div>
+    `;
+    countersHost.appendChild(row);
   });
 
   KB_NAV.modalArmedForApply = false;
@@ -3998,6 +4514,24 @@ function addCustomTimerTag() {
   }, 15);
 }
 
+function addCustomCounterTag() {
+  const keys = getCounterKeys();
+  let nextNum = keys.length;
+  while (PLC.counters[`Counter_${nextNum}`]) {
+    nextNum++;
+  }
+  const newKey = `Counter_${nextNum}`;
+  PLC.counters[newKey] = { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 5, ACC: 0, label: `Count_${nextNum}` };
+  openBlankTagsModal('timers');
+  setTimeout(() => {
+    const el = document.getElementById(`editCntLabel_${newKey}`);
+    if (el) {
+      el.focus();
+      el.scrollIntoView({ block: 'nearest' });
+    }
+  }, 15);
+}
+
 function closeBlankTagsModal() {
   closeCustomSelectDropdown();
   KB_NAV.modalArmedForApply = false;
@@ -4016,6 +4550,10 @@ function resetBlankTagsDefaults() {
     'Timer_1': { EN: false, TT: false, DN: false, PRE: def.timerDefs['Timer_1'].PRE, ACC: 0, label: def.timerDefs['Timer_1'].label },
     'Timer_2': { EN: false, TT: false, DN: false, PRE: def.timerDefs['Timer_2'].PRE, ACC: 0, label: def.timerDefs['Timer_2'].label },
     'Timer_3': { EN: false, TT: false, DN: false, PRE: def.timerDefs['Timer_3'].PRE, ACC: 0, label: def.timerDefs['Timer_3'].label }
+  };
+  PLC.counters = {
+    'Counter_0': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 5, ACC: 0, label: 'Batch_Count' },
+    'Counter_1': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 10, ACC: 0, label: 'Cycle_Count' }
   };
   openBlankTagsModal();
 }
@@ -4041,28 +4579,39 @@ function applyBlankTagsChanges() {
     const lbl = (document.getElementById(`editTmrLabel_${tKey}`)?.value || '').trim();
     const preParsed = parseInt(document.getElementById(`editTmrPre_${tKey}`)?.value || '3000', 10);
     const accParsed = parseInt(document.getElementById(`editTmrAcc_${tKey}`)?.value || '0', 10);
-    const dnVal = document.getElementById(`editTmrDn_${tKey}`)?.value === '1';
-    const ttVal = document.getElementById(`editTmrTt_${tKey}`)?.value === '1';
 
     t.label = lbl || tKey;
     t.PRE = isNaN(preParsed) ? 3000 : Math.min(60000, Math.max(100, preParsed));
     t.ACC = isNaN(accParsed) ? 0 : Math.min(t.PRE, Math.max(0, accParsed));
-    t.DN = dnVal;
-    t.TT = ttVal;
-    t.EN = dnVal || ttVal;
+    t.DN = t.ACC >= t.PRE;
 
     PLC.rungs.forEach(rung => {
       rung.elements.forEach(el => {
-        if (el.type === 'TON' && el.addr === tKey) {
+        if ((el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') && el.addr === tKey) {
           el.preset = t.PRE;
-        } else if (el.type === 'BRANCH') {
-          el.branches.forEach(leg => {
-            leg.forEach(sub => {
-              if (sub.type === 'TON' && sub.addr === tKey) {
-                sub.preset = t.PRE;
-              }
-            });
-          });
+        }
+      });
+    });
+  });
+
+  const counterRows = Array.from(document.querySelectorAll('#blankCountersEditorList .custom-io-item'));
+  counterRows.forEach(row => {
+    const cKey = row.dataset.counterKey;
+    const c = PLC.counters[cKey];
+    if (!c) return;
+    const lbl = (document.getElementById(`editCntLabel_${cKey}`)?.value || '').trim();
+    const preParsed = parseInt(document.getElementById(`editCntPre_${cKey}`)?.value || '5', 10);
+    const accParsed = parseInt(document.getElementById(`editCntAcc_${cKey}`)?.value || '0', 10);
+
+    c.label = lbl || cKey;
+    c.PRE = isNaN(preParsed) ? 5 : preParsed;
+    c.ACC = isNaN(accParsed) ? 0 : accParsed;
+    c.DN = c.ACC >= c.PRE;
+
+    PLC.rungs.forEach(rung => {
+      rung.elements.forEach(el => {
+        if ((el.type === 'CTU' || el.type === 'CTD') && el.addr === cKey) {
+          el.preset = c.PRE;
         }
       });
     });
@@ -4264,6 +4813,11 @@ function executeShortcutRowAction(rowEl) {
     return;
   }
 
+  if (action === 'toggle-focus') {
+    toggleFocusMode();
+    return;
+  }
+
   if (action === 'toggle-dock') {
     toggleQuickDockBar();
     return;
@@ -4409,11 +4963,20 @@ function openInsertModal(slotSpec, directType) {
   const options = [
     { type: 'XIC', sym: '| | XIC', desc: 'Examine If Closed' },
     { type: 'XIO', sym: '|/| XIO', desc: 'Examine If Open' },
+    { type: 'ONS', sym: '[ONS]', desc: 'One-Shot Rising Pulse' },
     ...(isInsideBranch ? [] : [{ type: 'BRANCH', sym: '[ ] OR', desc: 'Parallel OR Branch' }]),
     { type: 'OTE', sym: '( ) OTE', desc: 'Output Energize' },
     { type: 'OTL', sym: '(L) OTL', desc: 'Output Latch' },
     { type: 'OTU', sym: '(U) OTU', desc: 'Output Unlatch' },
-    { type: 'TON', sym: '[TON]', desc: 'Timer On-Delay' }
+    { type: 'TON', sym: '[TON]', desc: 'Timer On-Delay' },
+    { type: 'TOF', sym: '[TOF]', desc: 'Timer Off-Delay' },
+    { type: 'RTO', sym: '[RTO]', desc: 'Retentive Timer On' },
+    { type: 'CTU', sym: '[CTU]', desc: 'Count Up Counter' },
+    { type: 'CTD', sym: '[CTD]', desc: 'Count Down Counter' },
+    { type: 'RES', sym: '(RES)', desc: 'Reset Timer / Counter' },
+    { type: 'EQU', sym: '[EQU]', desc: 'Equal Compare (A == B)' },
+    { type: 'GRT', sym: '[GRT]', desc: 'Greater Than (A > B)' },
+    { type: 'LES', sym: '[LES]', desc: 'Less Than (A < B)' }
   ];
 
   const host = document.getElementById('insertPaletteHost');
@@ -4455,16 +5018,31 @@ function createDefaultInstruction(type) {
       return { type: 'XIC', addr: getInputAddress(0), label: PLC.inputLabels[0] || 'Start_PB' };
     case 'XIO':
       return { type: 'XIO', addr: getInputAddress(1), label: PLC.inputLabels[1] || 'Stop_NC' };
+    case 'ONS':
+      return { type: 'ONS', addr: `ONS_Bit_${Math.floor(Math.random() * 90 + 10)}`, label: 'One_Shot' };
     case 'OTE':
       return { type: 'OTE', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Output_Bit' };
     case 'OTL':
       return { type: 'OTL', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Latch_Bit' };
     case 'OTU':
       return { type: 'OTU', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Unlatch_Bit' };
-    case 'TON': {
+    case 'TON':
+    case 'TOF':
+    case 'RTO': {
       const t0 = PLC.timers['Timer_0'] || { PRE: 3000, label: 'Delay_Tmr' };
-      return { type: 'TON', addr: 'Timer_0', preset: t0.PRE, label: t0.label || 'Delay_Tmr' };
+      return { type, addr: 'Timer_0', preset: t0.PRE, label: t0.label || 'Delay_Tmr' };
     }
+    case 'CTU':
+    case 'CTD': {
+      const c0 = PLC.counters['Counter_0'] || { PRE: 5, label: 'Batch_Count' };
+      return { type, addr: 'Counter_0', preset: c0.PRE, label: c0.label || 'Batch_Count' };
+    }
+    case 'RES':
+      return { type: 'RES', addr: 'Counter_0', label: 'Reset_Tag' };
+    case 'EQU':
+    case 'GRT':
+    case 'LES':
+      return { type, addr: 'Counter_0.ACC', preset: 5, label: 'Cmp_Check' };
     case 'BRANCH':
       return {
         type: 'BRANCH',
@@ -4606,15 +5184,25 @@ function closeCustomSelectDropdown() {
  * Fast DOM Synchronization on Every Scan Cycle
  */
 function syncUiVisuals() {
+  document.querySelectorAll('.rung-block').forEach(block => {
+    const rIdx = parseInt(block.dataset.rungIdx, 10);
+    const rung = PLC.rungs[rIdx];
+    if (rung) {
+      block.classList.toggle('rung-energized', !!rung.energized);
+    }
+  });
+
   document.querySelectorAll('.inst-node').forEach(node => {
     const path = JSON.parse(node.dataset.path);
     const el = resolveElementPath(path);
     if (!el) return;
 
+    node.classList.toggle('power-passing', !!el.outPower);
+
     const sym = node.querySelector('[data-sym]');
     if (!sym) return;
 
-    if (el.type === 'TON') {
+    if (el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') {
       const t = PLC.timers[el.addr];
       if (t) {
         sym.classList.toggle('active', !!t.DN);
@@ -4622,6 +5210,18 @@ function syncUiVisuals() {
         const accSpan = sym.querySelector('[data-acc]');
         if (accSpan) accSpan.textContent = `ACC:${Math.round(t.ACC)}`;
       }
+    } else if (el.type === 'CTU' || el.type === 'CTD') {
+      const c = PLC.counters[el.addr];
+      if (c) {
+        sym.classList.toggle('active', !!c.DN);
+        sym.classList.toggle('timing', !!el.timing);
+        const accSpan = sym.querySelector('[data-acc]');
+        if (accSpan) accSpan.textContent = `ACC:${Math.round(c.ACC)}`;
+      }
+    } else if (el.type === 'EQU' || el.type === 'GRT' || el.type === 'LES') {
+      sym.classList.toggle('active', !!el.energized);
+      const accSpan = sym.querySelector('[data-acc]');
+      if (accSpan) accSpan.textContent = `A:${Math.round(getNumericValue(el.addr))}`;
     } else {
       sym.classList.toggle('active', !!el.energized);
     }
@@ -4762,6 +5362,10 @@ function buildInputOutputRacks() {
           badgeHtml = `<span class="out-role-badge fwd">KM · FWD</span>`;
         } else if (cfg.direction === 'REVERSE') {
           badgeHtml = `<span class="out-role-badge rev">KM · REV</span>`;
+        } else if (cfg.direction === 'STAR') {
+          badgeHtml = `<span class="out-role-badge star">KM · STAR</span>`;
+        } else if (cfg.direction === 'DELTA') {
+          badgeHtml = `<span class="out-role-badge delta">KM · DELTA</span>`;
         } else {
           badgeHtml = `<span class="out-role-badge">KM · AUX</span>`;
         }
@@ -4961,9 +5565,11 @@ function buildMimicLamps() {
   `).join('');
 }
 
-function getActiveContactorDirections() {
+function getActiveContactorRoles() {
   let fwdActive = false;
   let revActive = false;
+  let starActive = false;
+  let deltaActive = false;
 
   for (let i = 0; i < PLC.physicalOut.length; i++) {
     if (!PLC.physicalOut[i]) continue;
@@ -4971,9 +5577,11 @@ function getActiveContactorDirections() {
     if (cfg.deviceType === 'CONTACTOR') {
       if (cfg.direction === 'FORWARD') fwdActive = true;
       else if (cfg.direction === 'REVERSE') revActive = true;
+      else if (cfg.direction === 'STAR') starActive = true;
+      else if (cfg.direction === 'DELTA') deltaActive = true;
     }
   }
-  return { fwdActive, revActive };
+  return { fwdActive, revActive, starActive, deltaActive };
 }
 
 function speedStepFromRpm(rpm, isReverse) {
@@ -4983,11 +5591,6 @@ function speedStepFromRpm(rpm, isReverse) {
 }
 
 function updatePlantMimic() {
-  const o0 = !!PLC.physicalOut[0];
-  const o1 = !!PLC.physicalOut[1];
-  const o2 = !!PLC.physicalOut[2];
-  const o3 = !!PLC.physicalOut[3];
-
   const lamps = getEffectiveMimicLamps();
   lamps.forEach((lamp, idx) => {
     const el = document.getElementById(`lamp${idx}`);
@@ -5005,9 +5608,14 @@ function updatePlantMimic() {
   let stateColor = 'var(--text-secondary)';
   let modeStr = 'STANDBY';
 
-  const { fwdActive, revActive } = getActiveContactorDirections();
+  const { fwdActive, revActive, starActive, deltaActive } = getActiveContactorRoles();
 
-  if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') {
+  if (PLC.majorFault) {
+    stateStr = 'MAJOR INTERLOCK FAULT';
+    stateColor = 'var(--crimson-fault)';
+    modeStr = 'CPU HALTED — CHECK LOGIC';
+    degStep = 0;
+  } else if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') {
     const bm = PLC.blankMimic;
     rpm = bm.rpm;
     modeStr = bm.subtext;
@@ -5041,25 +5649,18 @@ function updatePlantMimic() {
       stateColor = 'var(--crimson-fault)';
       degStep = 0;
     }
-  } else if (PLC.presetId === 'preset3') {
-    if (o0 && o1 && !o2) {
-      rpm = 1040;
-      degStep = speedStepFromRpm(rpm, false);
-      stateStr = 'STAR (Y) START';
-      stateColor = 'var(--amber-warn)';
-      modeStr = '58% REDUCED V (STAR)';
-    } else if (o0 && o2 && !o1) {
-      rpm = 1785;
-      degStep = speedStepFromRpm(rpm, false);
-      stateStr = 'DELTA (Δ) RUN';
-      stateColor = 'var(--power-green)';
-      modeStr = '100% FULL V (DELTA)';
-    }
-  } else if (fwdActive && revActive) {
-    stateStr = 'INTERLOCK FAULT';
-    stateColor = 'var(--crimson-fault)';
-    modeStr = 'FWD + REV PHASE CONFLICT';
-    degStep = 0;
+  } else if (fwdActive && starActive && !deltaActive) {
+    rpm = 1040;
+    degStep = speedStepFromRpm(rpm, false);
+    stateStr = 'STAR (Y) START';
+    stateColor = 'var(--amber-warn)';
+    modeStr = '58% REDUCED V (STAR)';
+  } else if (fwdActive && deltaActive && !starActive) {
+    rpm = 1785;
+    degStep = speedStepFromRpm(rpm, false);
+    stateStr = 'DELTA (Δ) RUN';
+    stateColor = 'var(--power-green)';
+    modeStr = '100% FULL V (DELTA)';
   } else if (revActive && !fwdActive) {
     rpm = 1760;
     degStep = speedStepFromRpm(rpm, true);
@@ -5074,7 +5675,7 @@ function updatePlantMimic() {
     modeStr = 'CW 3-PHASE';
   }
 
-  if (!(PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM')) {
+  if (!PLC.majorFault && !(PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM')) {
     const redFaultPilotOn = lamps.some(l => l.color === 'red' && !!PLC.physicalOut[l.bitIndex]);
     if (redFaultPilotOn || !PLC.physicalIn[2]) {
       stateStr = 'FAULT / OL TRIP';
@@ -5134,6 +5735,25 @@ function renderDataTables() {
       `;
     });
     tHost.innerHTML = tHtml;
+  }
+
+  const cHost = document.getElementById('counterTableHost');
+  if (cHost) {
+    let cHtml = '';
+    Object.entries(PLC.counters).forEach(([name, c]) => {
+      cHtml += `
+        <div class="timer-table-row">
+          <div class="timer-name-col">
+            <strong style="color:var(--amber-warn);">${name}</strong>
+            ${c.label && c.label !== name ? `<span class="timer-alias-sub">${escapeHtml(c.label)}</span>` : ''}
+          </div>
+          <span>.PRE:${c.PRE}</span>
+          <span>.ACC:${Math.round(c.ACC)}</span>
+          <span style="color:${c.DN ? 'var(--power-green)' : 'var(--text-muted)'}; font-weight:800;">.DN:${c.DN ? '1' : '0'}</span>
+        </div>
+      `;
+    });
+    cHost.innerHTML = cHtml;
   }
 }
 
@@ -5215,17 +5835,40 @@ function openInspector(path) {
 
   typeSel.value = el.type;
   labelInp.value = el.label || '';
-  presetInp.value = el.preset || (PLC.timers[el.addr]?.PRE ?? 3000);
+  presetInp.value = el.preset ?? (PLC.timers[el.addr]?.PRE ?? PLC.counters[el.addr]?.PRE ?? 3000);
 
   if (wrapBtn) {
     wrapBtn.style.display = (path.bIdx === undefined && (el.type === 'XIC' || el.type === 'XIO')) ? 'inline-flex' : 'none';
   }
 
   populateAddressOptions(el.type, el.addr);
-  document.getElementById('inspPresetWrap').style.display = (el.type === 'TON') ? 'block' : 'none';
+  syncInspectorPresetVisibility(el.type);
 
   modal.classList.add('open');
   setTimeout(() => typeSel.focus(), 10);
+}
+
+function syncInspectorPresetVisibility(type) {
+  const wrap = document.getElementById('inspPresetWrap');
+  const lbl = document.getElementById('inspPresetLabel');
+  const inp = document.getElementById('inspPreset');
+  if (!wrap || !lbl || !inp) return;
+
+  if (type === 'TON' || type === 'TOF' || type === 'RTO') {
+    wrap.style.display = 'block';
+    lbl.textContent = 'Timer Preset (.PRE in ms)';
+    inp.step = '100';
+  } else if (type === 'CTU' || type === 'CTD') {
+    wrap.style.display = 'block';
+    lbl.textContent = 'Counter Preset (.PRE counts)';
+    inp.step = '1';
+  } else if (type === 'EQU' || type === 'GRT' || type === 'LES') {
+    wrap.style.display = 'block';
+    lbl.textContent = 'Source B Constant Value';
+    inp.step = '1';
+  } else {
+    wrap.style.display = 'none';
+  }
 }
 
 function closeInspector() {
@@ -5245,8 +5888,16 @@ function populateAddressOptions(type, selectedAddr) {
   let pool = getContactAddresses();
   if (type === 'OTE' || type === 'OTL' || type === 'OTU') {
     pool = getCoilAddresses();
-  } else if (type === 'TON') {
+  } else if (type === 'TON' || type === 'TOF' || type === 'RTO') {
     pool = getTimerKeys();
+  } else if (type === 'CTU' || type === 'CTD') {
+    pool = getCounterKeys();
+  } else if (type === 'RES') {
+    pool = getResetAddresses();
+  } else if (type === 'EQU' || type === 'GRT' || type === 'LES') {
+    pool = getCompareAddresses();
+  } else if (type === 'ONS') {
+    pool = Array.from(new Set([selectedAddr || 'ONS_Bit_1', 'ONS_Bit_1', 'ONS_Bit_2', 'ONS_Bit_3']));
   }
 
   if (selectedAddr && !pool.includes(selectedAddr)) {
@@ -5267,7 +5918,7 @@ function handleInspectorTypeChange() {
   const newType = document.getElementById('inspType').value;
   const curAddr = document.getElementById('inspAddr').value;
   populateAddressOptions(newType, curAddr);
-  document.getElementById('inspPresetWrap').style.display = (newType === 'TON') ? 'block' : 'none';
+  syncInspectorPresetVisibility(newType);
   handleInspectorAddrChange();
 }
 
@@ -5279,9 +5930,13 @@ function handleInspectorAddrChange() {
   if (labelInp && alias) {
     labelInp.value = alias;
   }
-  if (newType === 'TON' && PLC.timers[newAddr]) {
-    const presetInp = document.getElementById('inspPreset');
-    if (presetInp) presetInp.value = PLC.timers[newAddr].PRE;
+  const presetInp = document.getElementById('inspPreset');
+  if (!presetInp) return;
+
+  if ((newType === 'TON' || newType === 'TOF' || newType === 'RTO') && PLC.timers[newAddr]) {
+    presetInp.value = PLC.timers[newAddr].PRE;
+  } else if ((newType === 'CTU' || newType === 'CTD') && PLC.counters[newAddr]) {
+    presetInp.value = PLC.counters[newAddr].PRE;
   }
 }
 
@@ -5294,9 +5949,12 @@ function applyInspectorChanges() {
   el.addr = document.getElementById('inspAddr').value;
   el.label = document.getElementById('inspLabel').value.trim();
 
-  if (el.type === 'TON') {
+  if (el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') {
     const parsed = parseInt(document.getElementById('inspPreset').value, 10);
     el.preset = isNaN(parsed) ? 3000 : Math.min(60000, Math.max(100, parsed));
+  } else if (el.type === 'CTU' || el.type === 'CTD' || el.type === 'EQU' || el.type === 'GRT' || el.type === 'LES') {
+    const parsed = parseInt(document.getElementById('inspPreset').value, 10);
+    el.preset = isNaN(parsed) ? 0 : parsed;
   }
 
   closeInspector();
@@ -5341,7 +5999,7 @@ function removeInspectedInstruction() {
 }
 
 /**
- * Unified Workspace View Switcher (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags)
+ * Unified Workspace View Switcher
  */
 function switchWorkspaceView(paneId, btnEl) {
   document.querySelectorAll('.pane').forEach(p => {
@@ -5360,32 +6018,25 @@ function switchWorkspaceView(paneId, btnEl) {
 }
 
 function toggleCpuRun() {
-  PLC.running = !PLC.running;
-  const btn = document.getElementById('btnRunToggle');
-  const led = document.getElementById('cpuLed');
-  const lbl = document.getElementById('cpuStateLabel');
-
-  if (PLC.running) {
-    btn.innerHTML = 'Pause <span class="kbd-tag hide-mobile">SPC</span>';
-    btn.classList.add('btn-run');
-    led.className = 'status-led run';
-    lbl.textContent = 'REM RUN';
-    PLC.lastFrameTime = performance.now();
-  } else {
-    btn.innerHTML = 'Run <span class="kbd-tag hide-mobile">SPC</span>';
-    btn.classList.remove('btn-run');
-    led.className = 'status-led prog';
-    lbl.textContent = 'REM PROG';
+  if (PLC.majorFault) {
+    clearControllerFault();
+    return;
   }
+  PLC.running = !PLC.running;
+  if (PLC.running) {
+    PLC.lastFrameTime = performance.now();
+  }
+  syncCpuStatusPill();
 }
 
 function stepSingleScan() {
+  if (PLC.majorFault) return;
   if (PLC.running) toggleCpuRun();
   executePlcScan(PLC.fixedStepMs);
 }
 
 function mainScanLoop(now) {
-  if (PLC.running) {
+  if (PLC.running && !PLC.majorFault) {
     const rawDt = now - PLC.lastFrameTime;
     PLC.lastFrameTime = now;
     PLC.scanAccumulator += Math.min(100, rawDt);
@@ -5409,7 +6060,7 @@ function escapeHtml(str) {
 }
 
 /**
- * Full Desktop Keyboard Shortcuts, Arrow Navigation, Dropdown Execution & Instant Delete
+ * Desktop Keyboard Shortcuts & Navigation
  */
 document.addEventListener('keydown', function (e) {
   const activeEl = document.activeElement;
@@ -5566,6 +6217,12 @@ document.addEventListener('keydown', function (e) {
       KB_NAV.arrowNavActive = false;
       if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneData', document.getElementById('tabBtnData'));
+      return;
+    }
+
+    if (lowerKey === 'f') {
+      e.preventDefault();
+      toggleFocusMode();
       return;
     }
 
