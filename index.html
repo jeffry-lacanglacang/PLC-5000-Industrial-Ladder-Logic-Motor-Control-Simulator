@@ -226,6 +226,16 @@
     background-color: #10b981;
   }
 
+  button.btn-accent {
+    background-color: rgba(56, 189, 248, 0.16);
+    border-color: var(--sky-accent);
+    color: var(--sky-accent);
+  }
+
+  button.btn-accent:hover {
+    background-color: rgba(56, 189, 248, 0.28);
+  }
+
   button.btn-danger {
     color: #fca5a5;
     border-color: rgba(239, 68, 68, 0.4);
@@ -300,6 +310,16 @@
     color: var(--sky-accent);
   }
 
+  .blank-mode-pill {
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid var(--sky-accent);
+    color: var(--sky-accent);
+    font-weight: 800;
+    font-size: 10px;
+  }
+
   .kb-hint-badge {
     padding: 3px 7px;
     border-radius: 5px;
@@ -309,7 +329,7 @@
     font-size: 10px;
   }
 
-  /* Workspace View Switcher Tabs (Visible on both Mobile & Desktop for 1/2/3 Pane Focus) */
+  /* Workspace View Switcher Tabs */
   .mobile-nav-tabs {
     display: flex;
     background: var(--bg-panel);
@@ -394,6 +414,24 @@
     text-transform: uppercase;
     letter-spacing: 0.6px;
     color: var(--text-secondary);
+  }
+
+  .custom-banner {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .custom-banner strong {
+    color: var(--sky-accent);
   }
 
   /* Field Digital Inputs Grid */
@@ -592,7 +630,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 48px 20px;
+    padding: 40px 20px;
     margin: 12px 20px;
     border: 1px dashed var(--border-strong);
     border-radius: 10px;
@@ -602,6 +640,14 @@
     font-size: 12px;
     gap: 10px;
     min-width: 600px;
+  }
+
+  .empty-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 6px;
   }
 
   .rung-top-bar {
@@ -897,6 +943,7 @@
     padding: 6px 8px;
     font-family: var(--font-mono);
     font-size: 10px;
+    gap: 8px;
   }
 
   .lamp-dot {
@@ -931,6 +978,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 6px;
+    cursor: default;
+  }
+
+  .data-cell.editable-bit {
+    cursor: pointer;
+  }
+
+  .data-cell.editable-bit:hover {
+    border-color: var(--sky-accent);
   }
 
   .data-cell.on {
@@ -938,6 +995,24 @@
     border-color: var(--power-green);
     background: var(--power-green-dim);
     font-weight: 700;
+  }
+
+  .data-cell-tag {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .data-cell-alias {
+    font-size: 9px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .data-cell.on .data-cell-alias {
+    color: #6ee7b7;
   }
 
   .timer-table-row {
@@ -951,6 +1026,21 @@
     border: 1px solid var(--border-subtle);
     border-radius: 6px;
     margin-top: 6px;
+    gap: 6px;
+  }
+
+  .timer-name-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .timer-alias-sub {
+    font-size: 9px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Persistent Mobile Quick-Control Dock */
@@ -1027,6 +1117,65 @@
     max-width: 440px;
     padding: 18px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  }
+
+  .modal-sheet.wide-sheet {
+    max-width: 640px;
+    max-height: 88dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-scroll-body {
+    overflow-y: auto;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .custom-io-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  @media (max-width: 560px) {
+    .custom-io-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .custom-io-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .custom-io-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .custom-io-item input,
+  .custom-io-item select {
+    min-height: 34px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    color: var(--text-primary);
+    padding: 0 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    flex: 1;
+    min-width: 0;
   }
 
   .modal-sheet.shortcuts-sheet {
@@ -1264,6 +1413,7 @@
       <option value="preset3">3. Star-Delta Reduced-Voltage Starter</option>
       <option value="preset4">4. Automated Conveyor + Latching Fault Alarm</option>
     </select>
+    <span id="blankModeBadge" class="blank-mode-pill">BLANK CUSTOMIZABLE</span>
   </div>
 
   <div class="scan-telemetry">
@@ -1286,7 +1436,14 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">1756-IB16 Inputs (Local:1:I.Data.0–7)</span>
-        <span style="font-family:var(--font-mono); font-size:10px; color:var(--sky-accent);">HOLD / TAP</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="btnEditBlankIo" class="btn-accent" style="display:none; min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Edit I/O</button>
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--sky-accent);">HOLD / TAP</span>
+        </div>
+      </div>
+      <div id="blankIoBanner" class="custom-banner" style="display:none;">
+        <span><strong>Blank Routine:</strong> Customize 1756 I/O tags, modes &amp; states.</span>
+        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Configure</button>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
     </div>
@@ -1294,6 +1451,7 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">1756-OB16E Outputs (Local:2:O.Data.0–7)</span>
+        <button id="btnEditBlankOut" class="btn-accent" style="display:none; min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Edit Out</button>
       </div>
       <div id="outputRackHost" class="out-rack"></div>
     </div>
@@ -1306,7 +1464,10 @@
         <span>MainTask &rsaquo; MainProgram &rsaquo;</span>
         <strong>MainRoutine (Ladder Diagram)</strong>
       </div>
-      <div style="display:flex; gap:6px;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button id="btnBlankCustomizeBar" class="btn-accent" style="display:none;" onclick="openBlankIoModal()">Edit 1756 I/O</button>
+        <button id="btnBlankMimicBar" class="btn-accent" style="display:none;" onclick="openBlankMimicModal()">Edit Mimic</button>
+        <button id="btnBlankTagsBar" class="btn-accent" style="display:none;" onclick="openBlankTagsModal()">Edit Tags</button>
         <button id="btnAddRungTop" onclick="addNewRung()" title="Shortcut: N">+ Add Rung <span class="kbd-tag hide-mobile">N</span></button>
       </div>
     </div>
@@ -1325,7 +1486,15 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">3-Phase Motor &amp; Plant Mimic</span>
-        <button id="btnOlTrip" class="btn-danger" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="toggleOverloadTrip()" title="Shortcut: O">Trip OL Relay <span class="kbd-tag hide-mobile">O</span></button>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <button id="btnEditBlankMimic" class="btn-accent" style="min-height:30px; padding:0 8px; font-size:11px; display:none;" onclick="openBlankMimicModal()">Edit Mimic</button>
+          <button id="btnOlTrip" class="btn-danger" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="toggleOverloadTrip()" title="Shortcut: O">Trip OL Relay <span class="kbd-tag hide-mobile">O</span></button>
+        </div>
+      </div>
+
+      <div id="blankMimicBanner" class="custom-banner" style="display:none;">
+        <span><strong>Blank Routine:</strong> Customize motor speed, state &amp; lamps.</span>
+        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankMimicModal()">Customize</button>
       </div>
 
       <div class="mimic-box">
@@ -1354,6 +1523,11 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Program Tags: Control_Bits (DINT)</span>
+        <button id="btnEditBlankBits" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px; display:none;" onclick="openBlankTagsModal('bits')">Edit Bits</button>
+      </div>
+      <div id="blankBitsBanner" class="custom-banner" style="display:none;">
+        <span><strong>Blank Routine:</strong> Tap any bit to toggle or edit aliases.</span>
+        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('bits')">Configure</button>
       </div>
       <div id="binaryTableHost" class="data-grid"></div>
     </div>
@@ -1361,6 +1535,11 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Program Tags: TIMER Structures</span>
+        <button id="btnEditBlankTimers" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px; display:none;" onclick="openBlankTagsModal('timers')">Edit Timers</button>
+      </div>
+      <div id="blankTimersBanner" class="custom-banner" style="display:none;">
+        <span><strong>Blank Routine:</strong> Set .PRE presets, aliases &amp; status bits.</span>
+        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('timers')">Configure</button>
       </div>
       <div id="timerTableHost"></div>
     </div>
@@ -1370,8 +1549,116 @@
 <!-- Persistent Android / Mobile Quick-Control Dock -->
 <div class="mobile-quick-dock" id="mobileQuickDock"></div>
 
-<!-- Custom Keyboard Dropdown Popup (for instant Arrow + Enter selection & exit) -->
+<!-- Custom Keyboard Dropdown Popup -->
 <div id="kbDropdownPopup" class="kb-dropdown-popup" role="listbox"></div>
+
+<!-- Blank Routine: 1756 I/O Customization Modal -->
+<div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
+  <div class="modal-sheet wide-sheet">
+    <div class="modal-head">
+      <h3>Customize 1756 I/O (Blank MainRoutine)</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
+    </div>
+
+    <div class="modal-scroll-body">
+      <div>
+        <div class="shortcut-section-title">1756-IB16 Digital Inputs (Local:1:I.Data.0–7)</div>
+        <div id="blankInputEditorList" class="custom-io-list"></div>
+      </div>
+
+      <div>
+        <div class="shortcut-section-title">1756-OB16E Digital Outputs (Local:2:O.Data.0–7)</div>
+        <div id="blankOutputEditorList" class="custom-io-list"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="resetBlankIoDefaults()">Reset I/O Defaults</button>
+      <button class="btn-run" onclick="applyBlankIoChanges()">Save 1756 I/O</button>
+    </div>
+  </div>
+</div>
+
+<!-- Blank Routine: 3-Phase Motor & Mimic Customization Modal -->
+<div id="blankMimicModal" class="modal-overlay" onclick="if(event.target===this) closeBlankMimicModal()">
+  <div class="modal-sheet wide-sheet">
+    <div class="modal-head">
+      <h3>Customize Motor &amp; Plant Mimic (Blank MainRoutine)</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeBlankMimicModal()">Close</button>
+    </div>
+
+    <div class="modal-scroll-body">
+      <div class="field-group">
+        <label for="mimicDriveMode">Motor Behavior Source</label>
+        <select id="mimicDriveMode" onchange="toggleCustomMimicFields()">
+          <option value="AUTO">Auto (Follow 1756-OB16E Outputs &amp; Faults)</option>
+          <option value="CUSTOM">Manual / Custom Mimic Override</option>
+        </select>
+      </div>
+
+      <div id="customMimicOverrideFields">
+        <div class="field-group">
+          <label for="mimicPresetState">Simulated Motor State</label>
+          <select id="mimicPresetState" onchange="syncMimicStateDefaults()">
+            <option value="STOPPED">STOPPED (0 RPM)</option>
+            <option value="FORWARD">FORWARD RUN (CW)</option>
+            <option value="REVERSE">REVERSE RUN (CCW)</option>
+            <option value="STAR">STAR (Y) START (Reduced V)</option>
+            <option value="DELTA">DELTA (Δ) RUN (Full Line V)</option>
+            <option value="FAULT">FAULT / OL TRIP</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="mimicCustomRpm">Rotor Speed (RPM)</label>
+          <input type="number" id="mimicCustomRpm" min="0" max="3600" step="5" value="0">
+        </div>
+
+        <div class="field-group">
+          <label for="mimicCustomSubtext">Telemetry Sub-Label (e.g. 460VAC 60HZ / STANDBY)</label>
+          <input type="text" id="mimicCustomSubtext" maxlength="24" value="STANDBY">
+        </div>
+      </div>
+
+      <div>
+        <div class="shortcut-section-title">Pilot Lamps (4 Indicators)</div>
+        <div id="blankLampsEditorList" class="custom-io-list"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="resetBlankMimicDefaults()">Reset Mimic Defaults</button>
+      <button class="btn-run" onclick="applyBlankMimicChanges()">Save Mimic</button>
+    </div>
+  </div>
+</div>
+
+<!-- Blank Routine: Control_Bits & TIMER Tags Customization Modal -->
+<div id="blankTagsModal" class="modal-overlay" onclick="if(event.target===this) closeBlankTagsModal()">
+  <div class="modal-sheet wide-sheet">
+    <div class="modal-head">
+      <h3>Customize Control_Bits &amp; TIMER Tags (Blank MainRoutine)</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeBlankTagsModal()">Close</button>
+    </div>
+
+    <div class="modal-scroll-body">
+      <div id="blankBitsEditorSection">
+        <div class="shortcut-section-title">Control_Bits (DINT) — Aliases &amp; Bit States (0–7)</div>
+        <div id="blankBitsEditorList" class="custom-io-list"></div>
+      </div>
+
+      <div id="blankTimersEditorSection">
+        <div class="shortcut-section-title">TIMER Structures — Presets (.PRE ms), Aliases &amp; Bits</div>
+        <div id="blankTimersEditorList" class="custom-io-list"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="resetBlankTagsDefaults()">Reset Tag Defaults</button>
+      <button class="btn-run" onclick="applyBlankTagsChanges()">Save Tags</button>
+    </div>
+  </div>
+</div>
 
 <!-- Keyboard Shortcuts Reference Modal -->
 <div id="shortcutsModal" class="modal-overlay" onclick="if(event.target===this) closeShortcutsModal()">
@@ -1455,7 +1742,7 @@
 
     <div class="field-group">
       <label for="inspAddr">Controller / Program Tag</label>
-      <select id="inspAddr"></select>
+      <select id="inspAddr" onchange="handleInspectorAddrChange()"></select>
     </div>
 
     <div class="field-group" id="inspPresetWrap" style="display:none;">
@@ -1517,11 +1804,34 @@ const PLC = {
     'Ready_Pilot'
   ],
   Control_Bits: Array(8).fill(false),
+  controlBitLabels: [
+    'Sys_Run',
+    'Fault_Latch',
+    'Aux_Bit_2',
+    'Aux_Bit_3',
+    'Step_1_Flag',
+    'Step_2_Flag',
+    'Auto_Mode',
+    'Alarm_Ack'
+  ],
   timers: {
-    'Timer_0': { EN: false, TT: false, DN: false, PRE: 3000, ACC: 0 },
-    'Timer_1': { EN: false, TT: false, DN: false, PRE: 2000, ACC: 0 },
-    'Timer_2': { EN: false, TT: false, DN: false, PRE: 4000, ACC: 0 },
-    'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0 }
+    'Timer_0': { EN: false, TT: false, DN: false, PRE: 3000, ACC: 0, label: 'Start_Delay' },
+    'Timer_1': { EN: false, TT: false, DN: false, PRE: 2000, ACC: 0, label: 'Seq_Timer' },
+    'Timer_2': { EN: false, TT: false, DN: false, PRE: 4000, ACC: 0, label: 'Step_Timer' },
+    'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0, label: 'Pulse_Timer' }
+  },
+
+  blankMimic: {
+    driveMode: 'AUTO',
+    state: 'STOPPED',
+    rpm: 0,
+    subtext: 'STANDBY',
+    lamps: [
+      { bitIndex: 0, label: 'Main_KM1', color: 'green' },
+      { bitIndex: 1, label: 'Star_Rev_KM2', color: 'amber' },
+      { bitIndex: 2, label: 'Delta_KM3', color: 'blue' },
+      { bitIndex: 3, label: 'Fault_Horn', color: 'red' }
+    ]
   },
 
   rungs: []
@@ -1545,14 +1855,14 @@ const KB_NAV = {
 
 // Primary Field Input Shortcut Map (Start, Stop, OL, Reset, + Digits 4..7)
 const FIELD_INPUT_KEYMAP = {
-  's': 0, // Local:1:I.Data.0 — Start
-  'x': 1, // Local:1:I.Data.1 — Stop
-  'o': 2, // Local:1:I.Data.2 — OL Relay
-  'r': 3, // Local:1:I.Data.3 — Reset / Rev Start
-  '4': 4, // Local:1:I.Data.4
-  '5': 5, // Local:1:I.Data.5
-  '6': 6, // Local:1:I.Data.6
-  '7': 7  // Local:1:I.Data.7
+  's': 0,
+  'x': 1,
+  'o': 2,
+  'r': 3,
+  '4': 4,
+  '5': 5,
+  '6': 6,
+  '7': 7
 };
 
 const FIELD_INPUT_KEY_BADGES = {
@@ -1587,6 +1897,27 @@ const COIL_ADDRESSES = [
 ];
 
 const TIMER_ADDRESSES = ['Timer_0', 'Timer_1', 'Timer_2', 'Timer_3'];
+
+function getDefaultLabelForAddress(addr) {
+  if (!addr) return '';
+  if (addr.startsWith('Local:1:I.Data.')) {
+    const idx = parseInt(addr.slice(15), 10);
+    return PLC.inputLabels[idx] || '';
+  }
+  if (addr.startsWith('Local:2:O.Data.')) {
+    const idx = parseInt(addr.slice(15), 10);
+    return PLC.outputLabels[idx] || '';
+  }
+  if (addr.startsWith('Control_Bits.')) {
+    const idx = parseInt(addr.slice(13), 10);
+    return PLC.controlBitLabels[idx] || '';
+  }
+  if (addr.startsWith('Timer_')) {
+    const tKey = addr.split('.')[0];
+    return PLC.timers[tKey]?.label || '';
+  }
+  return '';
+}
 
 function getBit(addr) {
   if (!addr) return false;
@@ -1628,6 +1959,13 @@ const PRESETS = {
     initIn: [false, true, true, false, false, false, false, true],
     inLabels: ['Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Rev_Reset_PB', 'Prox_Sensor', 'Jam_Sim_Sw', 'Aux_PB', 'EStop_OK'],
     outLabels: ['Main_KM1', 'Star_Rev_KM2', 'Delta_KM3', 'Fault_Horn', 'Run_Pilot', 'Conv_Belt', 'Diverter_Sol', 'Ready_Pilot'],
+    bitLabels: ['Sys_Run', 'Fault_Latch', 'Aux_Bit_2', 'Aux_Bit_3', 'Step_1_Flag', 'Step_2_Flag', 'Auto_Mode', 'Alarm_Ack'],
+    timerDefs: {
+      'Timer_0': { PRE: 3000, label: 'Start_Delay' },
+      'Timer_1': { PRE: 2000, label: 'Seq_Timer' },
+      'Timer_2': { PRE: 4000, label: 'Step_Timer' },
+      'Timer_3': { PRE: 1500, label: 'Pulse_Timer' }
+    },
     rungs: []
   },
   preset1: {
@@ -1819,6 +2157,38 @@ const PRESETS = {
   }
 };
 
+function syncBlankCustomizationVisibility() {
+  const isBlank = PLC.presetId === 'blank';
+  const ids = [
+    'blankModeBadge',
+    'btnEditBlankIo',
+    'btnEditBlankOut',
+    'blankIoBanner',
+    'btnBlankCustomizeBar',
+    'btnBlankMimicBar',
+    'btnBlankTagsBar',
+    'btnEditBlankMimic',
+    'blankMimicBanner',
+    'btnEditBlankBits',
+    'blankBitsBanner',
+    'btnEditBlankTimers',
+    'blankTimersBanner'
+  ];
+  const flexIds = new Set([
+    'blankModeBadge',
+    'blankIoBanner',
+    'blankMimicBanner',
+    'blankBitsBanner',
+    'blankTimersBanner'
+  ]);
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = isBlank ? (flexIds.has(id) ? 'flex' : 'inline-flex') : 'none';
+    }
+  });
+}
+
 function loadPreset(id) {
   const p = PRESETS[id];
   if (!p) return;
@@ -1830,9 +2200,32 @@ function loadPreset(id) {
   PLC.outputLabels = [...p.outLabels];
   PLC.rungs = JSON.parse(JSON.stringify(p.rungs));
 
+  if (id === 'blank') {
+    PLC.controlBitLabels = [...p.bitLabels];
+    Object.entries(p.timerDefs).forEach(([k, def]) => {
+      if (PLC.timers[k]) {
+        PLC.timers[k].PRE = def.PRE;
+        PLC.timers[k].label = def.label;
+      }
+    });
+    PLC.blankMimic.lamps = [
+      { bitIndex: 0, label: PLC.outputLabels[0], color: 'green' },
+      { bitIndex: 1, label: PLC.outputLabels[1], color: 'amber' },
+      { bitIndex: 2, label: PLC.outputLabels[2], color: 'blue' },
+      { bitIndex: 3, label: PLC.outputLabels[3], color: 'red' }
+    ];
+  } else {
+    PLC.controlBitLabels = ['Sys_Run', 'Fault_Latch', 'Aux_Bit_2', 'Aux_Bit_3', 'Step_1_Flag', 'Step_2_Flag', 'Auto_Mode', 'Alarm_Ack'];
+    PLC.timers['Timer_0'].label = 'Timer_0';
+    PLC.timers['Timer_1'].label = 'Timer_1';
+    PLC.timers['Timer_2'].label = 'Timer_2';
+    PLC.timers['Timer_3'].label = 'Timer_3';
+  }
+
   KB_NAV.selectedRungIdx = 0;
   KB_NAV.selectedItemIdx = 0;
 
+  syncBlankCustomizationVisibility();
   clearPlcMemory();
   buildInputOutputRacks();
   buildMobileQuickDock();
@@ -2026,11 +2419,19 @@ function renderLadderCanvas() {
   host.innerHTML = '';
 
   if (PLC.rungs.length === 0) {
+    const isBlank = PLC.presetId === 'blank';
     host.innerHTML = `
       <div class="empty-routine-prompt">
         <div style="color:var(--sky-accent); font-weight:800; font-size:13px;">EMPTY MAINROUTINE (MAINPROGRAM)</div>
-        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above, or press <strong>[P]</strong> to select a Circuit Preset.</div>
-        <button id="btnAddFirstRung" class="btn-run kb-nav-node" style="margin-top:4px;" onclick="addNewRung()">+ Add First Rung <span class="kbd-tag hide-mobile">N</span></button>
+        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above, or customize <strong>1756 I/O, Mimic &amp; Tags</strong> directly.</div>
+        <div class="empty-quick-actions">
+          <button id="btnAddFirstRung" class="btn-run kb-nav-node" onclick="addNewRung()">+ Add First Rung <span class="kbd-tag hide-mobile">N</span></button>
+          ${isBlank ? `
+            <button type="button" class="btn-accent" onclick="openBlankIoModal()">Customize 1756 I/O</button>
+            <button type="button" class="btn-accent" onclick="openBlankMimicModal()">Customize Mimic</button>
+            <button type="button" class="btn-accent" onclick="openBlankTagsModal()">Customize Bits &amp; Timers</button>
+          ` : ''}
+        </div>
       </div>
     `;
     applyLadderKeyboardCursor();
@@ -2160,6 +2561,353 @@ function buildInstructionNode(el, path) {
   `;
 
   return node;
+}
+
+/**
+ * Blank MainRoutine Customization Modals (1756 I/O, Mimic, Control_Bits & TIMER Tags)
+ */
+function openBlankIoModal() {
+  if (PLC.presetId !== 'blank') return;
+
+  const inHost = document.getElementById('blankInputEditorList');
+  const outHost = document.getElementById('blankOutputEditorList');
+  inHost.innerHTML = '';
+  outHost.innerHTML = '';
+
+  for (let i = 0; i < 8; i++) {
+    const item = document.createElement('div');
+    item.className = 'custom-io-item';
+    item.innerHTML = `
+      <div class="custom-io-row">
+        <strong style="color:var(--sky-accent);">I.${i}</strong>
+        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(PLC.inputLabels[i])}" placeholder="Input Label">
+      </div>
+      <div class="custom-io-row">
+        <select id="editInMode_${i}">
+          <option value="MOM_NO" ${PLC.inputModes[i] === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
+          <option value="MOM_NC" ${PLC.inputModes[i] === 'MOM_NC' ? 'selected' : ''}>MOM_NC</option>
+          <option value="TOGGLE" ${PLC.inputModes[i] === 'TOGGLE' ? 'selected' : ''}>TOGGLE</option>
+        </select>
+        <select id="editInState_${i}">
+          <option value="0" ${!PLC.physicalIn[i] ? 'selected' : ''}>State: 0</option>
+          <option value="1" ${PLC.physicalIn[i] ? 'selected' : ''}>State: 1</option>
+        </select>
+      </div>
+    `;
+    inHost.appendChild(item);
+  }
+
+  for (let i = 0; i < 8; i++) {
+    const item = document.createElement('div');
+    item.className = 'custom-io-item';
+    item.innerHTML = `
+      <div class="custom-io-row">
+        <strong style="color:var(--power-green);">O.${i}</strong>
+        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(PLC.outputLabels[i])}" placeholder="Output Label">
+      </div>
+    `;
+    outHost.appendChild(item);
+  }
+
+  document.getElementById('blankIoModal').classList.add('open');
+}
+
+function closeBlankIoModal() {
+  document.getElementById('blankIoModal').classList.remove('open');
+}
+
+function resetBlankIoDefaults() {
+  const def = PRESETS.blank;
+  for (let i = 0; i < 8; i++) {
+    const lblEl = document.getElementById(`editInLabel_${i}`);
+    const modeEl = document.getElementById(`editInMode_${i}`);
+    const stEl = document.getElementById(`editInState_${i}`);
+    const outEl = document.getElementById(`editOutLabel_${i}`);
+    if (lblEl) lblEl.value = def.inLabels[i];
+    if (modeEl) modeEl.value = def.modes[i];
+    if (stEl) stEl.value = def.initIn[i] ? '1' : '0';
+    if (outEl) outEl.value = def.outLabels[i];
+  }
+}
+
+function applyBlankIoChanges() {
+  for (let i = 0; i < 8; i++) {
+    const lblVal = (document.getElementById(`editInLabel_${i}`)?.value || '').trim();
+    const modeVal = document.getElementById(`editInMode_${i}`)?.value || 'MOM_NO';
+    const stVal = document.getElementById(`editInState_${i}`)?.value === '1';
+    const outVal = (document.getElementById(`editOutLabel_${i}`)?.value || '').trim();
+
+    PLC.inputLabels[i] = lblVal || `Input_${i}`;
+    PLC.inputModes[i] = modeVal;
+    PLC.physicalIn[i] = stVal;
+    PLC.outputLabels[i] = outVal || `Output_${i}`;
+  }
+
+  closeBlankIoModal();
+  buildInputOutputRacks();
+  buildMobileQuickDock();
+  buildMimicLamps();
+  syncUiVisuals();
+}
+
+function openBlankMimicModal() {
+  if (PLC.presetId !== 'blank') return;
+
+  const bm = PLC.blankMimic;
+  document.getElementById('mimicDriveMode').value = bm.driveMode;
+  document.getElementById('mimicPresetState').value = bm.state;
+  document.getElementById('mimicCustomRpm').value = bm.rpm;
+  document.getElementById('mimicCustomSubtext').value = bm.subtext;
+  toggleCustomMimicFields();
+
+  const lampsHost = document.getElementById('blankLampsEditorList');
+  lampsHost.innerHTML = '';
+  bm.lamps.forEach((lamp, idx) => {
+    let bitOpts = '';
+    for (let b = 0; b < 8; b++) {
+      bitOpts += `<option value="${b}" ${lamp.bitIndex === b ? 'selected' : ''}>O.Data.${b} (${escapeHtml(PLC.outputLabels[b])})</option>`;
+    }
+    const row = document.createElement('div');
+    row.className = 'custom-io-item';
+    row.innerHTML = `
+      <div class="custom-io-row">
+        <span class="lamp-dot ${lamp.color} on"></span>
+        <input type="text" id="editLampLabel_${idx}" maxlength="18" value="${escapeHtml(lamp.label)}" placeholder="Lamp Label">
+      </div>
+      <div class="custom-io-row">
+        <select id="editLampBit_${idx}">${bitOpts}</select>
+        <select id="editLampColor_${idx}">
+          <option value="green" ${lamp.color === 'green' ? 'selected' : ''}>Green</option>
+          <option value="amber" ${lamp.color === 'amber' ? 'selected' : ''}>Amber</option>
+          <option value="blue" ${lamp.color === 'blue' ? 'selected' : ''}>Blue</option>
+          <option value="red" ${lamp.color === 'red' ? 'selected' : ''}>Red</option>
+        </select>
+      </div>
+    `;
+    lampsHost.appendChild(row);
+  });
+
+  document.getElementById('blankMimicModal').classList.add('open');
+}
+
+function closeBlankMimicModal() {
+  document.getElementById('blankMimicModal').classList.remove('open');
+}
+
+function toggleCustomMimicFields() {
+  const mode = document.getElementById('mimicDriveMode').value;
+  const wrap = document.getElementById('customMimicOverrideFields');
+  if (wrap) wrap.style.display = mode === 'CUSTOM' ? 'block' : 'none';
+}
+
+function syncMimicStateDefaults() {
+  const state = document.getElementById('mimicPresetState').value;
+  const rpmEl = document.getElementById('mimicCustomRpm');
+  const subEl = document.getElementById('mimicCustomSubtext');
+  if (state === 'STOPPED') {
+    rpmEl.value = 0;
+    subEl.value = 'STANDBY';
+  } else if (state === 'FORWARD') {
+    rpmEl.value = 1760;
+    subEl.value = 'CW 3-PHASE';
+  } else if (state === 'REVERSE') {
+    rpmEl.value = 1760;
+    subEl.value = 'CCW 3-PHASE';
+  } else if (state === 'STAR') {
+    rpmEl.value = 1140;
+    subEl.value = '58% REDUCED V';
+  } else if (state === 'DELTA') {
+    rpmEl.value = 1785;
+    subEl.value = '100% FULL LINE V';
+  } else if (state === 'FAULT') {
+    rpmEl.value = 0;
+    subEl.value = 'OVERLOAD TRIP';
+  }
+}
+
+function resetBlankMimicDefaults() {
+  PLC.blankMimic = {
+    driveMode: 'AUTO',
+    state: 'STOPPED',
+    rpm: 0,
+    subtext: 'STANDBY',
+    lamps: [
+      { bitIndex: 0, label: PLC.outputLabels[0], color: 'green' },
+      { bitIndex: 1, label: PLC.outputLabels[1], color: 'amber' },
+      { bitIndex: 2, label: PLC.outputLabels[2], color: 'blue' },
+      { bitIndex: 3, label: PLC.outputLabels[3], color: 'red' }
+    ]
+  };
+  openBlankMimicModal();
+}
+
+function applyBlankMimicChanges() {
+  const driveMode = document.getElementById('mimicDriveMode').value;
+  const state = document.getElementById('mimicPresetState').value;
+  const rpmVal = parseInt(document.getElementById('mimicCustomRpm').value, 10);
+  const subtextVal = (document.getElementById('mimicCustomSubtext').value || '').trim();
+
+  PLC.blankMimic.driveMode = driveMode;
+  PLC.blankMimic.state = state;
+  PLC.blankMimic.rpm = isNaN(rpmVal) ? 0 : Math.min(3600, Math.max(0, rpmVal));
+  PLC.blankMimic.subtext = subtextVal || 'CUSTOM MIMIC';
+
+  for (let i = 0; i < 4; i++) {
+    const lbl = (document.getElementById(`editLampLabel_${i}`)?.value || '').trim();
+    const bitIdx = parseInt(document.getElementById(`editLampBit_${i}`)?.value || String(i), 10);
+    const col = document.getElementById(`editLampColor_${i}`)?.value || 'green';
+    PLC.blankMimic.lamps[i] = {
+      bitIndex: isNaN(bitIdx) ? i : bitIdx,
+      label: lbl || PLC.outputLabels[bitIdx] || `Lamp_${i}`,
+      color: col
+    };
+  }
+
+  closeBlankMimicModal();
+  buildMimicLamps();
+  syncUiVisuals();
+}
+
+function openBlankTagsModal(focusSection) {
+  if (PLC.presetId !== 'blank') return;
+
+  const bitsHost = document.getElementById('blankBitsEditorList');
+  const timersHost = document.getElementById('blankTimersEditorList');
+  bitsHost.innerHTML = '';
+  timersHost.innerHTML = '';
+
+  for (let i = 0; i < 8; i++) {
+    const row = document.createElement('div');
+    row.className = 'custom-io-item';
+    row.innerHTML = `
+      <div class="custom-io-row">
+        <strong style="color:var(--sky-accent);">Bit.${i}</strong>
+        <input type="text" id="editBitLabel_${i}" maxlength="18" value="${escapeHtml(PLC.controlBitLabels[i] || `Aux_Bit_${i}`)}" placeholder="Alias">
+        <select id="editBitState_${i}" style="max-width:92px;">
+          <option value="0" ${!PLC.Control_Bits[i] ? 'selected' : ''}>Val: 0</option>
+          <option value="1" ${PLC.Control_Bits[i] ? 'selected' : ''}>Val: 1</option>
+        </select>
+      </div>
+    `;
+    bitsHost.appendChild(row);
+  }
+
+  TIMER_ADDRESSES.forEach(tKey => {
+    const t = PLC.timers[tKey];
+    const row = document.createElement('div');
+    row.className = 'custom-io-item';
+    row.innerHTML = `
+      <div class="custom-io-row">
+        <strong style="color:var(--sky-accent);">${tKey}</strong>
+        <input type="text" id="editTmrLabel_${tKey}" maxlength="18" value="${escapeHtml(t.label || tKey)}" placeholder="Timer Alias">
+      </div>
+      <div class="custom-io-row">
+        <span style="color:var(--text-secondary);">.PRE</span>
+        <input type="number" id="editTmrPre_${tKey}" min="100" max="60000" step="100" value="${t.PRE}">
+        <span style="color:var(--text-secondary);">.ACC</span>
+        <input type="number" id="editTmrAcc_${tKey}" min="0" max="60000" step="50" value="${Math.round(t.ACC)}">
+      </div>
+      <div class="custom-io-row">
+        <select id="editTmrDn_${tKey}">
+          <option value="0" ${!t.DN ? 'selected' : ''}>.DN = 0</option>
+          <option value="1" ${t.DN ? 'selected' : ''}>.DN = 1</option>
+        </select>
+        <select id="editTmrTt_${tKey}">
+          <option value="0" ${!t.TT ? 'selected' : ''}>.TT = 0</option>
+          <option value="1" ${t.TT ? 'selected' : ''}>.TT = 1</option>
+        </select>
+      </div>
+    `;
+    timersHost.appendChild(row);
+  });
+
+  document.getElementById('blankTagsModal').classList.add('open');
+
+  if (focusSection === 'timers') {
+    document.getElementById('blankTimersEditorSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (focusSection === 'bits') {
+    document.getElementById('blankBitsEditorSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function closeBlankTagsModal() {
+  document.getElementById('blankTagsModal').classList.remove('open');
+}
+
+function resetBlankTagsDefaults() {
+  const def = PRESETS.blank;
+  for (let i = 0; i < 8; i++) {
+    const lblEl = document.getElementById(`editBitLabel_${i}`);
+    const stEl = document.getElementById(`editBitState_${i}`);
+    if (lblEl) lblEl.value = def.bitLabels[i];
+    if (stEl) stEl.value = '0';
+  }
+  TIMER_ADDRESSES.forEach(tKey => {
+    const tDef = def.timerDefs[tKey];
+    const lblEl = document.getElementById(`editTmrLabel_${tKey}`);
+    const preEl = document.getElementById(`editTmrPre_${tKey}`);
+    const accEl = document.getElementById(`editTmrAcc_${tKey}`);
+    const dnEl = document.getElementById(`editTmrDn_${tKey}`);
+    const ttEl = document.getElementById(`editTmrTt_${tKey}`);
+    if (lblEl) lblEl.value = tDef.label;
+    if (preEl) preEl.value = tDef.PRE;
+    if (accEl) accEl.value = 0;
+    if (dnEl) dnEl.value = '0';
+    if (ttEl) ttEl.value = '0';
+  });
+}
+
+function applyBlankTagsChanges() {
+  for (let i = 0; i < 8; i++) {
+    const lbl = (document.getElementById(`editBitLabel_${i}`)?.value || '').trim();
+    const val = document.getElementById(`editBitState_${i}`)?.value === '1';
+    PLC.controlBitLabels[i] = lbl || `Aux_Bit_${i}`;
+    PLC.Control_Bits[i] = val;
+  }
+
+  TIMER_ADDRESSES.forEach(tKey => {
+    const t = PLC.timers[tKey];
+    if (!t) return;
+    const lbl = (document.getElementById(`editTmrLabel_${tKey}`)?.value || '').trim();
+    const preParsed = parseInt(document.getElementById(`editTmrPre_${tKey}`)?.value || '3000', 10);
+    const accParsed = parseInt(document.getElementById(`editTmrAcc_${tKey}`)?.value || '0', 10);
+    const dnVal = document.getElementById(`editTmrDn_${tKey}`)?.value === '1';
+    const ttVal = document.getElementById(`editTmrTt_${tKey}`)?.value === '1';
+
+    t.label = lbl || tKey;
+    t.PRE = isNaN(preParsed) ? 3000 : Math.min(60000, Math.max(100, preParsed));
+    t.ACC = isNaN(accParsed) ? 0 : Math.min(t.PRE, Math.max(0, accParsed));
+    t.DN = dnVal;
+    t.TT = ttVal;
+    t.EN = dnVal || ttVal;
+
+    // Update any existing TON instructions on ladder referencing this timer
+    PLC.rungs.forEach(rung => {
+      rung.elements.forEach(el => {
+        if (el.type === 'TON' && el.addr === tKey) {
+          el.preset = t.PRE;
+        } else if (el.type === 'BRANCH') {
+          el.branches.forEach(leg => {
+            leg.forEach(sub => {
+              if (sub.type === 'TON' && sub.addr === tKey) {
+                sub.preset = t.PRE;
+              }
+            });
+          });
+        }
+      });
+    });
+  });
+
+  closeBlankTagsModal();
+  renderLadderCanvas();
+  syncUiVisuals();
+}
+
+function toggleBlankControlBit(idx) {
+  if (PLC.presetId !== 'blank') return;
+  PLC.Control_Bits[idx] = !PLC.Control_Bits[idx];
+  syncUiVisuals();
 }
 
 /**
@@ -2365,6 +3113,9 @@ function openShortcutsModal() {
   closeCustomSelectDropdown();
   closeInsertModal();
   closeInspector();
+  closeBlankIoModal();
+  closeBlankMimicModal();
+  closeBlankTagsModal();
   document.getElementById('shortcutsModal').classList.add('open');
 
   const rows = getShortcutRows();
@@ -2451,23 +3202,25 @@ function updatePaletteHighlight() {
 function createDefaultInstruction(type) {
   switch (type) {
     case 'XIC':
-      return { type: 'XIC', addr: 'Local:1:I.Data.0', label: 'Start_PB' };
+      return { type: 'XIC', addr: 'Local:1:I.Data.0', label: PLC.inputLabels[0] || 'Start_PB' };
     case 'XIO':
-      return { type: 'XIO', addr: 'Local:1:I.Data.1', label: 'Stop_NC' };
+      return { type: 'XIO', addr: 'Local:1:I.Data.1', label: PLC.inputLabels[1] || 'Stop_NC' };
     case 'OTE':
-      return { type: 'OTE', addr: 'Local:2:O.Data.0', label: 'Output_Bit' };
+      return { type: 'OTE', addr: 'Local:2:O.Data.0', label: PLC.outputLabels[0] || 'Output_Bit' };
     case 'OTL':
-      return { type: 'OTL', addr: 'Control_Bits.0', label: 'Latch_Bit' };
+      return { type: 'OTL', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Latch_Bit' };
     case 'OTU':
-      return { type: 'OTU', addr: 'Control_Bits.0', label: 'Unlatch_Bit' };
-    case 'TON':
-      return { type: 'TON', addr: 'Timer_0', preset: 3000, label: 'Delay_Tmr' };
+      return { type: 'OTU', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Unlatch_Bit' };
+    case 'TON': {
+      const t0 = PLC.timers['Timer_0'] || { PRE: 3000, label: 'Delay_Tmr' };
+      return { type: 'TON', addr: 'Timer_0', preset: t0.PRE, label: t0.label || 'Delay_Tmr' };
+    }
     case 'BRANCH':
       return {
         type: 'BRANCH',
         branches: [
-          [{ type: 'XIC', addr: 'Local:1:I.Data.0', label: 'Path_A' }],
-          [{ type: 'XIC', addr: 'Local:2:O.Data.0', label: 'Path_B' }]
+          [{ type: 'XIC', addr: 'Local:1:I.Data.0', label: PLC.inputLabels[0] || 'Path_A' }],
+          [{ type: 'XIC', addr: 'Local:2:O.Data.0', label: PLC.outputLabels[0] || 'Path_B' }]
         ]
       };
     default:
@@ -2508,7 +3261,7 @@ function addParallelBranchLeg(rIdx, eIdx) {
 
   const newLegIdx = br.branches.length;
   br.branches.push([
-    { type: 'XIC', addr: 'Control_Bits.0', label: `Leg_${newLegIdx + 1}` }
+    { type: 'XIC', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || `Leg_${newLegIdx + 1}` }
   ]);
   renderLadderCanvas();
   openInspector({ rIdx, eIdx, bIdx: newLegIdx, kIdx: 0 });
@@ -2527,7 +3280,7 @@ function wrapInspectedInBranch() {
     type: 'BRANCH',
     branches: [
       [existing],
-      [{ type: 'XIC', addr: 'Local:2:O.Data.0', label: 'Seal_In' }]
+      [{ type: 'XIC', addr: 'Local:2:O.Data.0', label: PLC.outputLabels[0] || 'Seal_In' }]
     ]
   };
   closeInspector();
@@ -2780,9 +3533,6 @@ function bindPhysicalSwitchPointer(btnEl, idx) {
   }
 }
 
-/**
- * Keyboard Press / Release Handler for Field Inputs (Start, Stop, OL, Reset, 4-7)
- */
 function triggerFieldInputKeyDown(idx) {
   const mode = PLC.inputModes[idx];
   if (mode === 'TOGGLE') {
@@ -2839,6 +3589,17 @@ function toggleOverloadTrip() {
 function buildMimicLamps() {
   const host = document.getElementById('mimicLampsHost');
   if (!host) return;
+
+  if (PLC.presetId === 'blank') {
+    host.innerHTML = PLC.blankMimic.lamps.map((lamp, idx) => `
+      <div class="pilot-row">
+        <span>Local:2:O.Data.${lamp.bitIndex} (${escapeHtml(lamp.label)})</span>
+        <span id="lamp${idx}" class="lamp-dot ${lamp.color}"></span>
+      </div>
+    `).join('');
+    return;
+  }
+
   host.innerHTML = `
     <div class="pilot-row"><span>Local:2:O.Data.0 (${escapeHtml(PLC.outputLabels[0])})</span><span id="lamp0" class="lamp-dot green"></span></div>
     <div class="pilot-row"><span>Local:2:O.Data.1 (${escapeHtml(PLC.outputLabels[1])})</span><span id="lamp1" class="lamp-dot amber"></span></div>
@@ -2872,14 +3633,21 @@ function updatePlantMimic() {
   const o2 = PLC.physicalOut[2];
   const o3 = PLC.physicalOut[3];
 
-  const l0 = document.getElementById('lamp0');
-  const l1 = document.getElementById('lamp1');
-  const l2 = document.getElementById('lamp2');
-  const l3 = document.getElementById('lamp3');
-  if (l0) l0.classList.toggle('on', o0);
-  if (l1) l1.classList.toggle('on', o1);
-  if (l2) l2.classList.toggle('on', o2);
-  if (l3) l3.classList.toggle('on', o3);
+  if (PLC.presetId === 'blank') {
+    PLC.blankMimic.lamps.forEach((lamp, idx) => {
+      const el = document.getElementById(`lamp${idx}`);
+      if (el) el.classList.toggle('on', !!PLC.physicalOut[lamp.bitIndex]);
+    });
+  } else {
+    const l0 = document.getElementById('lamp0');
+    const l1 = document.getElementById('lamp1');
+    const l2 = document.getElementById('lamp2');
+    const l3 = document.getElementById('lamp3');
+    if (l0) l0.classList.toggle('on', o0);
+    if (l1) l1.classList.toggle('on', o1);
+    if (l2) l2.classList.toggle('on', o2);
+    if (l3) l3.classList.toggle('on', o3);
+  }
 
   const statusEl = document.getElementById('motorStatusText');
   const rpmEl = document.getElementById('motorRpmText');
@@ -2892,7 +3660,36 @@ function updatePlantMimic() {
   let stateColor = 'var(--text-secondary)';
   let modeStr = 'STANDBY';
 
-  if (PLC.presetId === 'preset2') {
+  if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') {
+    const bm = PLC.blankMimic;
+    rpm = bm.rpm;
+    modeStr = bm.subtext;
+    if (bm.state === 'STOPPED') {
+      stateStr = 'STOPPED';
+      stateColor = 'var(--text-secondary)';
+      degStep = 0;
+    } else if (bm.state === 'FORWARD') {
+      stateStr = 'FORWARD RUN';
+      stateColor = 'var(--power-green)';
+      degStep = rpm > 0 ? Math.max(4, Math.round(rpm / 120)) : 15;
+    } else if (bm.state === 'REVERSE') {
+      stateStr = 'REVERSE RUN';
+      stateColor = 'var(--amber-warn)';
+      degStep = rpm > 0 ? -Math.max(4, Math.round(rpm / 120)) : -15;
+    } else if (bm.state === 'STAR') {
+      stateStr = 'STAR (Y) START';
+      stateColor = 'var(--amber-warn)';
+      degStep = rpm > 0 ? Math.max(3, Math.round(rpm / 130)) : 9;
+    } else if (bm.state === 'DELTA') {
+      stateStr = 'DELTA (Δ) RUN';
+      stateColor = 'var(--power-green)';
+      degStep = rpm > 0 ? Math.max(5, Math.round(rpm / 110)) : 17;
+    } else if (bm.state === 'FAULT') {
+      stateStr = 'FAULT / OL TRIP';
+      stateColor = 'var(--crimson-fault)';
+      degStep = 0;
+    }
+  } else if (PLC.presetId === 'preset2') {
     if (o0 && !o1) {
       rpm = 1760; degStep = 15; stateStr = 'FORWARD RUN'; stateColor = 'var(--power-green)'; modeStr = 'CW 3-PHASE';
     } else if (o1 && !o0) {
@@ -2912,9 +3709,11 @@ function updatePlantMimic() {
     rpm = 1760; degStep = 15; stateStr = 'MOTOR RUNNING'; stateColor = 'var(--power-green)'; modeStr = '460VAC 60HZ';
   }
 
-  if (o3 || !PLC.physicalIn[2]) {
-    stateStr = 'FAULT / OL TRIP';
-    stateColor = 'var(--crimson-fault)';
+  if (!(PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM')) {
+    if (o3 || !PLC.physicalIn[2]) {
+      stateStr = 'FAULT / OL TRIP';
+      stateColor = 'var(--crimson-fault)';
+    }
   }
 
   if (PLC.running && degStep !== 0) {
@@ -2932,11 +3731,22 @@ function updatePlantMimic() {
 
 function renderDataTables() {
   const bHost = document.getElementById('binaryTableHost');
+  const isBlank = PLC.presetId === 'blank';
   if (bHost) {
     let html = '';
     for (let i = 0; i < 8; i++) {
       const on = PLC.Control_Bits[i];
-      html += `<div class="data-cell ${on ? 'on' : ''}"><span>Control_Bits.${i}</span><strong>${on ? '1' : '0'}</strong></div>`;
+      const alias = PLC.controlBitLabels[i] || '';
+      html += `
+        <div class="data-cell ${on ? 'on' : ''} ${isBlank ? 'editable-bit' : ''}"
+             ${isBlank ? `onclick="toggleBlankControlBit(${i})" title="Tap to toggle Control_Bits.${i}"` : ''}>
+          <div class="data-cell-tag">
+            <span>Control_Bits.${i}</span>
+            ${isBlank && alias ? `<span class="data-cell-alias">${escapeHtml(alias)}</span>` : ''}
+          </div>
+          <strong>${on ? '1' : '0'}</strong>
+        </div>
+      `;
     }
     bHost.innerHTML = html;
   }
@@ -2947,7 +3757,10 @@ function renderDataTables() {
     Object.entries(PLC.timers).forEach(([name, t]) => {
       tHtml += `
         <div class="timer-table-row">
-          <strong style="color:var(--sky-accent);">${name}</strong>
+          <div class="timer-name-col">
+            <strong style="color:var(--sky-accent);">${name}</strong>
+            ${isBlank && t.label ? `<span class="timer-alias-sub">${escapeHtml(t.label)}</span>` : ''}
+          </div>
           <span>.PRE:${t.PRE}</span>
           <span>.ACC:${Math.round(t.ACC)}</span>
           <span style="color:${t.DN ? 'var(--power-green)' : 'var(--text-muted)'}; font-weight:800;">.DN:${t.DN ? '1' : '0'}</span>
@@ -2971,8 +3784,8 @@ function addNewRung() {
   PLC.rungs.push({
     comment: `Rung ${PLC.rungs.length}: Auxiliary Control Logic`,
     elements: [
-      { type: 'XIC', addr: 'Local:1:I.Data.0', label: 'Cond_In' },
-      { type: 'OTE', addr: 'Control_Bits.2', label: 'Aux_Bit' }
+      { type: 'XIC', addr: 'Local:1:I.Data.0', label: PLC.inputLabels[0] || 'Cond_In' },
+      { type: 'OTE', addr: 'Control_Bits.2', label: PLC.controlBitLabels[2] || 'Aux_Bit' }
     ]
   });
   KB_NAV.selectedRungIdx = PLC.rungs.length - 1;
@@ -3036,7 +3849,7 @@ function openInspector(path) {
 
   typeSel.value = el.type;
   labelInp.value = el.label || '';
-  presetInp.value = el.preset || 3000;
+  presetInp.value = el.preset || (PLC.timers[el.addr]?.PRE ?? 3000);
 
   if (wrapBtn) {
     wrapBtn.style.display = (path.bIdx === undefined && (el.type === 'XIC' || el.type === 'XIO')) ? 'inline-flex' : 'none';
@@ -3073,7 +3886,8 @@ function populateAddressOptions(type, selectedAddr) {
   pool.forEach(addr => {
     const opt = document.createElement('option');
     opt.value = addr;
-    opt.textContent = addr;
+    const alias = getDefaultLabelForAddress(addr);
+    opt.textContent = alias ? `${addr} (${alias})` : addr;
     if (addr === selectedAddr) opt.selected = true;
     addrSel.appendChild(opt);
   });
@@ -3084,6 +3898,21 @@ function handleInspectorTypeChange() {
   const curAddr = document.getElementById('inspAddr').value;
   populateAddressOptions(newType, curAddr);
   document.getElementById('inspPresetWrap').style.display = (newType === 'TON') ? 'block' : 'none';
+  handleInspectorAddrChange();
+}
+
+function handleInspectorAddrChange() {
+  const newType = document.getElementById('inspType').value;
+  const newAddr = document.getElementById('inspAddr').value;
+  const alias = getDefaultLabelForAddress(newAddr);
+  const labelInp = document.getElementById('inspLabel');
+  if (labelInp && alias) {
+    labelInp.value = alias;
+  }
+  if (newType === 'TON' && PLC.timers[newAddr]) {
+    const presetInp = document.getElementById('inspPreset');
+    if (presetInp) presetInp.value = PLC.timers[newAddr].PRE;
+  }
 }
 
 function applyInspectorChanges() {
@@ -3218,7 +4047,35 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
-  // 0. Keyboard Shortcuts Modal Open: ArrowUp/ArrowDown to scroll & select, Enter to execute, Esc to close
+  // Close customization modals on Escape
+  const blankIoModal = document.getElementById('blankIoModal');
+  if (blankIoModal && blankIoModal.classList.contains('open')) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeBlankIoModal();
+    }
+    return;
+  }
+
+  const blankMimicModal = document.getElementById('blankMimicModal');
+  if (blankMimicModal && blankMimicModal.classList.contains('open')) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeBlankMimicModal();
+    }
+    return;
+  }
+
+  const blankTagsModal = document.getElementById('blankTagsModal');
+  if (blankTagsModal && blankTagsModal.classList.contains('open')) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeBlankTagsModal();
+    }
+    return;
+  }
+
+  // 0. Keyboard Shortcuts Modal Open
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
     if (e.key === 'ArrowDown') {
@@ -3246,7 +4103,7 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 1. Custom Dropdown Menu Open (ArrowUp/ArrowDown to navigate, Enter to execute & exit)
+  // 1. Custom Dropdown Menu Open
   if (KB_NAV.activeSelect) {
     const optionCount = KB_NAV.activeSelect.options.length;
     if (e.key === 'ArrowDown') {
@@ -3382,17 +4239,14 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // Do not trigger global hotkeys while typing text or numbers
   if (isTextTyping) return;
 
-  // Open Keyboard Shortcuts Reference Modal (K or ?)
   if ((lowerKey === 'k' || e.key === '?') && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
     openShortcutsModal();
     return;
   }
 
-  // 4. Global View Switcher Hotkeys (1 = MainRoutine, 2 = 1756 I/O & Mimic, 3 = Controller Tags)
   if (!e.ctrlKey && !e.altKey && !e.metaKey) {
     if (e.key === '1') {
       e.preventDefault();
@@ -3417,7 +4271,6 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    // 5. + Add Rung Shortcut (N or + / =)
     if (lowerKey === 'n' || e.key === '+' || e.key === '=') {
       e.preventDefault();
       KB_NAV.arrowNavActive = false;
@@ -3426,14 +4279,12 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    // 6. Reset PLC Memory & Timers (Shift + R)
     if (lowerKey === 'r' && e.shiftKey) {
       e.preventDefault();
       clearPlcMemory();
       return;
     }
 
-    // 7. Field Switch Hotkeys: Start (S), Stop (X), OL (O), Reset (R), Inputs 4..7
     if (Object.prototype.hasOwnProperty.call(FIELD_INPUT_KEYMAP, lowerKey)) {
       e.preventDefault();
       if (!KB_NAV.heldKeys[lowerKey]) {
@@ -3443,7 +4294,6 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    // 8. CPU Run/Pause (Space), Step Scan (T), Preset Dropdown (P)
     if (e.code === 'Space' && activeTag !== 'BUTTON' && activeTag !== 'SELECT') {
       e.preventDefault();
       toggleCpuRun();
@@ -3464,7 +4314,6 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    // 9. Quick Rung Element Insertion Shortcuts (C = Contact, B = OR Branch, U = Output Coil)
     if ((lowerKey === 'c' || lowerKey === 'b' || lowerKey === 'u') && PLC.rungs.length > 0) {
       e.preventDefault();
       const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
@@ -3482,7 +4331,6 @@ document.addEventListener('keydown', function (e) {
     }
   }
 
-  // 10. Top Menu Bar / Toolbar Focused Controls (<select> or arrow-navigated <button>)
   if (activeTag === 'SELECT') {
     if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
@@ -3539,7 +4387,6 @@ document.addEventListener('keydown', function (e) {
     }
   }
 
-  // 11. Main Ladder Canvas Navigation (Arrow Keys, Enter to Edit/Insert, Delete to Instant-Remove)
   if (e.key === 'ArrowRight') {
     e.preventDefault();
     KB_NAV.arrowNavActive = true;
@@ -3641,7 +4488,6 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// Release momentary field switches when key is released
 document.addEventListener('keyup', function (e) {
   const lowerKey = e.key.toLowerCase();
   if (KB_NAV.heldKeys[lowerKey]) {
@@ -3652,7 +4498,6 @@ document.addEventListener('keyup', function (e) {
   }
 });
 
-// Safety release if window loses focus while holding a momentary key
 window.addEventListener('blur', function () {
   Object.keys(KB_NAV.heldKeys).forEach(k => {
     delete KB_NAV.heldKeys[k];
@@ -3662,7 +4507,6 @@ window.addEventListener('blur', function () {
   });
 });
 
-// Close custom dropdown if user clicks elsewhere on screen
 document.addEventListener('mousedown', function (e) {
   const popup = document.getElementById('kbDropdownPopup');
   if (popup && popup.classList.contains('open') && !popup.contains(e.target) && e.target !== KB_NAV.activeSelect) {
