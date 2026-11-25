@@ -552,6 +552,61 @@
     background: var(--power-green-dim);
   }
 
+  .out-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .out-role-badge {
+    font-size: 8px;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+    background: rgba(148, 163, 184, 0.14);
+    border: 1px solid rgba(148, 163, 184, 0.32);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .out-role-badge.fwd {
+    color: var(--power-green);
+    border-color: rgba(16, 185, 129, 0.45);
+    background: rgba(16, 185, 129, 0.12);
+  }
+
+  .out-role-badge.rev {
+    color: var(--amber-warn);
+    border-color: rgba(245, 158, 11, 0.45);
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .out-role-badge.pilot-green {
+    color: var(--power-green);
+    border-color: rgba(16, 185, 129, 0.45);
+    background: rgba(16, 185, 129, 0.12);
+  }
+
+  .out-role-badge.pilot-amber {
+    color: var(--amber-warn);
+    border-color: rgba(245, 158, 11, 0.45);
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .out-role-badge.pilot-blue {
+    color: var(--sky-accent);
+    border-color: rgba(56, 189, 248, 0.45);
+    background: rgba(56, 189, 248, 0.12);
+  }
+
+  .out-role-badge.pilot-red {
+    color: var(--crimson-fault);
+    border-color: rgba(239, 68, 68, 0.45);
+    background: rgba(239, 68, 68, 0.12);
+  }
+
   .led-indicator {
     width: 11px;
     height: 11px;
@@ -565,6 +620,30 @@
     background: var(--power-green);
     border-color: #a7f3d0;
     box-shadow: 0 0 10px var(--power-green);
+  }
+
+  .led-indicator.pilot-green.on {
+    background: var(--power-green);
+    border-color: #a7f3d0;
+    box-shadow: 0 0 10px var(--power-green);
+  }
+
+  .led-indicator.pilot-amber.on {
+    background: var(--amber-warn);
+    border-color: #fde68a;
+    box-shadow: 0 0 10px var(--amber-warn);
+  }
+
+  .led-indicator.pilot-blue.on {
+    background: var(--sky-accent);
+    border-color: #bae6fd;
+    box-shadow: 0 0 10px var(--sky-accent);
+  }
+
+  .led-indicator.pilot-red.on {
+    background: var(--crimson-fault);
+    border-color: #fecaca;
+    box-shadow: 0 0 10px var(--crimson-fault);
   }
 
   /* Ladder Editor Board */
@@ -1043,7 +1122,7 @@
     text-overflow: ellipsis;
   }
 
-  /* Persistent Bottom Quick-Control Dock (Configurable on Both Desktop & Mobile) */
+  /* Persistent Bottom Quick-Control Dock */
   .mobile-quick-dock {
     display: flex;
     background: var(--bg-panel);
@@ -1186,7 +1265,7 @@
   }
 
   .modal-sheet.wide-sheet {
-    max-width: 720px;
+    max-width: 760px;
     max-height: 88dvh;
     display: flex;
     flex-direction: column;
@@ -1534,7 +1613,7 @@
         </div>
       </div>
       <div id="blankIoBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Edit 1756 I/O addresses &amp; modes via <strong>Edit I/O</strong>.</span>
+        <span><strong>Blank Routine:</strong> Edit 1756 I/O addresses, contactor directions &amp; pilot colors via <strong>Edit I/O</strong>.</span>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
     </div>
@@ -1542,6 +1621,7 @@
     <div class="card">
       <div class="card-header">
         <span id="outputRackTitle" class="card-title">1756-OB16E Outputs (Local:2:O.Data.0–7)</span>
+        <button id="btnEditOutputsCard" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal('outputs')">Edit Outputs</button>
       </div>
       <div id="outputRackHost" class="out-rack"></div>
     </div>
@@ -1583,7 +1663,7 @@
       </div>
 
       <div id="blankMimicBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Motor speed &amp; pilot lamps update live or via <strong>Edit Mimic</strong>.</span>
+        <span><strong>Blank Routine:</strong> Motor speed &amp; pilot lamps update live from 1756 outputs or via <strong>Edit Mimic</strong>.</span>
       </div>
 
       <div class="mimic-box">
@@ -1667,12 +1747,12 @@
 <div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Edit 1756 I/O Modules, Addresses &amp; KM Channels</h3>
+      <h3>Edit 1756 I/O Modules, Contactors (FWD/REV) &amp; Pilot Lights</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
     </div>
 
     <div class="modal-scroll-body">
-      <div>
+      <div id="blankInputEditorSection">
         <div class="section-head-with-btn">
           <span class="shortcut-section-title">1756-IB16 Digital Inputs (Available Tags, Alias, Mode &amp; State)</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add 1756 Input</button>
@@ -1680,9 +1760,9 @@
         <div id="blankInputEditorList" class="custom-io-list"></div>
       </div>
 
-      <div>
+      <div id="blankOutputEditorSection">
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-OB16E Outputs &amp; KM Contactors (Available Tags &amp; Alias)</span>
+          <span class="shortcut-section-title">1756-OB16E Outputs — Contactors (Forward / Reverse) &amp; Pilot Lights (Color)</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add 1756 Output</button>
         </div>
         <div id="blankOutputEditorList" class="custom-io-list"></div>
@@ -1708,7 +1788,7 @@
       <div class="field-group">
         <label for="mimicDriveMode">Motor Behavior Source</label>
         <select id="mimicDriveMode" onchange="toggleCustomMimicFields()">
-          <option value="AUTO">Auto (Follow 1756-OB16E Outputs &amp; Faults)</option>
+          <option value="AUTO">Auto (Follow 1756-OB16E Contactors &amp; Faults)</option>
           <option value="CUSTOM">Manual / Custom Mimic Override</option>
         </select>
       </div>
@@ -1739,7 +1819,7 @@
 
       <div>
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">Pilot Lamps</span>
+          <span class="shortcut-section-title">Pilot Lamps (Synced with 1756 Pilot Light Outputs)</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomMimicLamp()">+ Add Lamp</button>
         </div>
         <div id="blankLampsEditorList" class="custom-io-list"></div>
@@ -1895,6 +1975,35 @@
  * Studio 5000 Logix Designer — ControlLogix Ladder Logic & Motor Control Simulator
  */
 
+const VALID_LAMP_COLORS = ['green', 'amber', 'blue', 'red'];
+
+function createDefaultOutputConfigs(labels) {
+  return (labels || []).map((lbl, idx) => {
+    const str = String(lbl || '');
+    const isPilot = /pilot|horn|fault|alm|lt|lamp/i.test(str);
+    if (isPilot) {
+      let color = 'green';
+      if (/fault|horn|alm|red/i.test(str)) color = 'red';
+      else if (/rev|amber|yellow|warn/i.test(str)) color = 'amber';
+      else if (/ready|blue|delta/i.test(str)) color = 'blue';
+      return { deviceType: 'PILOT', direction: 'NONE', color };
+    }
+    let direction = 'FORWARD';
+    if (/rev/i.test(str)) direction = 'REVERSE';
+    else if (/spare|aux|fan|brake|pump|gate|sol|diverter/i.test(str) && idx > 2) direction = 'NONE';
+    return { deviceType: 'CONTACTOR', direction, color: 'green' };
+  });
+}
+
+function normalizeOutputConfig(cfg, fallbackLabel, idx) {
+  const fallback = createDefaultOutputConfigs([fallbackLabel || `Output_${idx}`])[0];
+  if (!cfg || typeof cfg !== 'object') return fallback;
+  const deviceType = cfg.deviceType === 'PILOT' ? 'PILOT' : 'CONTACTOR';
+  const direction = ['FORWARD', 'REVERSE', 'NONE'].includes(cfg.direction) ? cfg.direction : fallback.direction;
+  const color = VALID_LAMP_COLORS.includes(cfg.color) ? cfg.color : fallback.color;
+  return { deviceType, direction, color };
+}
+
 const PLC = {
   running: true,
   scanCount: 0,
@@ -1942,14 +2051,24 @@ const PLC = {
     'Local:2:O.Data.7'
   ],
   outputLabels: [
-    'Main_KM1',
-    'Star_Rev_KM2',
+    'Fwd_KM1',
+    'Rev_KM2',
     'Delta_KM3',
-    'Fault_Horn',
+    'Fault_Pilot',
     'Run_Pilot',
     'Conv_Belt',
     'Diverter_Sol',
     'Ready_Pilot'
+  ],
+  outputConfigs: [
+    { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+    { deviceType: 'CONTACTOR', direction: 'REVERSE', color: 'amber' },
+    { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'blue' },
+    { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
+    { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
+    { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+    { deviceType: 'CONTACTOR', direction: 'NONE', color: 'amber' },
+    { deviceType: 'PILOT', direction: 'NONE', color: 'blue' }
   ],
   Control_Bits: Array(8).fill(false),
   controlBitLabels: [
@@ -1969,7 +2088,6 @@ const PLC = {
     'Timer_3': { EN: false, TT: false, DN: false, PRE: 1500, ACC: 0, label: 'Pulse_Timer' }
   },
 
-  // Configurable Bottom Quick-Control Dock Buttons (e.g., Start, Stop, OL, Rev)
   quickDockItems: [
     { id: 'dock_0', addr: 'Local:1:I.Data.0', label: 'Start', mode: 'MOM_NO', key: 'S' },
     { id: 'dock_1', addr: 'Local:1:I.Data.1', label: 'Stop', mode: 'MOM_NC', key: 'X' },
@@ -1983,10 +2101,9 @@ const PLC = {
     rpm: 0,
     subtext: 'STANDBY',
     lamps: [
-      { bitIndex: 0, label: 'Main_KM1', color: 'green' },
-      { bitIndex: 1, label: 'Star_Rev_KM2', color: 'amber' },
-      { bitIndex: 2, label: 'Delta_KM3', color: 'blue' },
-      { bitIndex: 3, label: 'Fault_Horn', color: 'red' }
+      { bitIndex: 3, label: 'Fault_Pilot', color: 'red' },
+      { bitIndex: 4, label: 'Run_Pilot', color: 'green' },
+      { bitIndex: 7, label: 'Ready_Pilot', color: 'blue' }
     ]
   },
 
@@ -2009,7 +2126,6 @@ const KB_NAV = {
   modalArmedForApply: false
 };
 
-// Default Fallback Field Input Shortcut Map (Start, Stop, OL, Reset/Rev, + Digits 4..7)
 const DEFAULT_FIELD_INPUT_KEYMAP = {
   's': 0,
   'x': 1,
@@ -2038,6 +2154,13 @@ function getInputAddress(idx) {
 
 function getOutputAddress(idx) {
   return PLC.outputAddresses[idx] || `Local:2:O.Data.${idx}`;
+}
+
+function getOutputConfig(idx) {
+  if (!PLC.outputConfigs[idx]) {
+    PLC.outputConfigs[idx] = normalizeOutputConfig(null, PLC.outputLabels[idx], idx);
+  }
+  return PLC.outputConfigs[idx];
 }
 
 function findInputIndexByAddress(addr) {
@@ -2226,6 +2349,39 @@ function syncQuickDockFromCurrentIo(preserveCustomExtra) {
   PLC.quickDockItems = newItems;
 }
 
+function syncMimicLampsFromOutputConfigs(preserveManualNonPilotLamps) {
+  const pilotOutputs = [];
+  for (let i = 0; i < PLC.outputLabels.length; i++) {
+    const cfg = getOutputConfig(i);
+    if (cfg.deviceType === 'PILOT') {
+      pilotOutputs.push({
+        bitIndex: i,
+        label: PLC.outputLabels[i] || `Pilot_${i}`,
+        color: cfg.color || 'green'
+      });
+    }
+  }
+
+  if (pilotOutputs.length > 0) {
+    if (preserveManualNonPilotLamps && Array.isArray(PLC.blankMimic.lamps)) {
+      const extraManual = PLC.blankMimic.lamps.filter(l => {
+        const cfg = getOutputConfig(l.bitIndex);
+        return cfg && cfg.deviceType !== 'PILOT';
+      });
+      PLC.blankMimic.lamps = [...pilotOutputs, ...extraManual];
+    } else {
+      PLC.blankMimic.lamps = pilotOutputs;
+    }
+  } else if (!Array.isArray(PLC.blankMimic.lamps) || PLC.blankMimic.lamps.length === 0) {
+    PLC.blankMimic.lamps = [
+      { bitIndex: 0, label: PLC.outputLabels[0] || 'Main_KM1', color: 'green' },
+      { bitIndex: 1, label: PLC.outputLabels[1] || 'Star_Rev_KM2', color: 'amber' },
+      { bitIndex: 2, label: PLC.outputLabels[2] || 'Delta_KM3', color: 'blue' },
+      { bitIndex: 3, label: PLC.outputLabels[3] || 'Fault_Pilot', color: 'red' }
+    ];
+  }
+}
+
 const PRESETS = {
   blank: {
     modes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
@@ -2239,7 +2395,17 @@ const PRESETS = {
       'Local:2:O.Data.4', 'Local:2:O.Data.5', 'Local:2:O.Data.6', 'Local:2:O.Data.7'
     ],
     inLabels: ['Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Rev_Reset_PB', 'Prox_Sensor', 'Jam_Sim_Sw', 'Aux_PB', 'EStop_OK'],
-    outLabels: ['Main_KM1', 'Star_Rev_KM2', 'Delta_KM3', 'Fault_Horn', 'Run_Pilot', 'Conv_Belt', 'Diverter_Sol', 'Ready_Pilot'],
+    outLabels: ['Fwd_KM1', 'Rev_KM2', 'Delta_KM3', 'Fault_Pilot', 'Run_Pilot', 'Conv_Belt', 'Diverter_Sol', 'Ready_Pilot'],
+    outConfigs: [
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'REVERSE', color: 'amber' },
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'blue' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'amber' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'blue' }
+    ],
     bitLabels: ['Sys_Run', 'Fault_Latch', 'Aux_Bit_2', 'Aux_Bit_3', 'Step_1_Flag', 'Step_2_Flag', 'Auto_Mode', 'Alarm_Ack'],
     timerDefs: {
       'Timer_0': { PRE: 3000, label: 'Start_Delay' },
@@ -2254,6 +2420,16 @@ const PRESETS = {
     initIn: [false, true, true, false, false, false, false, true],
     inLabels: ['Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Reset_PB', 'Local_Auto', 'Spare_In', 'Lamp_Test', 'EStop_OK'],
     outLabels: ['Main_KM1', 'Spare_Out1', 'Spare_Out2', 'OL_Fault', 'Run_Pilot', 'Cool_Fan', 'Brake_Rel', 'Ready_Pilot'],
+    outConfigs: [
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'green' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'blue' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'amber' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'blue' }
+    ],
     rungs: [
       {
         comment: 'Rung 0: 3-Wire Start/Stop Seal-In Starter with NC Stop & NC Overload',
@@ -2291,6 +2467,16 @@ const PRESETS = {
     initIn: [false, true, true, false, false, false, false, true],
     inLabels: ['Fwd_Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Rev_Start_PB', 'Fwd_Limit', 'Rev_Limit', 'Spare_PB', 'EStop_OK'],
     outLabels: ['Fwd_KM1', 'Rev_KM2', 'Spare_Out', 'OL_Fault', 'Fwd_Pilot', 'Rev_Pilot', 'Brake_Rel', 'Ready_Pilot'],
+    outConfigs: [
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'REVERSE', color: 'amber' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'green' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'amber' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'blue' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'blue' }
+    ],
     rungs: [
       {
         comment: 'Rung 0: Forward Contactor KM1 with NC Interlock from Reverse KM2',
@@ -2338,6 +2524,16 @@ const PRESETS = {
     initIn: [false, true, true, false, false, false, false, true],
     inLabels: ['Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Test_PB', 'Phase_OK', 'Auto_Sel', 'Spare_In', 'EStop_OK'],
     outLabels: ['Main_KM1', 'Star_KM2', 'Delta_KM3', 'OL_Fault', 'Delta_Pilot', 'Lube_Pump', 'Cool_Fan', 'Ready_Pilot'],
+    outConfigs: [
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'amber' },
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'blue' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'blue' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'blue' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'blue' }
+    ],
     rungs: [
       {
         comment: 'Rung 0: Main Line Contactor KM1 Seal-In Control',
@@ -2386,6 +2582,16 @@ const PRESETS = {
     initIn: [false, true, true, false, false, false, false, true],
     inLabels: ['Sys_Start', 'Stop_PB_NC', 'OL_Relay_NC', 'Fault_Reset', 'Jam_Sensor', 'Part_Prox', 'Jog_PB', 'EStop_OK'],
     outLabels: ['Main_Belt', 'Feed_Conv', 'Diverter', 'Fault_Horn', 'Sys_Run_Lt', 'Reject_Sol', 'Air_Gate', 'Ready_Pilot'],
+    outConfigs: [
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'amber' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'red' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'green' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'amber' },
+      { deviceType: 'CONTACTOR', direction: 'NONE', color: 'blue' },
+      { deviceType: 'PILOT', direction: 'NONE', color: 'blue' }
+    ],
     rungs: [
       {
         comment: 'Rung 0: Master System Run Bit (Control_Bits.0) with Fault Interlock (Control_Bits.1)',
@@ -2471,6 +2677,10 @@ function loadPreset(id) {
     ? [...p.outAddresses]
     : p.outLabels.map((_, idx) => `Local:2:O.Data.${idx}`);
 
+  PLC.outputConfigs = p.outConfigs
+    ? p.outConfigs.map((cfg, idx) => normalizeOutputConfig(cfg, p.outLabels[idx], idx))
+    : createDefaultOutputConfigs(p.outLabels);
+
   PLC.I = Array(PLC.physicalIn.length).fill(false);
   PLC.O = Array(PLC.outputLabels.length).fill(false);
   PLC.physicalOut = Array(PLC.outputLabels.length).fill(false);
@@ -2490,12 +2700,6 @@ function loadPreset(id) {
       'Timer_2': { EN: false, TT: false, DN: false, PRE: p.timerDefs['Timer_2'].PRE, ACC: 0, label: p.timerDefs['Timer_2'].label },
       'Timer_3': { EN: false, TT: false, DN: false, PRE: p.timerDefs['Timer_3'].PRE, ACC: 0, label: p.timerDefs['Timer_3'].label }
     };
-    PLC.blankMimic.lamps = [
-      { bitIndex: 0, label: PLC.outputLabels[0], color: 'green' },
-      { bitIndex: 1, label: PLC.outputLabels[1], color: 'amber' },
-      { bitIndex: 2, label: PLC.outputLabels[2], color: 'blue' },
-      { bitIndex: 3, label: PLC.outputLabels[3], color: 'red' }
-    ];
   } else {
     PLC.controlBitLabels = ['Sys_Run', 'Fault_Latch', 'Aux_Bit_2', 'Aux_Bit_3', 'Step_1_Flag', 'Step_2_Flag', 'Auto_Mode', 'Alarm_Ack'];
     PLC.Control_Bits = Array(PLC.controlBitLabels.length).fill(false);
@@ -2507,6 +2711,7 @@ function loadPreset(id) {
     };
   }
 
+  syncMimicLampsFromOutputConfigs(false);
   syncQuickDockFromCurrentIo(false);
 
   KB_NAV.selectedRungIdx = 0;
@@ -3078,7 +3283,7 @@ function applyQuickDockChanges() {
 }
 
 /**
- * 1756 I/O Customization Modal — Dropdown of Available Controller/Program Tags (Conflict-Free)
+ * 1756 I/O Customization Modal — Contactor Forward/Reverse & Pilot Light Color Options
  */
 let draftBlankIo = {
   inputs: [],
@@ -3139,10 +3344,16 @@ function initDraftBlankIoFromPlc() {
       mode: PLC.inputModes[i] || 'MOM_NO',
       state: !!PLC.physicalIn[i]
     })),
-    outputs: Array.from({ length: PLC.physicalOut.length }, (_, i) => ({
-      addr: getOutputAddress(i),
-      label: PLC.outputLabels[i] || `Output_${i}`
-    }))
+    outputs: Array.from({ length: PLC.physicalOut.length }, (_, i) => {
+      const cfg = getOutputConfig(i);
+      return {
+        addr: getOutputAddress(i),
+        label: PLC.outputLabels[i] || `Output_${i}`,
+        deviceType: cfg.deviceType,
+        direction: cfg.direction,
+        color: cfg.color
+      };
+    })
   };
 }
 
@@ -3159,10 +3370,16 @@ function captureDraftBlankIoFromDom() {
 
   const outRows = Array.from(document.querySelectorAll('#blankOutputEditorList .custom-io-item'));
   if (outRows.length > 0) {
-    draftBlankIo.outputs = outRows.map((row, i) => ({
-      addr: row.querySelector(`#editOutAddr_${i}`)?.value || draftBlankIo.outputs[i]?.addr || `Local:2:O.Data.${i}`,
-      label: (row.querySelector(`#editOutLabel_${i}`)?.value ?? draftBlankIo.outputs[i]?.label ?? `Output_${i}`).trim()
-    }));
+    draftBlankIo.outputs = outRows.map((row, i) => {
+      const prev = draftBlankIo.outputs[i] || { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' };
+      return {
+        addr: row.querySelector(`#editOutAddr_${i}`)?.value || prev.addr || `Local:2:O.Data.${i}`,
+        label: (row.querySelector(`#editOutLabel_${i}`)?.value ?? prev.label ?? `Output_${i}`).trim(),
+        deviceType: row.querySelector(`#editOutType_${i}`)?.value || prev.deviceType || 'CONTACTOR',
+        direction: row.querySelector(`#editOutDir_${i}`)?.value || prev.direction || 'FORWARD',
+        color: row.querySelector(`#editOutColor_${i}`)?.value || prev.color || 'green'
+      };
+    });
   }
 }
 
@@ -3230,6 +3447,7 @@ function renderBlankIoEditorLists() {
     const globalSlotIdx = inputSlotCount + i;
     const usedByOthers = new Set(allSelectedAddrs.filter((_, idx) => idx !== globalSlotIdx));
     const optionsHtml = buildAvailableTagOptionsHtml(outp.addr, usedByOthers);
+    const isPilot = outp.deviceType === 'PILOT';
 
     const item = document.createElement('div');
     item.className = 'custom-io-item';
@@ -3241,11 +3459,89 @@ function renderBlankIoEditorLists() {
         ${draftBlankIo.outputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomOutputChannel(${i})" title="Remove Output">&times;</button>` : ''}
       </div>
       <div class="custom-io-row">
-        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(outp.label)}" placeholder="Output / KM Label">
+        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(outp.label)}" placeholder="Output / KM / Pilot Alias">
+      </div>
+      <div class="custom-io-row">
+        <select id="editOutType_${i}" onchange="handleOutputDeviceTypeChange(${i}, this.value)">
+          <option value="CONTACTOR" ${!isPilot ? 'selected' : ''}>Contactor (KM)</option>
+          <option value="PILOT" ${isPilot ? 'selected' : ''}>Pilot Light</option>
+        </select>
+        <select id="editOutDir_${i}" style="display:${!isPilot ? 'block' : 'none'};" onchange="handleOutputDirectionChange(${i}, this.value)">
+          <option value="FORWARD" ${outp.direction === 'FORWARD' ? 'selected' : ''}>Dir: Forward (CW)</option>
+          <option value="REVERSE" ${outp.direction === 'REVERSE' ? 'selected' : ''}>Dir: Reverse (CCW)</option>
+          <option value="NONE" ${outp.direction === 'NONE' ? 'selected' : ''}>Dir: Auxiliary</option>
+        </select>
+        <select id="editOutColor_${i}" style="display:${isPilot ? 'block' : 'none'};" onchange="handleOutputPilotColorChange(${i}, this.value)">
+          <option value="green" ${outp.color === 'green' ? 'selected' : ''}>Color: Green</option>
+          <option value="amber" ${outp.color === 'amber' ? 'selected' : ''}>Color: Amber</option>
+          <option value="blue" ${outp.color === 'blue' ? 'selected' : ''}>Color: Blue</option>
+          <option value="red" ${outp.color === 'red' ? 'selected' : ''}>Color: Red</option>
+        </select>
       </div>
     `;
     outHost.appendChild(item);
   });
+}
+
+function isGenericOrAutoOutputLabel(label) {
+  const s = String(label || '').trim();
+  if (!s) return true;
+  return /^(Output_\d+|KM_Aux_\d+|Spare_Out\d*|Fwd_KM\d+|Rev_KM\d+|Main_KM\d+|Green_Pilot|Amber_Pilot|Blue_Pilot|Red_Pilot|Run_Pilot|Fault_Pilot)$/i.test(s);
+}
+
+function handleOutputDeviceTypeChange(idx, newDeviceType) {
+  captureDraftBlankIoFromDom();
+  const item = draftBlankIo.outputs[idx];
+  if (!item) return;
+  item.deviceType = newDeviceType === 'PILOT' ? 'PILOT' : 'CONTACTOR';
+
+  if (item.deviceType === 'PILOT') {
+    if (!VALID_LAMP_COLORS.includes(item.color)) item.color = 'green';
+    if (isGenericOrAutoOutputLabel(item.label)) {
+      const capColor = item.color.charAt(0).toUpperCase() + item.color.slice(1);
+      item.label = `${capColor}_Pilot`;
+    }
+  } else {
+    if (!['FORWARD', 'REVERSE', 'NONE'].includes(item.direction)) item.direction = 'FORWARD';
+    if (isGenericOrAutoOutputLabel(item.label)) {
+      if (item.direction === 'REVERSE') item.label = `Rev_KM${idx + 1}`;
+      else if (item.direction === 'FORWARD') item.label = `Fwd_KM${idx + 1}`;
+      else item.label = `KM_Aux_${idx}`;
+    }
+  }
+
+  renderBlankIoEditorLists();
+  const focusEl = document.getElementById(item.deviceType === 'PILOT' ? `editOutColor_${idx}` : `editOutDir_${idx}`);
+  if (focusEl) focusEl.focus();
+}
+
+function handleOutputDirectionChange(idx, newDir) {
+  captureDraftBlankIoFromDom();
+  const item = draftBlankIo.outputs[idx];
+  if (!item) return;
+  item.direction = newDir;
+  if (isGenericOrAutoOutputLabel(item.label)) {
+    if (newDir === 'REVERSE') item.label = `Rev_KM${idx + 1}`;
+    else if (newDir === 'FORWARD') item.label = `Fwd_KM${idx + 1}`;
+    else item.label = `KM_Aux_${idx}`;
+  }
+  renderBlankIoEditorLists();
+  const focusEl = document.getElementById(`editOutDir_${idx}`);
+  if (focusEl) focusEl.focus();
+}
+
+function handleOutputPilotColorChange(idx, newColor) {
+  captureDraftBlankIoFromDom();
+  const item = draftBlankIo.outputs[idx];
+  if (!item) return;
+  item.color = newColor;
+  if (isGenericOrAutoOutputLabel(item.label)) {
+    const capColor = newColor.charAt(0).toUpperCase() + newColor.slice(1);
+    item.label = `${capColor}_Pilot`;
+  }
+  renderBlankIoEditorLists();
+  const focusEl = document.getElementById(`editOutColor_${idx}`);
+  if (focusEl) focusEl.focus();
 }
 
 function handleBlankIoAddrSelectChange(kind, idx, selectedTag) {
@@ -3263,16 +3559,25 @@ function handleBlankIoAddrSelectChange(kind, idx, selectedTag) {
   if (focusTarget) focusTarget.focus();
 }
 
-function openBlankIoModal() {
+function openBlankIoModal(focusSection) {
   initDraftBlankIoFromPlc();
   renderBlankIoEditorLists();
 
   KB_NAV.modalArmedForApply = false;
   document.getElementById('blankIoModal').classList.add('open');
-  setTimeout(() => {
-    const firstAddrSel = document.getElementById('editInAddr_0');
-    if (firstAddrSel) firstAddrSel.focus();
-  }, 10);
+
+  if (focusSection === 'outputs') {
+    document.getElementById('blankOutputEditorSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const firstOut = document.getElementById('editOutType_0') || document.getElementById('editOutAddr_0');
+      if (firstOut) firstOut.focus();
+    }, 20);
+  } else {
+    setTimeout(() => {
+      const firstAddrSel = document.getElementById('editInAddr_0');
+      if (firstAddrSel) firstAddrSel.focus();
+    }, 10);
+  }
 }
 
 function addCustomInputChannel() {
@@ -3316,9 +3621,14 @@ function addCustomOutputChannel() {
   const nextAvailable = getAllAvailableControllerProgramTags().find(t => !used.has(t.addr));
   const idx = draftBlankIo.outputs.length;
   const chosenAddr = nextAvailable ? nextAvailable.addr : `Local:2:O.Data.${idx}`;
+  const defaultAlias = getDefaultLabelForAddress(chosenAddr) || `Fwd_KM${idx + 1}`;
+  const inferred = createDefaultOutputConfigs([defaultAlias])[0];
   draftBlankIo.outputs.push({
     addr: chosenAddr,
-    label: getDefaultLabelForAddress(chosenAddr) || `KM_Aux_${idx}`
+    label: defaultAlias,
+    deviceType: inferred.deviceType,
+    direction: inferred.direction,
+    color: inferred.color
   });
   renderBlankIoEditorLists();
   setTimeout(() => {
@@ -3347,18 +3657,28 @@ function closeBlankIoModal() {
 }
 
 function resetBlankIoDefaults() {
-  const def = PRESETS.blank;
+  const def = PRESETS[PLC.presetId] || PRESETS.blank;
+  const baseInAddrs = def.inAddresses || def.inLabels.map((_, i) => `Local:1:I.Data.${i}`);
+  const baseOutAddrs = def.outAddresses || def.outLabels.map((_, i) => `Local:2:O.Data.${i}`);
+  const baseOutConfigs = def.outConfigs || createDefaultOutputConfigs(def.outLabels);
+
   draftBlankIo = {
-    inputs: def.inAddresses.map((addr, i) => ({
+    inputs: baseInAddrs.map((addr, i) => ({
       addr,
       label: def.inLabels[i] || `Input_${i}`,
       mode: def.modes[i] || 'MOM_NO',
       state: !!def.initIn[i]
     })),
-    outputs: def.outAddresses.map((addr, i) => ({
-      addr,
-      label: def.outLabels[i] || `Output_${i}`
-    }))
+    outputs: baseOutAddrs.map((addr, i) => {
+      const cfg = normalizeOutputConfig(baseOutConfigs[i], def.outLabels[i], i);
+      return {
+        addr,
+        label: def.outLabels[i] || `Output_${i}`,
+        deviceType: cfg.deviceType,
+        direction: cfg.direction,
+        color: cfg.color
+      };
+    })
   };
   renderBlankIoEditorLists();
 }
@@ -3383,9 +3703,12 @@ function applyBlankIoChanges() {
 
   const nextOutAddrs = [];
   const nextOutLabels = [];
+  const nextOutConfigs = [];
   draftBlankIo.outputs.forEach((outp, i) => {
+    const labelStr = outp.label || `Output_${i}`;
     nextOutAddrs.push(outp.addr || `Local:2:O.Data.${i}`);
-    nextOutLabels.push(outp.label || `Output_${i}`);
+    nextOutLabels.push(labelStr);
+    nextOutConfigs.push(normalizeOutputConfig(outp, labelStr, i));
   });
 
   PLC.quickDockItems.forEach(item => {
@@ -3410,8 +3733,11 @@ function applyBlankIoChanges() {
 
   PLC.outputAddresses = nextOutAddrs;
   PLC.outputLabels = nextOutLabels;
+  PLC.outputConfigs = nextOutConfigs;
   PLC.O = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
   PLC.physicalOut = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
+
+  syncMimicLampsFromOutputConfigs(true);
 
   closeBlankIoModal();
   buildInputOutputRacks();
@@ -3527,18 +3853,11 @@ function syncMimicStateDefaults() {
 }
 
 function resetBlankMimicDefaults() {
-  PLC.blankMimic = {
-    driveMode: 'AUTO',
-    state: 'STOPPED',
-    rpm: 0,
-    subtext: 'STANDBY',
-    lamps: [
-      { bitIndex: 0, label: PLC.outputLabels[0] || 'Main_KM1', color: 'green' },
-      { bitIndex: 1, label: PLC.outputLabels[1] || 'Star_Rev_KM2', color: 'amber' },
-      { bitIndex: 2, label: PLC.outputLabels[2] || 'Delta_KM3', color: 'blue' },
-      { bitIndex: 3, label: PLC.outputLabels[3] || 'Fault_Horn', color: 'red' }
-    ]
-  };
+  PLC.blankMimic.driveMode = 'AUTO';
+  PLC.blankMimic.state = 'STOPPED';
+  PLC.blankMimic.rpm = 0;
+  PLC.blankMimic.subtext = 'STANDBY';
+  syncMimicLampsFromOutputConfigs(false);
   openBlankMimicModal();
 }
 
@@ -3559,15 +3878,21 @@ function applyBlankMimicChanges() {
     const lbl = (document.getElementById(`editLampLabel_${i}`)?.value || '').trim();
     const bitIdx = parseInt(document.getElementById(`editLampBit_${i}`)?.value || String(i), 10);
     const col = document.getElementById(`editLampColor_${i}`)?.value || 'green';
+    const resolvedBit = isNaN(bitIdx) ? i : bitIdx;
     nextLamps.push({
-      bitIndex: isNaN(bitIdx) ? i : bitIdx,
-      label: lbl || PLC.outputLabels[bitIdx] || `Lamp_${i}`,
+      bitIndex: resolvedBit,
+      label: lbl || PLC.outputLabels[resolvedBit] || `Lamp_${i}`,
       color: col
     });
+
+    if (PLC.outputConfigs[resolvedBit] && PLC.outputConfigs[resolvedBit].deviceType === 'PILOT') {
+      PLC.outputConfigs[resolvedBit].color = col;
+    }
   }
   PLC.blankMimic.lamps = nextLamps;
 
   closeBlankMimicModal();
+  buildInputOutputRacks();
   buildMimicLamps();
   syncUiVisuals();
 }
@@ -4349,7 +4674,6 @@ function syncUiVisuals() {
     }
   }
 
-  // Synchronize Bottom Quick-Control Dock Buttons Live State
   PLC.quickDockItems.forEach((item, idx) => {
     const dBtn = document.getElementById(`dockBtn_${idx}`);
     if (!dBtn) return;
@@ -4425,6 +4749,24 @@ function buildInputOutputRacks() {
     outHost.innerHTML = '';
     for (let i = 0; i < PLC.physicalOut.length; i++) {
       const addrStr = getOutputAddress(i);
+      const cfg = getOutputConfig(i);
+      let badgeHtml = '';
+      let ledColorClass = '';
+
+      if (cfg.deviceType === 'PILOT') {
+        const col = cfg.color || 'green';
+        badgeHtml = `<span class="out-role-badge pilot-${col}">PILOT · ${col.toUpperCase()}</span>`;
+        ledColorClass = `pilot-${col}`;
+      } else {
+        if (cfg.direction === 'FORWARD') {
+          badgeHtml = `<span class="out-role-badge fwd">KM · FWD</span>`;
+        } else if (cfg.direction === 'REVERSE') {
+          badgeHtml = `<span class="out-role-badge rev">KM · REV</span>`;
+        } else {
+          badgeHtml = `<span class="out-role-badge">KM · AUX</span>`;
+        }
+      }
+
       const slot = document.createElement('div');
       slot.className = 'out-slot';
       slot.id = `outSlot_${i}`;
@@ -4432,8 +4774,9 @@ function buildInputOutputRacks() {
         <div style="min-width:0; overflow:hidden;">
           <div style="font-weight:800; color:var(--sky-accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(addrStr)}">${escapeHtml(addrStr)}</div>
           <div style="font-size:9px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(PLC.outputLabels[i])}</div>
+          <div class="out-meta-row">${badgeHtml}</div>
         </div>
-        <div id="outLed_${i}" class="led-indicator"></div>
+        <div id="outLed_${i}" class="led-indicator ${ledColorClass}"></div>
       `;
       outHost.appendChild(slot);
     }
@@ -4575,45 +4918,62 @@ function toggleOverloadTrip() {
   syncUiVisuals();
 }
 
+function getEffectiveMimicLamps() {
+  const pilotOutputs = [];
+  for (let i = 0; i < PLC.outputLabels.length; i++) {
+    const cfg = getOutputConfig(i);
+    if (cfg.deviceType === 'PILOT') {
+      pilotOutputs.push({
+        bitIndex: i,
+        label: PLC.outputLabels[i] || `Pilot_${i}`,
+        color: cfg.color || 'green'
+      });
+    }
+  }
+
+  if (PLC.presetId === 'blank') {
+    return Array.isArray(PLC.blankMimic.lamps) && PLC.blankMimic.lamps.length > 0
+      ? PLC.blankMimic.lamps
+      : pilotOutputs;
+  }
+
+  if (pilotOutputs.length > 0) {
+    return pilotOutputs;
+  }
+
+  return [
+    { bitIndex: 0, label: PLC.outputLabels[0] || 'Out_0', color: 'green' },
+    { bitIndex: 1, label: PLC.outputLabels[1] || 'Out_1', color: 'amber' },
+    { bitIndex: 2, label: PLC.outputLabels[2] || 'Out_2', color: 'blue' },
+    { bitIndex: 3, label: PLC.outputLabels[3] || 'Out_3', color: 'red' }
+  ];
+}
+
 function buildMimicLamps() {
   const host = document.getElementById('mimicLampsHost');
   if (!host) return;
-
-  if (PLC.presetId === 'blank') {
-    host.innerHTML = PLC.blankMimic.lamps.map((lamp, idx) => `
-      <div class="pilot-row">
-        <span>${escapeHtml(getOutputAddress(lamp.bitIndex))} (${escapeHtml(lamp.label)})</span>
-        <span id="lamp${idx}" class="lamp-dot ${lamp.color}"></span>
-      </div>
-    `).join('');
-    return;
-  }
-
-  host.innerHTML = `
-    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(0))} (${escapeHtml(PLC.outputLabels[0] || 'Out_0')})</span><span id="lamp0" class="lamp-dot green"></span></div>
-    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(1))} (${escapeHtml(PLC.outputLabels[1] || 'Out_1')})</span><span id="lamp1" class="lamp-dot amber"></span></div>
-    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(2))} (${escapeHtml(PLC.outputLabels[2] || 'Out_2')})</span><span id="lamp2" class="lamp-dot blue"></span></div>
-    <div class="pilot-row"><span>${escapeHtml(getOutputAddress(3))} (${escapeHtml(PLC.outputLabels[3] || 'Out_3')})</span><span id="lamp3" class="lamp-dot red"></span></div>
-  `;
+  const lamps = getEffectiveMimicLamps();
+  host.innerHTML = lamps.map((lamp, idx) => `
+    <div class="pilot-row">
+      <span>${escapeHtml(getOutputAddress(lamp.bitIndex))} (${escapeHtml(lamp.label)})</span>
+      <span id="lamp${idx}" class="lamp-dot ${lamp.color}"></span>
+    </div>
+  `).join('');
 }
 
-function hasReverseCircuitActive(o0, o1) {
-  if (o1 && !o0 && PLC.presetId !== 'preset3') return true;
+function getActiveContactorDirections() {
+  let fwdActive = false;
+  let revActive = false;
+
   for (let i = 0; i < PLC.physicalOut.length; i++) {
-    if (PLC.physicalOut[i] && /rev/i.test(PLC.outputLabels[i] || '')) {
-      return true;
+    if (!PLC.physicalOut[i]) continue;
+    const cfg = getOutputConfig(i);
+    if (cfg.deviceType === 'CONTACTOR') {
+      if (cfg.direction === 'FORWARD') fwdActive = true;
+      else if (cfg.direction === 'REVERSE') revActive = true;
     }
   }
-  return PLC.rungs.some(rung => {
-    if (!/rev/i.test(rung.comment || '')) return false;
-    return rung.elements.some(el => {
-      if (el.type === 'OTE' || el.type === 'OTL') return !!el.energized;
-      if (el.type === 'BRANCH') {
-        return el.branches.some(leg => leg.some(sub => (sub.type === 'OTE' || sub.type === 'OTL') && !!sub.energized));
-      }
-      return false;
-    });
-  });
+  return { fwdActive, revActive };
 }
 
 function speedStepFromRpm(rpm, isReverse) {
@@ -4628,21 +4988,11 @@ function updatePlantMimic() {
   const o2 = !!PLC.physicalOut[2];
   const o3 = !!PLC.physicalOut[3];
 
-  if (PLC.presetId === 'blank') {
-    PLC.blankMimic.lamps.forEach((lamp, idx) => {
-      const el = document.getElementById(`lamp${idx}`);
-      if (el) el.classList.toggle('on', !!PLC.physicalOut[lamp.bitIndex]);
-    });
-  } else {
-    const l0 = document.getElementById('lamp0');
-    const l1 = document.getElementById('lamp1');
-    const l2 = document.getElementById('lamp2');
-    const l3 = document.getElementById('lamp3');
-    if (l0) l0.classList.toggle('on', o0);
-    if (l1) l1.classList.toggle('on', o1);
-    if (l2) l2.classList.toggle('on', o2);
-    if (l3) l3.classList.toggle('on', o3);
-  }
+  const lamps = getEffectiveMimicLamps();
+  lamps.forEach((lamp, idx) => {
+    const el = document.getElementById(`lamp${idx}`);
+    if (el) el.classList.toggle('on', !!PLC.physicalOut[lamp.bitIndex]);
+  });
 
   const statusEl = document.getElementById('motorStatusText');
   const rpmEl = document.getElementById('motorRpmText');
@@ -4654,6 +5004,8 @@ function updatePlantMimic() {
   let stateStr = 'STOPPED';
   let stateColor = 'var(--text-secondary)';
   let modeStr = 'STANDBY';
+
+  const { fwdActive, revActive } = getActiveContactorDirections();
 
   if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') {
     const bm = PLC.blankMimic;
@@ -4689,22 +5041,6 @@ function updatePlantMimic() {
       stateColor = 'var(--crimson-fault)';
       degStep = 0;
     }
-  } else if (PLC.presetId === 'preset2') {
-    if (o0 && !o1) {
-      rpm = 1760;
-      degStep = speedStepFromRpm(rpm, false);
-      stateStr = 'FORWARD RUN';
-      stateColor = 'var(--power-green)';
-      modeStr = 'CW 3-PHASE';
-    } else if (o1 && !o0) {
-      rpm = 1760;
-      degStep = speedStepFromRpm(rpm, true);
-      stateStr = 'REVERSE RUN';
-      stateColor = 'var(--amber-warn)';
-      modeStr = 'CCW 3-PHASE';
-    } else if (o0 && o1) {
-      stateStr = 'INTERLOCK FAULT'; stateColor = 'var(--crimson-fault)'; modeStr = 'PHASE CONFLICT';
-    }
   } else if (PLC.presetId === 'preset3') {
     if (o0 && o1 && !o2) {
       rpm = 1040;
@@ -4719,22 +5055,28 @@ function updatePlantMimic() {
       stateColor = 'var(--power-green)';
       modeStr = '100% FULL V (DELTA)';
     }
-  } else if (hasReverseCircuitActive(o0, o1)) {
+  } else if (fwdActive && revActive) {
+    stateStr = 'INTERLOCK FAULT';
+    stateColor = 'var(--crimson-fault)';
+    modeStr = 'FWD + REV PHASE CONFLICT';
+    degStep = 0;
+  } else if (revActive && !fwdActive) {
     rpm = 1760;
     degStep = speedStepFromRpm(rpm, true);
     stateStr = 'REVERSE RUN';
     stateColor = 'var(--amber-warn)';
     modeStr = 'CCW 3-PHASE';
-  } else if (o0 || o1) {
+  } else if (fwdActive) {
     rpm = 1760;
     degStep = speedStepFromRpm(rpm, false);
-    stateStr = 'MOTOR RUNNING';
+    stateStr = 'FORWARD RUN';
     stateColor = 'var(--power-green)';
-    modeStr = '460VAC 60HZ';
+    modeStr = 'CW 3-PHASE';
   }
 
   if (!(PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM')) {
-    if (o3 || !PLC.physicalIn[2]) {
+    const redFaultPilotOn = lamps.some(l => l.color === 'red' && !!PLC.physicalOut[l.bitIndex]);
+    if (redFaultPilotOn || !PLC.physicalIn[2]) {
       stateStr = 'FAULT / OL TRIP';
       stateColor = 'var(--crimson-fault)';
     }
