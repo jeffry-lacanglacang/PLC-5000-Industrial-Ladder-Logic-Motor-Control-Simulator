@@ -1674,7 +1674,7 @@
     <div class="modal-scroll-body">
       <div>
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-IB16 Digital Inputs (Address, Alias, Mode &amp; State)</span>
+          <span class="shortcut-section-title">1756-IB16 Digital Inputs (Available Tags, Alias, Mode &amp; State)</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add 1756 Input</button>
         </div>
         <div id="blankInputEditorList" class="custom-io-list"></div>
@@ -1682,7 +1682,7 @@
 
       <div>
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-OB16E Outputs &amp; KM Contactors (Address &amp; Alias)</span>
+          <span class="shortcut-section-title">1756-OB16E Outputs &amp; KM Contactors (Available Tags &amp; Alias)</span>
           <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add 1756 Output</button>
         </div>
         <div id="blankOutputEditorList" class="custom-io-list"></div>
@@ -3078,77 +3078,221 @@ function applyQuickDockChanges() {
 }
 
 /**
- * 1756 I/O Customization Modal (Addresses, Aliases, Modes, States + Add/Remove)
+ * 1756 I/O Customization Modal — Dropdown of Available Controller/Program Tags (Conflict-Free)
  */
-function openBlankIoModal() {
+let draftBlankIo = {
+  inputs: [],
+  outputs: []
+};
+
+function getAllAvailableControllerProgramTags() {
+  const catalog = [];
+  const seen = new Set();
+
+  const pushTag = (addr, group, alias) => {
+    if (!addr || seen.has(addr)) return;
+    seen.add(addr);
+    const resolvedAlias = alias || getDefaultLabelForAddress(addr);
+    catalog.push({
+      addr,
+      group,
+      displayText: resolvedAlias ? `${addr} — ${resolvedAlias} [${group}]` : `${addr} [${group}]`
+    });
+  };
+
+  for (let i = 0; i < 16; i++) {
+    const addr = `Local:1:I.Data.${i}`;
+    pushTag(addr, '1756-IB16 IN', PLC.inputLabels[i] || `IB16_In_${i}`);
+  }
+  PLC.inputAddresses.forEach((addr, idx) => {
+    pushTag(addr, '1756-IB16 IN', PLC.inputLabels[idx] || `Input_${idx}`);
+  });
+
+  for (let i = 0; i < 16; i++) {
+    const addr = `Local:2:O.Data.${i}`;
+    pushTag(addr, '1756-OB16E OUT', PLC.outputLabels[i] || `OB16E_Out_${i}`);
+  }
+  PLC.outputAddresses.forEach((addr, idx) => {
+    pushTag(addr, '1756-OB16E OUT', PLC.outputLabels[idx] || `Output_${idx}`);
+  });
+
+  for (let i = 0; i < PLC.Control_Bits.length; i++) {
+    const addr = `Control_Bits.${i}`;
+    pushTag(addr, 'Program DINT', PLC.controlBitLabels[i] || `Bit_${i}`);
+  }
+
+  getTimerKeys().forEach(tKey => {
+    const tAlias = PLC.timers[tKey]?.label || tKey;
+    pushTag(`${tKey}.DN`, 'TIMER Bit', `${tAlias}.DN`);
+    pushTag(`${tKey}.TT`, 'TIMER Bit', `${tAlias}.TT`);
+    pushTag(`${tKey}.EN`, 'TIMER Bit', `${tAlias}.EN`);
+  });
+
+  return catalog;
+}
+
+function initDraftBlankIoFromPlc() {
+  draftBlankIo = {
+    inputs: Array.from({ length: PLC.physicalIn.length }, (_, i) => ({
+      addr: getInputAddress(i),
+      label: PLC.inputLabels[i] || `Input_${i}`,
+      mode: PLC.inputModes[i] || 'MOM_NO',
+      state: !!PLC.physicalIn[i]
+    })),
+    outputs: Array.from({ length: PLC.physicalOut.length }, (_, i) => ({
+      addr: getOutputAddress(i),
+      label: PLC.outputLabels[i] || `Output_${i}`
+    }))
+  };
+}
+
+function captureDraftBlankIoFromDom() {
+  const inRows = Array.from(document.querySelectorAll('#blankInputEditorList .custom-io-item'));
+  if (inRows.length > 0) {
+    draftBlankIo.inputs = inRows.map((row, i) => ({
+      addr: row.querySelector(`#editInAddr_${i}`)?.value || draftBlankIo.inputs[i]?.addr || `Local:1:I.Data.${i}`,
+      label: (row.querySelector(`#editInLabel_${i}`)?.value ?? draftBlankIo.inputs[i]?.label ?? `Input_${i}`).trim(),
+      mode: row.querySelector(`#editInMode_${i}`)?.value || draftBlankIo.inputs[i]?.mode || 'MOM_NO',
+      state: row.querySelector(`#editInState_${i}`)?.value === '1'
+    }));
+  }
+
+  const outRows = Array.from(document.querySelectorAll('#blankOutputEditorList .custom-io-item'));
+  if (outRows.length > 0) {
+    draftBlankIo.outputs = outRows.map((row, i) => ({
+      addr: row.querySelector(`#editOutAddr_${i}`)?.value || draftBlankIo.outputs[i]?.addr || `Local:2:O.Data.${i}`,
+      label: (row.querySelector(`#editOutLabel_${i}`)?.value ?? draftBlankIo.outputs[i]?.label ?? `Output_${i}`).trim()
+    }));
+  }
+}
+
+function buildAvailableTagOptionsHtml(currentAddr, usedByOtherRows) {
+  const catalog = getAllAvailableControllerProgramTags();
+  const available = catalog.filter(item => item.addr === currentAddr || !usedByOtherRows.has(item.addr));
+
+  if (currentAddr && !available.some(item => item.addr === currentAddr)) {
+    available.unshift({
+      addr: currentAddr,
+      group: 'Assigned',
+      displayText: `${currentAddr} [Assigned]`
+    });
+  }
+
+  return available.map(item =>
+    `<option value="${escapeHtml(item.addr)}" ${item.addr === currentAddr ? 'selected' : ''}>${escapeHtml(item.displayText)}</option>`
+  ).join('');
+}
+
+function renderBlankIoEditorLists() {
   const inHost = document.getElementById('blankInputEditorList');
   const outHost = document.getElementById('blankOutputEditorList');
   inHost.innerHTML = '';
   outHost.innerHTML = '';
 
-  for (let i = 0; i < PLC.physicalIn.length; i++) {
+  const allSelectedAddrs = [
+    ...draftBlankIo.inputs.map(x => x.addr),
+    ...draftBlankIo.outputs.map(x => x.addr)
+  ];
+
+  draftBlankIo.inputs.forEach((inp, i) => {
+    const usedByOthers = new Set(allSelectedAddrs.filter((_, idx) => idx !== i));
+    const optionsHtml = buildAvailableTagOptionsHtml(inp.addr, usedByOthers);
+
     const item = document.createElement('div');
     item.className = 'custom-io-item';
     item.dataset.inIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
         <strong style="color:var(--sky-accent);">IN #${i}</strong>
-        <input type="text" id="editInAddr_${i}" maxlength="26" value="${escapeHtml(getInputAddress(i))}" placeholder="1756 Input Address">
-        ${PLC.physicalIn.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomInputChannel(${i})" title="Remove Input">&times;</button>` : ''}
+        <select id="editInAddr_${i}" class="io-addr-select" onchange="handleBlankIoAddrSelectChange('IN', ${i}, this.value)">${optionsHtml}</select>
+        ${draftBlankIo.inputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomInputChannel(${i})" title="Remove Input">&times;</button>` : ''}
       </div>
       <div class="custom-io-row">
-        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(PLC.inputLabels[i] || `Input_${i}`)}" placeholder="Alias / Label">
+        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(inp.label)}" placeholder="Alias / Label">
       </div>
       <div class="custom-io-row">
         <select id="editInMode_${i}">
-          <option value="MOM_NO" ${PLC.inputModes[i] === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
-          <option value="MOM_NC" ${PLC.inputModes[i] === 'MOM_NC' ? 'selected' : ''}>MOM_NC</option>
-          <option value="TOGGLE" ${PLC.inputModes[i] === 'TOGGLE' ? 'selected' : ''}>TOGGLE</option>
+          <option value="MOM_NO" ${inp.mode === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
+          <option value="MOM_NC" ${inp.mode === 'MOM_NC' ? 'selected' : ''}>MOM_NC</option>
+          <option value="TOGGLE" ${inp.mode === 'TOGGLE' ? 'selected' : ''}>TOGGLE</option>
         </select>
         <select id="editInState_${i}">
-          <option value="0" ${!PLC.physicalIn[i] ? 'selected' : ''}>State: 0</option>
-          <option value="1" ${PLC.physicalIn[i] ? 'selected' : ''}>State: 1</option>
+          <option value="0" ${!inp.state ? 'selected' : ''}>State: 0</option>
+          <option value="1" ${inp.state ? 'selected' : ''}>State: 1</option>
         </select>
       </div>
     `;
     inHost.appendChild(item);
-  }
+  });
 
-  for (let i = 0; i < PLC.physicalOut.length; i++) {
+  const inputSlotCount = draftBlankIo.inputs.length;
+  draftBlankIo.outputs.forEach((outp, i) => {
+    const globalSlotIdx = inputSlotCount + i;
+    const usedByOthers = new Set(allSelectedAddrs.filter((_, idx) => idx !== globalSlotIdx));
+    const optionsHtml = buildAvailableTagOptionsHtml(outp.addr, usedByOthers);
+
     const item = document.createElement('div');
     item.className = 'custom-io-item';
     item.dataset.outIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
         <strong style="color:var(--power-green);">OUT #${i}</strong>
-        <input type="text" id="editOutAddr_${i}" maxlength="26" value="${escapeHtml(getOutputAddress(i))}" placeholder="1756 Output Address">
-        ${PLC.physicalOut.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomOutputChannel(${i})" title="Remove Output">&times;</button>` : ''}
+        <select id="editOutAddr_${i}" class="io-addr-select" onchange="handleBlankIoAddrSelectChange('OUT', ${i}, this.value)">${optionsHtml}</select>
+        ${draftBlankIo.outputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomOutputChannel(${i})" title="Remove Output">&times;</button>` : ''}
       </div>
       <div class="custom-io-row">
-        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(PLC.outputLabels[i] || `Output_${i}`)}" placeholder="Output / KM Label">
+        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(outp.label)}" placeholder="Output / KM Label">
       </div>
     `;
     outHost.appendChild(item);
+  });
+}
+
+function handleBlankIoAddrSelectChange(kind, idx, selectedTag) {
+  captureDraftBlankIoFromDom();
+  const alias = getDefaultLabelForAddress(selectedTag);
+  if (kind === 'IN' && draftBlankIo.inputs[idx]) {
+    draftBlankIo.inputs[idx].addr = selectedTag;
+    if (alias) draftBlankIo.inputs[idx].label = alias;
+  } else if (kind === 'OUT' && draftBlankIo.outputs[idx]) {
+    draftBlankIo.outputs[idx].addr = selectedTag;
+    if (alias) draftBlankIo.outputs[idx].label = alias;
   }
+  renderBlankIoEditorLists();
+  const focusTarget = document.getElementById(kind === 'IN' ? `editInAddr_${idx}` : `editOutAddr_${idx}`);
+  if (focusTarget) focusTarget.focus();
+}
+
+function openBlankIoModal() {
+  initDraftBlankIoFromPlc();
+  renderBlankIoEditorLists();
 
   KB_NAV.modalArmedForApply = false;
   document.getElementById('blankIoModal').classList.add('open');
   setTimeout(() => {
-    const firstInp = document.getElementById('editInLabel_0');
-    if (firstInp) firstInp.focus();
+    const firstAddrSel = document.getElementById('editInAddr_0');
+    if (firstAddrSel) firstAddrSel.focus();
   }, 10);
 }
 
 function addCustomInputChannel() {
-  const idx = PLC.physicalIn.length;
-  PLC.physicalIn.push(false);
-  PLC.inputAddresses.push(`Local:1:I.Data.${idx}`);
-  PLC.inputModes.push('MOM_NO');
-  PLC.inputLabels.push(`Aux_In_${idx}`);
-  PLC.I.push(false);
-  openBlankIoModal();
+  captureDraftBlankIoFromDom();
+  const used = new Set([
+    ...draftBlankIo.inputs.map(x => x.addr),
+    ...draftBlankIo.outputs.map(x => x.addr)
+  ]);
+  const nextAvailable = getAllAvailableControllerProgramTags().find(t => !used.has(t.addr));
+  const idx = draftBlankIo.inputs.length;
+  const chosenAddr = nextAvailable ? nextAvailable.addr : `Local:1:I.Data.${idx}`;
+  draftBlankIo.inputs.push({
+    addr: chosenAddr,
+    label: getDefaultLabelForAddress(chosenAddr) || `Aux_In_${idx}`,
+    mode: 'MOM_NO',
+    state: false
+  });
+  renderBlankIoEditorLists();
   setTimeout(() => {
-    const el = document.getElementById(`editInLabel_${idx}`);
+    const el = document.getElementById(`editInAddr_${idx}`);
     if (el) {
       el.focus();
       el.scrollIntoView({ block: 'nearest' });
@@ -3157,24 +3301,28 @@ function addCustomInputChannel() {
 }
 
 function removeCustomInputChannel(idx) {
-  if (PLC.physicalIn.length <= 1) return;
-  PLC.physicalIn.splice(idx, 1);
-  PLC.inputAddresses.splice(idx, 1);
-  PLC.inputModes.splice(idx, 1);
-  PLC.inputLabels.splice(idx, 1);
-  PLC.I.splice(idx, 1);
-  openBlankIoModal();
+  if (draftBlankIo.inputs.length <= 1) return;
+  captureDraftBlankIoFromDom();
+  draftBlankIo.inputs.splice(idx, 1);
+  renderBlankIoEditorLists();
 }
 
 function addCustomOutputChannel() {
-  const idx = PLC.physicalOut.length;
-  PLC.physicalOut.push(false);
-  PLC.O.push(false);
-  PLC.outputAddresses.push(`Local:2:O.Data.${idx}`);
-  PLC.outputLabels.push(`KM_Aux_${idx}`);
-  openBlankIoModal();
+  captureDraftBlankIoFromDom();
+  const used = new Set([
+    ...draftBlankIo.inputs.map(x => x.addr),
+    ...draftBlankIo.outputs.map(x => x.addr)
+  ]);
+  const nextAvailable = getAllAvailableControllerProgramTags().find(t => !used.has(t.addr));
+  const idx = draftBlankIo.outputs.length;
+  const chosenAddr = nextAvailable ? nextAvailable.addr : `Local:2:O.Data.${idx}`;
+  draftBlankIo.outputs.push({
+    addr: chosenAddr,
+    label: getDefaultLabelForAddress(chosenAddr) || `KM_Aux_${idx}`
+  });
+  renderBlankIoEditorLists();
   setTimeout(() => {
-    const el = document.getElementById(`editOutLabel_${idx}`);
+    const el = document.getElementById(`editOutAddr_${idx}`);
     if (el) {
       el.focus();
       el.scrollIntoView({ block: 'nearest' });
@@ -3183,12 +3331,10 @@ function addCustomOutputChannel() {
 }
 
 function removeCustomOutputChannel(idx) {
-  if (PLC.physicalOut.length <= 1) return;
-  PLC.physicalOut.splice(idx, 1);
-  PLC.O.splice(idx, 1);
-  PLC.outputAddresses.splice(idx, 1);
-  PLC.outputLabels.splice(idx, 1);
-  openBlankIoModal();
+  if (draftBlankIo.outputs.length <= 1) return;
+  captureDraftBlankIoFromDom();
+  draftBlankIo.outputs.splice(idx, 1);
+  renderBlankIoEditorLists();
 }
 
 function closeBlankIoModal() {
@@ -3202,49 +3348,45 @@ function closeBlankIoModal() {
 
 function resetBlankIoDefaults() {
   const def = PRESETS.blank;
-  PLC.physicalIn = [...def.initIn];
-  PLC.inputAddresses = [...def.inAddresses];
-  PLC.inputModes = [...def.modes];
-  PLC.inputLabels = [...def.inLabels];
-  PLC.outputAddresses = [...def.outAddresses];
-  PLC.outputLabels = [...def.outLabels];
-  PLC.I = Array(def.initIn.length).fill(false);
-  PLC.O = Array(def.outLabels.length).fill(false);
-  PLC.physicalOut = Array(def.outLabels.length).fill(false);
-  syncQuickDockFromCurrentIo(false);
-  openBlankIoModal();
+  draftBlankIo = {
+    inputs: def.inAddresses.map((addr, i) => ({
+      addr,
+      label: def.inLabels[i] || `Input_${i}`,
+      mode: def.modes[i] || 'MOM_NO',
+      state: !!def.initIn[i]
+    })),
+    outputs: def.outAddresses.map((addr, i) => ({
+      addr,
+      label: def.outLabels[i] || `Output_${i}`
+    }))
+  };
+  renderBlankIoEditorLists();
 }
 
 function applyBlankIoChanges() {
-  const inCount = document.querySelectorAll('#blankInputEditorList .custom-io-item').length;
-  const outCount = document.querySelectorAll('#blankOutputEditorList .custom-io-item').length;
+  captureDraftBlankIoFromDom();
 
   const prevInAddrs = [...PLC.inputAddresses];
   const prevOutAddrs = [...PLC.outputAddresses];
+  const prevOut = [...PLC.physicalOut];
 
   const nextIn = [];
   const nextInAddrs = [];
   const nextModes = [];
   const nextInLabels = [];
-  for (let i = 0; i < inCount; i++) {
-    const addrVal = (document.getElementById(`editInAddr_${i}`)?.value || '').trim() || `Local:1:I.Data.${i}`;
-    const lblVal = (document.getElementById(`editInLabel_${i}`)?.value || '').trim();
-    const modeVal = document.getElementById(`editInMode_${i}`)?.value || 'MOM_NO';
-    const stVal = document.getElementById(`editInState_${i}`)?.value === '1';
-    nextInAddrs.push(addrVal);
-    nextInLabels.push(lblVal || `Input_${i}`);
-    nextModes.push(modeVal);
-    nextIn.push(stVal);
-  }
+  draftBlankIo.inputs.forEach((inp, i) => {
+    nextInAddrs.push(inp.addr || `Local:1:I.Data.${i}`);
+    nextInLabels.push(inp.label || `Input_${i}`);
+    nextModes.push(inp.mode || 'MOM_NO');
+    nextIn.push(!!inp.state);
+  });
 
   const nextOutAddrs = [];
   const nextOutLabels = [];
-  for (let i = 0; i < outCount; i++) {
-    const addrVal = (document.getElementById(`editOutAddr_${i}`)?.value || '').trim() || `Local:2:O.Data.${i}`;
-    const outVal = (document.getElementById(`editOutLabel_${i}`)?.value || '').trim();
-    nextOutAddrs.push(addrVal);
-    nextOutLabels.push(outVal || `Output_${i}`);
-  }
+  draftBlankIo.outputs.forEach((outp, i) => {
+    nextOutAddrs.push(outp.addr || `Local:2:O.Data.${i}`);
+    nextOutLabels.push(outp.label || `Output_${i}`);
+  });
 
   PLC.quickDockItems.forEach(item => {
     const oldInIdx = prevInAddrs.indexOf(item.addr);
@@ -3264,13 +3406,12 @@ function applyBlankIoChanges() {
   PLC.inputAddresses = nextInAddrs;
   PLC.inputModes = nextModes;
   PLC.inputLabels = nextInLabels;
-  PLC.I = Array(inCount).fill(false);
+  PLC.I = Array(nextIn.length).fill(false);
 
-  const prevOut = PLC.physicalOut;
   PLC.outputAddresses = nextOutAddrs;
   PLC.outputLabels = nextOutLabels;
-  PLC.O = Array(outCount).fill(false).map((_, idx) => !!prevOut[idx]);
-  PLC.physicalOut = Array(outCount).fill(false).map((_, idx) => !!prevOut[idx]);
+  PLC.O = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
+  PLC.physicalOut = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
 
   closeBlankIoModal();
   buildInputOutputRacks();
