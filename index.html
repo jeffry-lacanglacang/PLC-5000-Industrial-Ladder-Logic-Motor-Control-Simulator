@@ -1505,7 +1505,7 @@
       <option value="preset3">3. Star-Delta Reduced-Voltage Starter</option>
       <option value="preset4">4. Automated Conveyor + Latching Fault Alarm</option>
     </select>
-    <span id="blankModeBadge" class="blank-mode-pill">BLANK CUSTOMIZABLE</span>
+    <span id="blankModeBadge" class="blank-mode-pill">BLANK ROUTINE</span>
   </div>
 
   <div class="scan-telemetry">
@@ -1534,8 +1534,7 @@
         </div>
       </div>
       <div id="blankIoBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Customize 1756 I/O addresses, modes &amp; dock buttons.</span>
-        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Configure</button>
+        <span><strong>Blank Routine:</strong> Edit 1756 I/O addresses &amp; modes via <strong>Edit I/O</strong>.</span>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
     </div>
@@ -1543,7 +1542,6 @@
     <div class="card">
       <div class="card-header">
         <span id="outputRackTitle" class="card-title">1756-OB16E Outputs (Local:2:O.Data.0–7)</span>
-        <button id="btnEditBlankOut" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Edit Out</button>
       </div>
       <div id="outputRackHost" class="out-rack"></div>
     </div>
@@ -1558,7 +1556,6 @@
       </div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button id="btnBlankCustomizeBar" class="btn-accent" onclick="openBlankIoModal()">Edit 1756 I/O</button>
-        <button id="btnDockCustomizeBar" class="btn-accent" onclick="openQuickDockModal()">Edit Dock</button>
         <button id="btnBlankMimicBar" class="btn-accent" onclick="openBlankMimicModal()">Edit Mimic</button>
         <button id="btnBlankTagsBar" class="btn-accent" onclick="openBlankTagsModal()">Edit Tags</button>
         <button id="btnAddRungTop" onclick="addNewRung()" title="Shortcut: N">+ Add Rung <span class="kbd-tag hide-mobile">N</span></button>
@@ -1586,8 +1583,7 @@
       </div>
 
       <div id="blankMimicBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Customize motor speed &amp; lamps.</span>
-        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankMimicModal()">Customize</button>
+        <span><strong>Blank Routine:</strong> Motor speed &amp; pilot lamps update live or via <strong>Edit Mimic</strong>.</span>
       </div>
 
       <div class="mimic-box">
@@ -1619,8 +1615,7 @@
         <button id="btnEditBlankBits" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('bits')">Edit Bits</button>
       </div>
       <div id="blankBitsBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Tap any bit to toggle or edit aliases.</span>
-        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('bits')">Configure</button>
+        <span><strong>Blank Routine:</strong> Tap any bit to toggle state.</span>
       </div>
       <div id="binaryTableHost" class="data-grid"></div>
     </div>
@@ -1631,8 +1626,7 @@
         <button id="btnEditBlankTimers" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('timers')">Edit Timers</button>
       </div>
       <div id="blankTimersBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Set .PRE presets, aliases &amp; status bits.</span>
-        <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('timers')">Configure</button>
+        <span><strong>Blank Routine:</strong> Adjust .PRE presets &amp; aliases via <strong>Edit Timers</strong>.</span>
       </div>
       <div id="timerTableHost"></div>
     </div>
@@ -1673,7 +1667,7 @@
 <div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Customize 1756 I/O Modules, Addresses &amp; KM Channels</h3>
+      <h3>Edit 1756 I/O Modules, Addresses &amp; KM Channels</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
     </div>
 
@@ -1681,10 +1675,7 @@
       <div>
         <div class="section-head-with-btn">
           <span class="shortcut-section-title">1756-IB16 Digital Inputs (Address, Alias, Mode &amp; State)</span>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="closeBlankIoModal(); openQuickDockModal();">Edit Bottom Dock</button>
-            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add 1756 Input</button>
-          </div>
+          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add 1756 Input</button>
         </div>
         <div id="blankInputEditorList" class="custom-io-list"></div>
       </div>
@@ -1709,7 +1700,7 @@
 <div id="blankMimicModal" class="modal-overlay" onclick="if(event.target===this) closeBlankMimicModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Customize Motor &amp; Plant Mimic</h3>
+      <h3>Edit Motor &amp; Plant Mimic</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankMimicModal()">Close</button>
     </div>
 
@@ -1766,7 +1757,7 @@
 <div id="blankTagsModal" class="modal-overlay" onclick="if(event.target===this) closeBlankTagsModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Customize Control_Bits &amp; TIMER Tags</h3>
+      <h3>Edit Control_Bits &amp; TIMER Tags</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankTagsModal()">Close</button>
     </div>
 
@@ -2721,19 +2712,12 @@ function renderLadderCanvas() {
   host.innerHTML = '';
 
   if (PLC.rungs.length === 0) {
-    const isBlank = PLC.presetId === 'blank';
     host.innerHTML = `
       <div class="empty-routine-prompt">
         <div style="color:var(--sky-accent); font-weight:800; font-size:13px;">EMPTY MAINROUTINE (MAINPROGRAM)</div>
-        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above, or customize <strong>1756 I/O, Bottom Dock, Mimic &amp; Tags</strong> directly.</div>
+        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above to begin programming.</div>
         <div class="empty-quick-actions">
           <button id="btnAddFirstRung" class="btn-run kb-nav-node" onclick="addNewRung()">+ Add First Rung <span class="kbd-tag hide-mobile">N</span></button>
-          <button type="button" class="btn-accent" onclick="openBlankIoModal()">Customize 1756 I/O</button>
-          <button type="button" class="btn-accent" onclick="openQuickDockModal()">Customize Bottom Dock</button>
-          ${isBlank ? `
-            <button type="button" class="btn-accent" onclick="openBlankMimicModal()">Customize Mimic</button>
-            <button type="button" class="btn-accent" onclick="openBlankTagsModal()">Customize Bits &amp; Timers</button>
-          ` : ''}
         </div>
       </div>
     `;
@@ -3066,7 +3050,6 @@ function resetQuickDockDefaults() {
 function applyQuickDockChanges() {
   captureDraftQuickDockFromDom();
 
-  // If a custom 1756 input address was typed into a dock item that doesn't exist yet, auto-register it as a 1756 input channel
   draftQuickDockItems.forEach(item => {
     const existsIn = findInputIndexByAddress(item.addr) !== -1;
     const existsOut = findOutputIndexByAddress(item.addr) !== -1;
@@ -3263,7 +3246,6 @@ function applyBlankIoChanges() {
     nextOutLabels.push(outVal || `Output_${i}`);
   }
 
-  // Keep any matching quick dock items synchronized with renamed 1756 addresses & labels
   PLC.quickDockItems.forEach(item => {
     const oldInIdx = prevInAddrs.indexOf(item.addr);
     if (oldInIdx !== -1 && oldInIdx < nextInAddrs.length) {
@@ -4442,7 +4424,7 @@ function buildMobileQuickDock() {
   editBtn.type = 'button';
   editBtn.className = 'dock-edit-btn';
   editBtn.textContent = 'Edit Dock';
-  editBtn.title = 'Customize Bottom Dock Buttons & 1756 I/O Addresses';
+  editBtn.title = 'Edit Bottom Dock Buttons & 1756 I/O Addresses';
   editBtn.onclick = () => openQuickDockModal();
   dock.appendChild(editBtn);
 }
@@ -4952,7 +4934,6 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
-  // 1. Custom Dropdown Menu Open (works for Preset selector & all Modals)
   if (KB_NAV.activeSelect) {
     const optionCount = KB_NAV.activeSelect.options.length;
     if (e.key === 'ArrowDown') {
@@ -4985,7 +4966,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // Inspector-style modals: Quick Dock, I/O, Mimic, Tags
   const quickDockModal = document.getElementById('quickDockModal');
   if (quickDockModal && quickDockModal.classList.contains('open')) {
     handleInspectorStyleModalKeydown(e, quickDockModal, applyQuickDockChanges, closeQuickDockModal);
@@ -5010,7 +4990,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 0. Keyboard Shortcuts Modal Open
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
     if (e.key === 'ArrowDown') {
@@ -5038,7 +5017,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 2. Insert Instruction Palette Modal Open
   const insertModal = document.getElementById('insertModal');
   if (insertModal && insertModal.classList.contains('open')) {
     const btns = Array.from(document.querySelectorAll('#insertPaletteHost .palette-item-btn'));
@@ -5070,7 +5048,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 3. Logix Instruction & Tag Inspector Modal Open
   const inspectorModal = document.getElementById('inspectorModal');
   if (inspectorModal && inspectorModal.classList.contains('open')) {
     handleInspectorStyleModalKeydown(e, inspectorModal, applyInspectorChanges, closeInspector, removeInspectedInstruction);
@@ -5129,7 +5106,6 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    // Check custom dock item shortcut keys first, then default field input keys
     const customDockMatch = PLC.quickDockItems.find(d => d.key && d.key.toLowerCase() === lowerKey);
     if (customDockMatch) {
       e.preventDefault();
@@ -5388,4 +5364,4 @@ window.onload = function () {
 };
 </script>
 </body>
-  </html>
+</html>
