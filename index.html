@@ -404,7 +404,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
     margin-bottom: 10px;
   }
 
@@ -474,6 +475,13 @@
     text-overflow: ellipsis;
   }
 
+  .io-controls-mini {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
   .io-mode-pill {
     min-height: 22px;
     padding: 0 5px;
@@ -482,6 +490,18 @@
     border-radius: 5px;
     background: var(--bg-card);
     color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .io-cfg-btn {
+    min-height: 22px;
+    padding: 0 5px;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    border-radius: 5px;
+    background: rgba(56, 189, 248, 0.14);
+    border-color: rgba(56, 189, 248, 0.45);
+    color: var(--sky-accent);
     flex-shrink: 0;
   }
 
@@ -1166,6 +1186,11 @@
     font-size: 11px;
   }
 
+  .custom-io-item.highlighted-target {
+    border-color: var(--sky-accent);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+  }
+
   .custom-io-row {
     display: flex;
     align-items: center;
@@ -1443,13 +1468,13 @@
     <div class="card">
       <div class="card-header">
         <span id="inputRackTitle" class="card-title">1756-IB16 Inputs (Local:1:I.Data.0–7)</span>
-        <div style="display:flex; align-items:center; gap:6px;">
+        <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+          <button id="btnMatchPlcPbs" class="btn-run" style="min-height:26px; padding:0 7px; font-size:10px;" onclick="matchPhysicalSwitchesToPlcPbs()" title="Configure physical switches to match PLC PB instructions">Match PLC PBs</button>
           <button id="btnEditBlankIo" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Edit I/O</button>
-          <span style="font-family:var(--font-mono); font-size:10px; color:var(--sky-accent);">HOLD / TAP</span>
         </div>
       </div>
       <div id="blankIoBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Customize 1756 I/O tags, modes &amp; states.</span>
+        <span><strong>Blank Routine:</strong> Customize 1756 I/O tags, PB modes &amp; states.</span>
         <button style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Configure</button>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
@@ -1563,15 +1588,18 @@
 <div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Customize 1756 I/O &amp; KM Channels</h3>
+      <h3>Configure Physical Switches &amp; 1756 I/O</h3>
       <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
     </div>
 
     <div class="modal-scroll-body">
       <div>
         <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-IB16 Digital Inputs</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add Input</button>
+          <span class="shortcut-section-title">1756-IB16 Physical Switches &amp; PB Config</span>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button type="button" class="btn-run" style="min-height:28px; padding:0 9px; font-size:10px;" onclick="syncModalInputsToPlcPbs()">Match PLC PBs</button>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add Input</button>
+          </div>
         </div>
         <div id="blankInputEditorList" class="custom-io-list"></div>
       </div>
@@ -1984,6 +2012,76 @@ function setBit(addr, state) {
   } else if (addr.startsWith('Control_Bits.')) {
     const idx = parseInt(addr.slice(13), 10);
     if (idx >= 0 && idx < PLC.Control_Bits.length) PLC.Control_Bits[idx] = !!state;
+  }
+}
+
+/**
+ * Inspect PLC PB instructions across all rungs to derive desired physical switch configs
+ */
+function inferPlcPbConfigs() {
+  const configs = {};
+
+  function inspectInstruction(el) {
+    if (!el || (el.type !== 'XIC' && el.type !== 'XIO')) return;
+    if (!el.addr || !el.addr.startsWith('Local:1:I.Data.')) return;
+    const idx = parseInt(el.addr.slice(15), 10);
+    if (isNaN(idx) || idx < 0 || idx >= PLC.physicalIn.length) return;
+
+    const combinedText = `${el.label || ''} ${PLC.inputLabels[idx] || ''}`.toLowerCase();
+    const isSelector = /\b(sw|sel|auto|man|prox|sens|lim|jam|mode)\b/.test(combinedText);
+    const isNcPb = /\b(nc|stop|estop|ol|trip|fault)\b/.test(combinedText);
+
+    if (!configs[idx]) {
+      if (isSelector) {
+        configs[idx] = { mode: 'TOGGLE', restingState: !!PLC.physicalIn[idx], label: el.label || PLC.inputLabels[idx] };
+      } else if (el.type === 'XIO' && isNcPb) {
+        // XIO on an NC pushbutton: resting closed (1), pressed opens (0) -> MOM_NC
+        configs[idx] = { mode: 'MOM_NC', restingState: true, label: el.label || PLC.inputLabels[idx] };
+      } else if (el.type === 'XIC' && isNcPb) {
+        // XIC on an NC pushbutton: resting closed (1), pressed opens (0) -> MOM_NC
+        configs[idx] = { mode: 'MOM_NC', restingState: true, label: el.label || PLC.inputLabels[idx] };
+      } else {
+        // Standard NO Pushbutton: resting open (0), pressed closes (1) -> MOM_NO
+        configs[idx] = { mode: 'MOM_NO', restingState: false, label: el.label || PLC.inputLabels[idx] };
+      }
+    }
+  }
+
+  PLC.rungs.forEach(rung => {
+    (rung.elements || []).forEach(el => {
+      if (el.type === 'BRANCH') {
+        (el.branches || []).forEach(leg => (leg || []).forEach(inspectInstruction));
+      } else {
+        inspectInstruction(el);
+      }
+    });
+  });
+
+  return configs;
+}
+
+function matchPhysicalSwitchesToPlcPbs() {
+  const inferred = inferPlcPbConfigs();
+  const keys = Object.keys(inferred);
+  keys.forEach(k => {
+    const idx = parseInt(k, 10);
+    const cfg = inferred[idx];
+    PLC.inputModes[idx] = cfg.mode;
+    PLC.physicalIn[idx] = cfg.restingState;
+    if (cfg.label) {
+      PLC.inputLabels[idx] = cfg.label;
+    }
+  });
+
+  buildInputOutputRacks();
+  buildMobileQuickDock();
+  syncUiVisuals();
+
+  const btn = document.getElementById('btnMatchPlcPbs');
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = keys.length > 0 ? `Matched ${keys.length} PB` : 'No PBs Found';
+    setTimeout(() => { btn.textContent = orig; }, 1200);
   }
 }
 
@@ -2601,9 +2699,9 @@ function buildInstructionNode(el, path) {
 }
 
 /**
- * Customization Modals (1756 I/O, Mimic, Control_Bits & TIMER Tags) with Add-to-List & Inspector Keyboard Flow
+ * Customization Modals (1756 I/O, Mimic, Control_Bits & TIMER Tags)
  */
-function openBlankIoModal() {
+function openBlankIoModal(highlightInputIdx) {
   const inHost = document.getElementById('blankInputEditorList');
   const outHost = document.getElementById('blankOutputEditorList');
   inHost.innerHTML = '';
@@ -2611,20 +2709,20 @@ function openBlankIoModal() {
 
   for (let i = 0; i < PLC.physicalIn.length; i++) {
     const item = document.createElement('div');
-    item.className = 'custom-io-item';
+    item.className = 'custom-io-item' + (highlightInputIdx === i ? ' highlighted-target' : '');
     item.dataset.inIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
         <strong style="color:var(--sky-accent);">I.${i}</strong>
-        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(PLC.inputLabels[i] || `Input_${i}`)}" placeholder="Input Label">
+        <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(PLC.inputLabels[i] || `Input_${i}`)}" placeholder="Input / PB Label">
       </div>
       <div class="custom-io-row">
-        <select id="editInMode_${i}">
-          <option value="MOM_NO" ${PLC.inputModes[i] === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
-          <option value="MOM_NC" ${PLC.inputModes[i] === 'MOM_NC' ? 'selected' : ''}>MOM_NC</option>
-          <option value="TOGGLE" ${PLC.inputModes[i] === 'TOGGLE' ? 'selected' : ''}>TOGGLE</option>
+        <select id="editInMode_${i}" title="Pushbutton / Switch Mode">
+          <option value="MOM_NO" ${PLC.inputModes[i] === 'MOM_NO' ? 'selected' : ''}>NO PB (MOM_NO)</option>
+          <option value="MOM_NC" ${PLC.inputModes[i] === 'MOM_NC' ? 'selected' : ''}>NC PB (MOM_NC)</option>
+          <option value="TOGGLE" ${PLC.inputModes[i] === 'TOGGLE' ? 'selected' : ''}>Selector (TOGGLE)</option>
         </select>
-        <select id="editInState_${i}">
+        <select id="editInState_${i}" title="Resting / Current Switch State">
           <option value="0" ${!PLC.physicalIn[i] ? 'selected' : ''}>State: 0</option>
           <option value="1" ${PLC.physicalIn[i] ? 'selected' : ''}>State: 1</option>
         </select>
@@ -2649,25 +2747,36 @@ function openBlankIoModal() {
   KB_NAV.modalArmedForApply = false;
   document.getElementById('blankIoModal').classList.add('open');
   setTimeout(() => {
-    const firstInp = document.getElementById('editInLabel_0');
-    if (firstInp) firstInp.focus();
-  }, 10);
+    const targetId = typeof highlightInputIdx === 'number' ? `editInMode_${highlightInputIdx}` : 'editInLabel_0';
+    const focusTarget = document.getElementById(targetId) || document.getElementById('editInLabel_0');
+    if (focusTarget) {
+      focusTarget.focus();
+      focusTarget.scrollIntoView({ block: 'nearest' });
+    }
+  }, 15);
+}
+
+function syncModalInputsToPlcPbs() {
+  const inferred = inferPlcPbConfigs();
+  Object.keys(inferred).forEach(k => {
+    const idx = parseInt(k, 10);
+    const cfg = inferred[idx];
+    const modeEl = document.getElementById(`editInMode_${idx}`);
+    const stateEl = document.getElementById(`editInState_${idx}`);
+    const lblEl = document.getElementById(`editInLabel_${idx}`);
+    if (modeEl) modeEl.value = cfg.mode;
+    if (stateEl) stateEl.value = cfg.restingState ? '1' : '0';
+    if (lblEl && cfg.label) lblEl.value = cfg.label;
+  });
 }
 
 function addCustomInputChannel() {
   const idx = PLC.physicalIn.length;
   PLC.physicalIn.push(false);
   PLC.inputModes.push('MOM_NO');
-  PLC.inputLabels.push(`Aux_In_${idx}`);
+  PLC.inputLabels.push(`Aux_PB_${idx}`);
   PLC.I.push(false);
-  openBlankIoModal();
-  setTimeout(() => {
-    const el = document.getElementById(`editInLabel_${idx}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
+  openBlankIoModal(idx);
 }
 
 function addCustomOutputChannel() {
@@ -3709,7 +3818,10 @@ function buildInputOutputRacks() {
       tile.innerHTML = `
         <div class="io-tile-top">
           <span class="io-tag" title="Local:1:I.Data.${i}">Local:1:I.Data.${i}</span>
-          <button class="io-mode-pill" onclick="cycleSwitchMode(${i})" title="Switch Contact Type">${mode}</button>
+          <div class="io-controls-mini">
+            <button class="io-mode-pill" onclick="cycleSwitchMode(${i})" title="Cycle NO/NC/Toggle Mode">${mode}</button>
+            <button class="io-cfg-btn" onclick="openBlankIoModal(${i})" title="Reconfigure PB / Switch">PB</button>
+          </div>
         </div>
         <div class="io-name">
           <span class="io-name-text">${escapeHtml(PLC.inputLabels[i])}</span>
@@ -4338,7 +4450,6 @@ document.addEventListener('keydown', function (e) {
   const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
   const lowerKey = e.key.toLowerCase();
 
-  // 1. Custom Dropdown Menu Open (works for Preset selector & all Modals)
   if (KB_NAV.activeSelect) {
     const optionCount = KB_NAV.activeSelect.options.length;
     if (e.key === 'ArrowDown') {
@@ -4371,7 +4482,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // Inspector-style modals: I/O, Mimic, Tags
   const blankIoModal = document.getElementById('blankIoModal');
   if (blankIoModal && blankIoModal.classList.contains('open')) {
     handleInspectorStyleModalKeydown(e, blankIoModal, applyBlankIoChanges, closeBlankIoModal);
@@ -4390,7 +4500,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 0. Keyboard Shortcuts Modal Open
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
     if (e.key === 'ArrowDown') {
@@ -4418,7 +4527,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 2. Insert Instruction Palette Modal Open
   const insertModal = document.getElementById('insertModal');
   if (insertModal && insertModal.classList.contains('open')) {
     const btns = Array.from(document.querySelectorAll('#insertPaletteHost .palette-item-btn'));
@@ -4450,7 +4558,6 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  // 3. Logix Instruction & Tag Inspector Modal Open
   const inspectorModal = document.getElementById('inspectorModal');
   if (inspectorModal && inspectorModal.classList.contains('open')) {
     handleInspectorStyleModalKeydown(e, inspectorModal, applyInspectorChanges, closeInspector, removeInspectedInstruction);
