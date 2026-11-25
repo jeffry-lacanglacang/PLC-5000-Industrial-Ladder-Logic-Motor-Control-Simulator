@@ -59,7 +59,8 @@
   /* Focus / Decluttered Mode */
   body.focus-mode .kb-hint-badge,
   body.focus-mode .custom-banner,
-  body.focus-mode .kbd-tag {
+  body.focus-mode .kbd-tag,
+  body.focus-mode .trace-bar {
     display: none !important;
   }
 
@@ -69,7 +70,7 @@
     }
   }
 
-  /* Desktop Keyboard Focus Ring & Active Pane Highlight */
+  /* Keyboard Focus Ring */
   .kb-focus,
   button:focus-visible,
   select:focus-visible,
@@ -167,6 +168,7 @@
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
+    flex-wrap: wrap;
   }
 
   .cpu-status-pill {
@@ -314,6 +316,36 @@
     display: flex;
   }
 
+  /* First-Run Interactive Walkthrough Banner */
+  .onboarding-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: linear-gradient(90deg, rgba(14, 116, 144, 0.35), rgba(30, 41, 59, 0.95));
+    border-bottom: 1px solid var(--sky-accent);
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--text-primary);
+    flex-shrink: 0;
+    z-index: 18;
+  }
+
+  .onboarding-banner.open {
+    display: flex;
+  }
+
+  .onboarding-step-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--sky-accent);
+    color: #090d16;
+    flex-shrink: 0;
+  }
+
   /* Scan Cycle & Preset Strip */
   .sub-toolbar {
     background: #0b111e;
@@ -334,12 +366,12 @@
     align-items: center;
     gap: 6px;
     flex: 1;
-    min-width: 220px;
+    min-width: 240px;
   }
 
   .preset-group select {
     width: 100%;
-    max-width: 350px;
+    max-width: 340px;
     min-height: 34px;
     font-size: 12px;
   }
@@ -358,25 +390,6 @@
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     color: var(--sky-accent);
-  }
-
-  .blank-mode-pill {
-    padding: 3px 8px;
-    border-radius: 5px;
-    background: rgba(56, 189, 248, 0.14);
-    border: 1px solid var(--sky-accent);
-    color: var(--sky-accent);
-    font-weight: 800;
-    font-size: 10px;
-  }
-
-  .kb-hint-badge {
-    padding: 3px 7px;
-    border-radius: 5px;
-    background: rgba(56, 189, 248, 0.08);
-    border: 1px solid rgba(56, 189, 248, 0.28);
-    color: var(--text-secondary);
-    font-size: 10px;
   }
 
   /* Workspace View Switcher Tabs */
@@ -464,24 +477,6 @@
     text-transform: uppercase;
     letter-spacing: 0.6px;
     color: var(--text-secondary);
-  }
-
-  .custom-banner {
-    background: rgba(56, 189, 248, 0.1);
-    border: 1px solid rgba(56, 189, 248, 0.35);
-    border-radius: 8px;
-    padding: 8px 10px;
-    margin-bottom: 10px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .custom-banner strong {
-    color: var(--sky-accent);
   }
 
   /* Field Digital Inputs Grid */
@@ -621,53 +616,14 @@
     white-space: nowrap;
   }
 
-  .out-role-badge.fwd {
-    color: var(--power-green);
-    border-color: rgba(16, 185, 129, 0.45);
-    background: rgba(16, 185, 129, 0.12);
-  }
-
-  .out-role-badge.rev {
-    color: var(--amber-warn);
-    border-color: rgba(245, 158, 11, 0.45);
-    background: rgba(245, 158, 11, 0.12);
-  }
-
-  .out-role-badge.star {
-    color: var(--amber-warn);
-    border-color: rgba(245, 158, 11, 0.45);
-    background: rgba(245, 158, 11, 0.12);
-  }
-
-  .out-role-badge.delta {
-    color: var(--sky-accent);
-    border-color: rgba(56, 189, 248, 0.45);
-    background: rgba(56, 189, 248, 0.12);
-  }
-
-  .out-role-badge.pilot-green {
-    color: var(--power-green);
-    border-color: rgba(16, 185, 129, 0.45);
-    background: rgba(16, 185, 129, 0.12);
-  }
-
-  .out-role-badge.pilot-amber {
-    color: var(--amber-warn);
-    border-color: rgba(245, 158, 11, 0.45);
-    background: rgba(245, 158, 11, 0.12);
-  }
-
-  .out-role-badge.pilot-blue {
-    color: var(--sky-accent);
-    border-color: rgba(56, 189, 248, 0.45);
-    background: rgba(56, 189, 248, 0.12);
-  }
-
-  .out-role-badge.pilot-red {
-    color: var(--crimson-fault);
-    border-color: rgba(239, 68, 68, 0.45);
-    background: rgba(239, 68, 68, 0.12);
-  }
+  .out-role-badge.fwd { color: var(--power-green); border-color: rgba(16, 185, 129, 0.45); background: rgba(16, 185, 129, 0.12); }
+  .out-role-badge.rev { color: var(--amber-warn); border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.12); }
+  .out-role-badge.star { color: var(--amber-warn); border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.12); }
+  .out-role-badge.delta { color: var(--sky-accent); border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.12); }
+  .out-role-badge.pilot-green { color: var(--power-green); border-color: rgba(16, 185, 129, 0.45); background: rgba(16, 185, 129, 0.12); }
+  .out-role-badge.pilot-amber { color: var(--amber-warn); border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.12); }
+  .out-role-badge.pilot-blue { color: var(--sky-accent); border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.12); }
+  .out-role-badge.pilot-red { color: var(--crimson-fault); border-color: rgba(239, 68, 68, 0.45); background: rgba(239, 68, 68, 0.12); }
 
   .led-indicator {
     width: 11px;
@@ -678,35 +634,11 @@
     flex-shrink: 0;
   }
 
-  .led-indicator.on {
-    background: var(--power-green);
-    border-color: #a7f3d0;
-    box-shadow: 0 0 10px var(--power-green);
-  }
-
-  .led-indicator.pilot-green.on {
-    background: var(--power-green);
-    border-color: #a7f3d0;
-    box-shadow: 0 0 10px var(--power-green);
-  }
-
-  .led-indicator.pilot-amber.on {
-    background: var(--amber-warn);
-    border-color: #fde68a;
-    box-shadow: 0 0 10px var(--amber-warn);
-  }
-
-  .led-indicator.pilot-blue.on {
-    background: var(--sky-accent);
-    border-color: #bae6fd;
-    box-shadow: 0 0 10px var(--sky-accent);
-  }
-
-  .led-indicator.pilot-red.on {
-    background: var(--crimson-fault);
-    border-color: #fecaca;
-    box-shadow: 0 0 10px var(--crimson-fault);
-  }
+  .led-indicator.on { background: var(--power-green); border-color: #a7f3d0; box-shadow: 0 0 10px var(--power-green); }
+  .led-indicator.pilot-green.on { background: var(--power-green); border-color: #a7f3d0; box-shadow: 0 0 10px var(--power-green); }
+  .led-indicator.pilot-amber.on { background: var(--amber-warn); border-color: #fde68a; box-shadow: 0 0 10px var(--amber-warn); }
+  .led-indicator.pilot-blue.on { background: var(--sky-accent); border-color: #bae6fd; box-shadow: 0 0 10px var(--sky-accent); }
+  .led-indicator.pilot-red.on { background: var(--crimson-fault); border-color: #fecaca; box-shadow: 0 0 10px var(--crimson-fault); }
 
   /* Ladder Editor Board */
   .ladder-toolbar {
@@ -732,6 +664,41 @@
 
   .routine-breadcrumb strong {
     color: var(--sky-accent);
+  }
+
+  /* Live Rung Continuity Trace Strip */
+  .trace-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .trace-status-badge {
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .trace-status-badge.true {
+    background: var(--power-green-dim);
+    color: var(--power-green);
+    border: 1px solid var(--power-green);
+  }
+
+  .trace-status-badge.false {
+    background: rgba(148, 163, 184, 0.14);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
   }
 
   .ladder-board {
@@ -765,6 +732,10 @@
     border-radius: 4px;
     transition: background-color 0.12s;
     min-width: 680px;
+  }
+
+  .rung-block.rung-selected {
+    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.45);
   }
 
   .rung-block.rung-energized {
@@ -860,7 +831,7 @@
     min-height: 74px;
   }
 
-  /* Interactive Wire Segment with Point-Specific Insertion Node (+) */
+  /* Interactive Wire Segment */
   .wire-segment {
     display: flex;
     align-items: center;
@@ -922,13 +893,8 @@
     position: relative;
   }
 
-  .branch-container.in-hot {
-    border-left-color: var(--power-green);
-  }
-
-  .branch-container.out-hot {
-    border-right-color: var(--power-green);
-  }
+  .branch-container.in-hot { border-left-color: var(--power-green); }
+  .branch-container.out-hot { border-right-color: var(--power-green); }
 
   .branch-path {
     display: flex;
@@ -981,6 +947,10 @@
 
   .inst-node.power-passing {
     background-color: rgba(16, 185, 129, 0.06);
+  }
+
+  .inst-node.orphan-tag .inst-addr {
+    color: var(--amber-warn);
   }
 
   .inst-addr {
@@ -1142,13 +1112,8 @@
     cursor: default;
   }
 
-  .data-cell.editable-bit {
-    cursor: pointer;
-  }
-
-  .data-cell.editable-bit:hover {
-    border-color: var(--sky-accent);
-  }
+  .data-cell.editable-bit { cursor: pointer; }
+  .data-cell.editable-bit:hover { border-color: var(--sky-accent); }
 
   .data-cell.on {
     color: var(--power-green);
@@ -1171,9 +1136,7 @@
     text-overflow: ellipsis;
   }
 
-  .data-cell.on .data-cell-alias {
-    color: #6ee7b7;
-  }
+  .data-cell.on .data-cell-alias { color: #6ee7b7; }
 
   .timer-table-row {
     display: flex;
@@ -1293,11 +1256,7 @@
     white-space: nowrap;
   }
 
-  .dock-edit-btn:hover {
-    background: rgba(56, 189, 248, 0.26);
-  }
-
-  /* Responsive Breakpoint for Android Phones & Tablets */
+  /* Responsive Breakpoint for Phones & Tablets */
   @media (max-width: 1023px) {
     .workspace {
       display: flex;
@@ -1340,16 +1299,50 @@
     border: 1px solid var(--border-strong);
     border-radius: 14px;
     width: 100%;
-    max-width: 460px;
+    max-width: 480px;
     padding: 18px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   }
 
   .modal-sheet.wide-sheet {
-    max-width: 780px;
+    max-width: 820px;
     max-height: 88dvh;
     display: flex;
     flex-direction: column;
+  }
+
+  .studio-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .studio-tab-btn {
+    min-height: 32px;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 7px;
+  }
+
+  .studio-tab-btn.active {
+    background: var(--sky-dim);
+    border-color: var(--sky-accent);
+    color: var(--sky-accent);
+  }
+
+  .studio-panel {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .studio-panel.active {
+    display: flex;
   }
 
   .modal-scroll-body {
@@ -1358,6 +1351,7 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
+    flex: 1;
   }
 
   .section-head-with-btn {
@@ -1474,9 +1468,7 @@
     transition: background-color 0.1s, border-color 0.1s;
   }
 
-  .shortcut-desc {
-    color: var(--text-primary);
-  }
+  .shortcut-desc { color: var(--text-primary); }
 
   .shortcut-keys {
     display: flex;
@@ -1513,7 +1505,7 @@
     align-items: center;
     justify-content: space-between;
     padding-bottom: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     border-bottom: 1px solid var(--border-subtle);
     flex-shrink: 0;
   }
@@ -1537,16 +1529,17 @@
   }
 
   .field-group select,
-  .field-group input {
+  .field-group input,
+  .field-group textarea {
     width: 100%;
     min-height: 42px;
     background: var(--bg-canvas);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
     color: var(--text-primary);
-    padding: 0 12px;
+    padding: 8px 12px;
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .modal-actions {
@@ -1554,11 +1547,12 @@
     justify-content: flex-end;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 16px;
+    margin-top: 14px;
+    flex-shrink: 0;
   }
 
   .modal-actions button {
-    min-height: 42px;
+    min-height: 40px;
     padding: 0 14px;
   }
 
@@ -1650,11 +1644,13 @@
       <span id="cpuStateLabel">REM RUN</span>
     </div>
     <button id="btnRunToggle" class="btn-run" onclick="toggleCpuRun()" title="Shortcut: Space">Pause <span class="kbd-tag hide-mobile">SPC</span></button>
-    <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single Continuous Task Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
-    <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Clear Controller Tags, Faults & Reset Timers (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
+    <button id="btnStepScan" onclick="stepSingleScan()" title="Execute Single 50ms Scan (Shortcut: T)">Step <span class="kbd-tag hide-mobile">T</span></button>
+    <button id="btnResetMemory" class="btn-danger" onclick="clearPlcMemory()" title="Reset Tags & Faults (Shortcut: Shift+R)">Reset <span class="kbd-tag hide-mobile">⇧R</span></button>
+    <button id="btnConfigStudio" class="btn-accent" onclick="openConfigStudio('io')" title="Configure 1756 I/O, Motor Mimic, Tags & Dock">Configure</button>
     <button id="btnFocusToggle" onclick="toggleFocusMode()" title="Toggle Decluttered Focus View (Shortcut: F)">Focus <span class="kbd-tag hide-mobile">F</span></button>
-    <button id="btnDockToggle" class="btn-accent" onclick="toggleQuickDockBar()" title="Show or Hide Bottom Quick-Control Dock (Shortcut: D)">Dock <span class="kbd-tag hide-mobile">D</span></button>
-    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="View All Keyboard Shortcuts (Shortcut: K or ?)" aria-label="View All Keyboard Shortcuts">Shortcuts <span class="kbd-tag hide-mobile">K</span></button>
+    <button id="btnDockToggle" onclick="toggleQuickDockBar()" title="Show or Hide Bottom Dock (Shortcut: D)">Dock <span class="kbd-tag hide-mobile">D</span></button>
+    <button id="btnGuideToggle" onclick="startOnboardingWalkthrough()" title="Interactive First-Run Walkthrough">Guide</button>
+    <button id="btnShortcutsHelp" class="btn-help-circle" onclick="openShortcutsModal()" title="Keyboard Shortcuts (K or ?)" aria-label="Keyboard Shortcuts">? <span class="kbd-tag hide-mobile">K</span></button>
   </div>
 </header>
 
@@ -1664,6 +1660,19 @@
     <span id="majorFaultReason">Simultaneous conflicting contactors energized.</span>
   </div>
   <button type="button" class="btn-run" style="min-height:30px; padding:0 10px; font-size:11px;" onclick="clearControllerFault()">Clear Fault &amp; Reset</button>
+</div>
+
+<!-- First-Run Interactive Guided Walkthrough -->
+<div id="onboardingBanner" class="onboarding-banner" role="region" aria-label="Interactive Quick-Start Guide">
+  <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+    <span id="onboardingStepPill" class="onboarding-step-pill">STEP 1 / 4</span>
+    <span id="onboardingText">Load a pre-wired motor control routine from the <strong>Routine Preset</strong> menu or click <strong>+ Add Rung</strong> to start from scratch.</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+    <button type="button" id="btnOnboardingAction" class="btn-run" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="runOnboardingStepAction()">Load 3-Wire Starter</button>
+    <button type="button" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="advanceOnboardingStep()">Next &rarr;</button>
+    <button type="button" style="min-height:28px; padding:0 8px; font-size:11px;" onclick="dismissOnboarding()" title="Dismiss Guide">&times;</button>
+  </div>
 </div>
 
 <div class="sub-toolbar">
@@ -1676,11 +1685,10 @@
       <option value="preset3">3. Star-Delta Reduced-Voltage Starter</option>
       <option value="preset4">4. Automated Conveyor + Latching Fault &amp; Batch Counter</option>
     </select>
-    <span id="blankModeBadge" class="blank-mode-pill">BLANK ROUTINE</span>
+    <button type="button" style="min-height:32px; padding:0 9px; font-size:11px;" onclick="openRoutineJsonModal()" title="Export or Import Routine JSON">JSON I/O</button>
   </div>
 
   <div class="scan-telemetry">
-    <span class="kb-hint-badge hide-mobile">[1/2/3] Views | [N] +Rung | [F] Focus | [S/X/O/R] Field I/O | [←↑→↓] Nav | [Enter] Edit | [K/?] Shortcuts</span>
     <span id="scanCycleTag" class="scan-badge">SCAN: 0</span>
     <span class="hide-mobile">1756-L83E | TASK: 50ms</span>
   </div>
@@ -1699,13 +1707,7 @@
     <div class="card">
       <div class="card-header">
         <span id="inputRackTitle" class="card-title">1756-IB16 Inputs (Local:1:I.Data.0–7)</span>
-        <div style="display:flex; align-items:center; gap:6px;">
-          <button id="btnEditBlankIo" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal()">Edit I/O</button>
-          <span style="font-family:var(--font-mono); font-size:10px; color:var(--sky-accent);">HOLD / TAP</span>
-        </div>
-      </div>
-      <div id="blankIoBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Edit 1756 I/O addresses, contactor roles &amp; pilot colors via <strong>Edit I/O</strong>.</span>
+        <button class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openConfigStudio('io')">Edit I/O</button>
       </div>
       <div id="inputRackHost" class="io-grid"></div>
     </div>
@@ -1713,7 +1715,7 @@
     <div class="card">
       <div class="card-header">
         <span id="outputRackTitle" class="card-title">1756-OB16E Outputs (Local:2:O.Data.0–7)</span>
-        <button id="btnEditOutputsCard" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankIoModal('outputs')">Edit Outputs</button>
+        <button class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openConfigStudio('io')">Edit Outputs</button>
       </div>
       <div id="outputRackHost" class="out-rack"></div>
     </div>
@@ -1724,13 +1726,18 @@
     <div class="ladder-toolbar">
       <div class="routine-breadcrumb">
         <span>MainTask &rsaquo; MainProgram &rsaquo;</span>
-        <strong>MainRoutine (Ladder Diagram)</strong>
+        <strong>MainRoutine</strong>
       </div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button id="btnBlankCustomizeBar" class="btn-accent" onclick="openBlankIoModal()">Edit 1756 I/O</button>
-        <button id="btnBlankMimicBar" class="btn-accent" onclick="openBlankMimicModal()">Edit Mimic</button>
-        <button id="btnBlankTagsBar" class="btn-accent" onclick="openBlankTagsModal()">Edit Tags</button>
-        <button id="btnAddRungTop" onclick="addNewRung()" title="Shortcut: N">+ Add Rung <span class="kbd-tag hide-mobile">N</span></button>
+        <button id="btnAddRungTop" class="btn-run" onclick="addNewRung()" title="Shortcut: N">+ Add Rung <span class="kbd-tag hide-mobile">N</span></button>
+      </div>
+    </div>
+
+    <!-- Live Rung Continuity Trace Bar -->
+    <div id="rungTraceBar" class="trace-bar">
+      <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+        <span id="traceRungStatus" class="trace-status-badge false">RUNG 0: FALSE</span>
+        <span id="traceRungDetail" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Select or add a rung to inspect live continuity.</span>
       </div>
     </div>
 
@@ -1749,13 +1756,9 @@
       <div class="card-header">
         <span class="card-title">3-Phase Motor &amp; Plant Mimic</span>
         <div style="display:flex; gap:6px; align-items:center;">
-          <button id="btnEditBlankMimic" class="btn-accent" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="openBlankMimicModal()">Edit Mimic</button>
-          <button id="btnOlTrip" class="btn-danger" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="toggleOverloadTrip()" title="Shortcut: O">Trip OL Relay <span class="kbd-tag hide-mobile">O</span></button>
+          <button class="btn-accent" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="openConfigStudio('mimic')">Edit Mimic</button>
+          <button id="btnOlTrip" class="btn-danger" style="min-height:30px; padding:0 8px; font-size:11px;" onclick="toggleOverloadTrip()" title="Shortcut: O">Trip OL <span class="kbd-tag hide-mobile">O</span></button>
         </div>
-      </div>
-
-      <div id="blankMimicBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Motor speed, interlock protection &amp; pilot lamps update live from 1756 outputs.</span>
       </div>
 
       <div class="mimic-box">
@@ -1784,10 +1787,7 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Program Tags: Control_Bits (DINT)</span>
-        <button id="btnEditBlankBits" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('bits')">Edit Bits</button>
-      </div>
-      <div id="blankBitsBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Tap any bit to toggle state.</span>
+        <button class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openConfigStudio('tags')">Edit Tags</button>
       </div>
       <div id="binaryTableHost" class="data-grid"></div>
     </div>
@@ -1795,10 +1795,7 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Program Tags: TIMER &amp; COUNTER</span>
-        <button id="btnEditBlankTimers" class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openBlankTagsModal('timers')">Edit Tags</button>
-      </div>
-      <div id="blankTimersBanner" class="custom-banner" style="display:none;">
-        <span><strong>Blank Routine:</strong> Adjust .PRE presets &amp; aliases via <strong>Edit Tags</strong>.</span>
+        <button class="btn-accent" style="min-height:26px; padding:0 8px; font-size:10px;" onclick="openConfigStudio('tags')">Edit Presets</button>
       </div>
       <div id="timerTableHost"></div>
       <div id="counterTableHost"></div>
@@ -1812,157 +1809,141 @@
 <!-- Custom Keyboard Dropdown Popup -->
 <div id="kbDropdownPopup" class="kb-dropdown-popup" role="listbox"></div>
 
-<!-- Quick-Control Dock Editor Modal -->
-<div id="quickDockModal" class="modal-overlay" onclick="if(event.target===this) closeQuickDockModal()">
+<!-- Unified Configuration Studio Modal (Progressive Disclosure) -->
+<div id="configStudioModal" class="modal-overlay" onclick="if(event.target===this) closeConfigStudio()">
   <div class="modal-sheet wide-sheet">
     <div class="modal-head">
-      <h3>Edit Bottom Quick-Control Dock &amp; 1756 Mapping</h3>
-      <button style="min-height:34px; padding:0 10px;" onclick="closeQuickDockModal()">Close</button>
+      <h3>Controller &amp; Plant Configuration Studio</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeConfigStudio()">Close</button>
+    </div>
+
+    <div class="studio-tabs" role="tablist">
+      <button type="button" class="studio-tab-btn active" data-studio-tab="io" onclick="switchStudioTab('io')">1. 1756 I/O Modules</button>
+      <button type="button" class="studio-tab-btn" data-studio-tab="mimic" onclick="switchStudioTab('mimic')">2. Motor &amp; Mimic</button>
+      <button type="button" class="studio-tab-btn" data-studio-tab="tags" onclick="switchStudioTab('tags')">3. Tags, Timers &amp; Counters</button>
+      <button type="button" class="studio-tab-btn" data-studio-tab="dock" onclick="switchStudioTab('dock')">4. Quick-Control Dock</button>
     </div>
 
     <div class="modal-scroll-body">
-      <div class="custom-banner" style="margin-bottom:0;">
-        <span>Map each bottom button (e.g., <strong>Start, Stop, OL, Rev</strong>) to any <strong>1756 I/O address</strong>, contact type, or shortcut key.</span>
-        <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px; flex-shrink:0;" onclick="addQuickDockItem()">+ Add Dock Button</button>
-      </div>
-
-      <div id="quickDockEditorList" class="custom-dock-list"></div>
-    </div>
-
-    <div class="modal-actions">
-      <button type="button" onclick="resetQuickDockDefaults()">Sync / Reset from 1756 I/O</button>
-      <button type="button" id="btnSaveQuickDock" class="btn-run" onclick="applyQuickDockChanges()">Save Dock Buttons</button>
-    </div>
-  </div>
-</div>
-
-<!-- 1756 I/O Customization Modal -->
-<div id="blankIoModal" class="modal-overlay" onclick="if(event.target===this) closeBlankIoModal()">
-  <div class="modal-sheet wide-sheet">
-    <div class="modal-head">
-      <h3>Edit 1756 I/O Modules, Contactors (FWD/REV/STAR/DELTA) &amp; Pilot Lights</h3>
-      <button style="min-height:34px; padding:0 10px;" onclick="closeBlankIoModal()">Close</button>
-    </div>
-
-    <div class="modal-scroll-body">
-      <div id="blankInputEditorSection">
-        <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-IB16 Digital Inputs (Available Tags, Alias, Mode &amp; State)</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add 1756 Input</button>
+      <!-- Tab 1: 1756 I/O -->
+      <div id="studioPanel_io" class="studio-panel active">
+        <div>
+          <div class="section-head-with-btn">
+            <span class="shortcut-section-title">1756-IB16 Digital Inputs</span>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomInputChannel()">+ Add Input</button>
+          </div>
+          <div id="blankInputEditorList" class="custom-io-list"></div>
         </div>
-        <div id="blankInputEditorList" class="custom-io-list"></div>
-      </div>
-
-      <div id="blankOutputEditorSection">
-        <div class="section-head-with-btn">
-          <span class="shortcut-section-title">1756-OB16E Outputs — Contactors (Forward / Reverse / Star / Delta) &amp; Pilot Lights</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add 1756 Output</button>
+        <div>
+          <div class="section-head-with-btn">
+            <span class="shortcut-section-title">1756-OB16E Digital Outputs (Contactors &amp; Pilot Lights)</span>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomOutputChannel()">+ Add Output</button>
+          </div>
+          <div id="blankOutputEditorList" class="custom-io-list"></div>
         </div>
-        <div id="blankOutputEditorList" class="custom-io-list"></div>
-      </div>
-    </div>
-
-    <div class="modal-actions">
-      <button type="button" onclick="resetBlankIoDefaults()">Reset 1756 I/O Defaults</button>
-      <button type="button" id="btnSaveBlankIo" class="btn-run" onclick="applyBlankIoChanges()">Save 1756 I/O</button>
-    </div>
-  </div>
-</div>
-
-<!-- 3-Phase Motor & Mimic Customization Modal -->
-<div id="blankMimicModal" class="modal-overlay" onclick="if(event.target===this) closeBlankMimicModal()">
-  <div class="modal-sheet wide-sheet">
-    <div class="modal-head">
-      <h3>Edit Motor &amp; Plant Mimic</h3>
-      <button style="min-height:34px; padding:0 10px;" onclick="closeBlankMimicModal()">Close</button>
-    </div>
-
-    <div class="modal-scroll-body">
-      <div class="field-group">
-        <label for="mimicDriveMode">Motor Behavior Source</label>
-        <select id="mimicDriveMode" onchange="toggleCustomMimicFields()">
-          <option value="AUTO">Auto (Follow 1756-OB16E Contactors &amp; Interlock Protection)</option>
-          <option value="CUSTOM">Manual / Custom Mimic Override</option>
-        </select>
       </div>
 
-      <div id="customMimicOverrideFields">
-        <div class="field-group">
-          <label for="mimicPresetState">Simulated Motor State</label>
-          <select id="mimicPresetState" onchange="syncMimicStateDefaults()">
-            <option value="STOPPED">STOPPED (0 RPM)</option>
-            <option value="FORWARD">FORWARD RUN (CW)</option>
-            <option value="REVERSE">REVERSE RUN (CCW)</option>
-            <option value="STAR">STAR (Y) START (Reduced V, Slower)</option>
-            <option value="DELTA">DELTA (Δ) RUN (Full Line V, Faster)</option>
-            <option value="FAULT">FAULT / OL TRIP</option>
+      <!-- Tab 2: Motor & Plant Mimic -->
+      <div id="studioPanel_mimic" class="studio-panel">
+        <div class="field-group" style="margin-bottom:0;">
+          <label for="mimicDriveMode">Motor Behavior Source</label>
+          <select id="mimicDriveMode" onchange="toggleCustomMimicFields()">
+            <option value="AUTO">Auto (Follow 1756-OB16E Contactors &amp; Interlock Protection)</option>
+            <option value="CUSTOM">Manual / Custom Mimic Override</option>
           </select>
         </div>
 
-        <div class="field-group">
-          <label for="mimicCustomRpm">Rotor Speed (RPM)</label>
-          <input type="number" id="mimicCustomRpm" min="0" max="3600" step="5" value="0">
+        <div id="customMimicOverrideFields">
+          <div class="field-group">
+            <label for="mimicPresetState">Simulated Motor State</label>
+            <select id="mimicPresetState" onchange="syncMimicStateDefaults()">
+              <option value="STOPPED">STOPPED (0 RPM)</option>
+              <option value="FORWARD">FORWARD RUN (CW)</option>
+              <option value="REVERSE">REVERSE RUN (CCW)</option>
+              <option value="STAR">STAR (Y) START (Reduced V, Slower)</option>
+              <option value="DELTA">DELTA (Δ) RUN (Full Line V, Faster)</option>
+              <option value="FAULT">FAULT / OL TRIP</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="mimicCustomRpm">Rotor Speed (RPM)</label>
+            <input type="number" id="mimicCustomRpm" min="0" max="3600" step="5" value="0">
+          </div>
+          <div class="field-group">
+            <label for="mimicCustomSubtext">Telemetry Sub-Label</label>
+            <input type="text" id="mimicCustomSubtext" maxlength="28" value="STANDBY">
+          </div>
         </div>
 
-        <div class="field-group">
-          <label for="mimicCustomSubtext">Telemetry Sub-Label (e.g. 460VAC 60HZ / STANDBY)</label>
-          <input type="text" id="mimicCustomSubtext" maxlength="28" value="STANDBY">
+        <div>
+          <div class="section-head-with-btn">
+            <span class="shortcut-section-title">Pilot Lamps</span>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomMimicLamp()">+ Add Lamp</button>
+          </div>
+          <div id="blankLampsEditorList" class="custom-io-list"></div>
         </div>
       </div>
 
-      <div>
-        <div class="section-head-with-btn">
-          <span class="shortcut-section-title">Pilot Lamps (Synced with 1756 Pilot Light Outputs)</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomMimicLamp()">+ Add Lamp</button>
+      <!-- Tab 3: Tags, Timers & Counters -->
+      <div id="studioPanel_tags" class="studio-panel">
+        <div>
+          <div class="section-head-with-btn">
+            <span class="shortcut-section-title">Control_Bits (DINT)</span>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomControlBit()">+ Add Bit</button>
+          </div>
+          <div id="blankBitsEditorList" class="custom-io-list"></div>
         </div>
-        <div id="blankLampsEditorList" class="custom-io-list"></div>
+        <div>
+          <div class="section-head-with-btn">
+            <span class="shortcut-section-title">TIMER Structures (TON / TOF / RTO)</span>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomTimerTag()">+ Add Timer</button>
+          </div>
+          <div id="blankTimersEditorList" class="custom-io-list"></div>
+        </div>
+        <div>
+          <div class="section-head-with-btn">
+            <span class="shortcut-section-title">COUNTER Structures (CTU / CTD)</span>
+            <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomCounterTag()">+ Add Counter</button>
+          </div>
+          <div id="blankCountersEditorList" class="custom-io-list"></div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Bottom Quick-Control Dock -->
+      <div id="studioPanel_dock" class="studio-panel">
+        <div class="section-head-with-btn">
+          <span class="shortcut-section-title">Bottom Dock Buttons &amp; Keybindings</span>
+          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addQuickDockItem()">+ Add Button</button>
+        </div>
+        <div id="quickDockEditorList" class="custom-dock-list"></div>
       </div>
     </div>
 
     <div class="modal-actions">
-      <button type="button" onclick="resetBlankMimicDefaults()">Reset Mimic Defaults</button>
-      <button type="button" id="btnSaveBlankMimic" class="btn-run" onclick="applyBlankMimicChanges()">Save Mimic</button>
+      <button type="button" onclick="resetActiveStudioTabDefaults()">Reset Tab Defaults</button>
+      <button type="button" id="btnSaveConfigStudio" class="btn-run" onclick="applyAllStudioChanges()">Save &amp; Apply</button>
     </div>
   </div>
 </div>
 
-<!-- Control_Bits, TIMER & COUNTER Tags Customization Modal -->
-<div id="blankTagsModal" class="modal-overlay" onclick="if(event.target===this) closeBlankTagsModal()">
-  <div class="modal-sheet wide-sheet">
+<!-- Routine JSON Export / Import Modal -->
+<div id="routineJsonModal" class="modal-overlay" onclick="if(event.target===this) closeRoutineJsonModal()">
+  <div class="modal-sheet wide-sheet" style="max-width:620px;">
     <div class="modal-head">
-      <h3>Edit Control_Bits, TIMER &amp; COUNTER Tags</h3>
-      <button style="min-height:34px; padding:0 10px;" onclick="closeBlankTagsModal()">Close</button>
+      <h3>Routine JSON Export / Import</h3>
+      <button style="min-height:34px; padding:0 10px;" onclick="closeRoutineJsonModal()">Close</button>
     </div>
-
-    <div class="modal-scroll-body">
-      <div id="blankBitsEditorSection">
-        <div class="section-head-with-btn">
-          <span class="shortcut-section-title">Control_Bits (DINT) — Aliases &amp; Bit States</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomControlBit()">+ Add Bit</button>
-        </div>
-        <div id="blankBitsEditorList" class="custom-io-list"></div>
-      </div>
-
-      <div id="blankTimersEditorSection">
-        <div class="section-head-with-btn">
-          <span class="shortcut-section-title">TIMER Structures (TON / TOF / RTO) — Presets (.PRE ms)</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomTimerTag()">+ Add Timer</button>
-        </div>
-        <div id="blankTimersEditorList" class="custom-io-list"></div>
-      </div>
-
-      <div id="blankCountersEditorSection">
-        <div class="section-head-with-btn">
-          <span class="shortcut-section-title">COUNTER Structures (CTU / CTD) — Presets (.PRE)</span>
-          <button type="button" class="btn-accent" style="min-height:28px; padding:0 10px; font-size:11px;" onclick="addCustomCounterTag()">+ Add Counter</button>
-        </div>
-        <div id="blankCountersEditorList" class="custom-io-list"></div>
-      </div>
+    <div class="field-group" style="margin-bottom:8px;">
+      <label for="routineJsonTextarea">Portable Logix Routine Definition (Rungs, I/O Maps, Timers &amp; Counters)</label>
+      <textarea id="routineJsonTextarea" rows="12" spellcheck="false" style="resize:vertical; line-height:1.4;"></textarea>
+      <input type="file" id="routineJsonFileInput" accept=".json,application/json" style="display:none;" onchange="handleRoutineFileInputChange(event)">
     </div>
-
+    <div id="routineJsonFeedback" style="font-family:var(--font-mono); font-size:11px; color:var(--sky-accent); min-height:16px;"></div>
     <div class="modal-actions">
-      <button type="button" onclick="resetBlankTagsDefaults()">Reset Tag Defaults</button>
-      <button type="button" id="btnSaveBlankTags" class="btn-run" onclick="applyBlankTagsChanges()">Save Tags</button>
+      <button type="button" onclick="copyRoutineJsonToClipboard()">Copy JSON</button>
+      <button type="button" onclick="pickAndImportRoutineJsonFile()">Import .json File</button>
+      <button type="button" onclick="downloadRoutineJsonFile()">Save / Export .json</button>
+      <button type="button" class="btn-run" onclick="importRoutineFromJson()">Load JSON into PLC</button>
     </div>
   </div>
 </div>
@@ -2029,7 +2010,7 @@
   </div>
 </div>
 
-<!-- Touch-Optimized Instruction Inspector Bottom Sheet / Modal -->
+<!-- Touch-Optimized Instruction Inspector Modal -->
 <div id="inspectorModal" class="modal-overlay" onclick="if(event.target===this) closeInspector()">
   <div class="modal-sheet">
     <div class="modal-head">
@@ -2082,16 +2063,16 @@
 </div>
 
 <script>
-/**
- * Studio 5000 Logix Designer — ControlLogix Ladder Logic & Motor Control Simulator
- * Includes:
- *  - Hardware & Interlock Fault Protection (Phase-to-Phase Short & Star-Delta Dead-Time Guard)
- *  - Expanded Logix Instructions (XIC, XIO, ONS, OTE, OTL, OTU, TON, TOF, RTO, CTU, CTD, RES, EQU, GRT, LES)
- *  - Live Power-Flow Highlighting & Decluttered Focus Mode
- */
-
 const VALID_LAMP_COLORS = ['green', 'amber', 'blue', 'red'];
 const VALID_CONTACTOR_ROLES = ['FORWARD', 'REVERSE', 'STAR', 'DELTA', 'NONE'];
+
+function isEditableTarget(target) {
+  if (!target) return false;
+  const tag = target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+  if (target.isContentEditable) return true;
+  return false;
+}
 
 function createDefaultOutputConfigs(labels) {
   return (labels || []).map((lbl, idx) => {
@@ -2135,55 +2116,30 @@ const PLC = {
   presetId: 'blank',
   dockVisible: true,
 
-  // Star-Delta dead-time tracking (minimum 250ms transition window)
   starOpenedAtScan: -100,
   wasStarEnergized: false,
 
   physicalIn: Array(8).fill(false),
   inputAddresses: [
-    'Local:1:I.Data.0',
-    'Local:1:I.Data.1',
-    'Local:1:I.Data.2',
-    'Local:1:I.Data.3',
-    'Local:1:I.Data.4',
-    'Local:1:I.Data.5',
-    'Local:1:I.Data.6',
-    'Local:1:I.Data.7'
+    'Local:1:I.Data.0', 'Local:1:I.Data.1', 'Local:1:I.Data.2', 'Local:1:I.Data.3',
+    'Local:1:I.Data.4', 'Local:1:I.Data.5', 'Local:1:I.Data.6', 'Local:1:I.Data.7'
   ],
   inputModes: ['MOM_NO', 'MOM_NC', 'TOGGLE', 'MOM_NO', 'TOGGLE', 'TOGGLE', 'MOM_NO', 'TOGGLE'],
   inputLabels: [
-    'Start_PB',
-    'Stop_PB_NC',
-    'OL_Relay_NC',
-    'Rev_Reset_PB',
-    'Prox_Sensor',
-    'Jam_Sim_Sw',
-    'Aux_PB',
-    'EStop_OK'
+    'Start_PB', 'Stop_PB_NC', 'OL_Relay_NC', 'Rev_Reset_PB',
+    'Prox_Sensor', 'Jam_Sim_Sw', 'Aux_PB', 'EStop_OK'
   ],
 
   I: Array(8).fill(false),
   O: Array(8).fill(false),
   physicalOut: Array(8).fill(false),
   outputAddresses: [
-    'Local:2:O.Data.0',
-    'Local:2:O.Data.1',
-    'Local:2:O.Data.2',
-    'Local:2:O.Data.3',
-    'Local:2:O.Data.4',
-    'Local:2:O.Data.5',
-    'Local:2:O.Data.6',
-    'Local:2:O.Data.7'
+    'Local:2:O.Data.0', 'Local:2:O.Data.1', 'Local:2:O.Data.2', 'Local:2:O.Data.3',
+    'Local:2:O.Data.4', 'Local:2:O.Data.5', 'Local:2:O.Data.6', 'Local:2:O.Data.7'
   ],
   outputLabels: [
-    'Fwd_KM1',
-    'Rev_KM2',
-    'Delta_KM3',
-    'Fault_Pilot',
-    'Run_Pilot',
-    'Conv_Belt',
-    'Diverter_Sol',
-    'Ready_Pilot'
+    'Fwd_KM1', 'Rev_KM2', 'Delta_KM3', 'Fault_Pilot',
+    'Run_Pilot', 'Conv_Belt', 'Diverter_Sol', 'Ready_Pilot'
   ],
   outputConfigs: [
     { deviceType: 'CONTACTOR', direction: 'FORWARD', color: 'green' },
@@ -2197,14 +2153,8 @@ const PLC = {
   ],
   Control_Bits: Array(8).fill(false),
   controlBitLabels: [
-    'Sys_Run',
-    'Fault_Latch',
-    'Aux_Bit_2',
-    'Aux_Bit_3',
-    'Step_1_Flag',
-    'Step_2_Flag',
-    'Auto_Mode',
-    'Alarm_Ack'
+    'Sys_Run', 'Fault_Latch', 'Aux_Bit_2', 'Aux_Bit_3',
+    'Step_1_Flag', 'Step_2_Flag', 'Auto_Mode', 'Alarm_Ack'
   ],
   oneshotStorage: {},
   timers: {
@@ -2242,8 +2192,8 @@ const PLC = {
 
 let activeEditPath = null;
 let pendingInsertSlot = null;
+let activeStudioTab = 'io';
 
-// Desktop Keyboard Navigation & Shortcut State
 const KB_NAV = {
   selectedRungIdx: 0,
   selectedItemIdx: 0,
@@ -2257,26 +2207,86 @@ const KB_NAV = {
 };
 
 const DEFAULT_FIELD_INPUT_KEYMAP = {
-  's': 0,
-  'x': 1,
-  'o': 2,
-  'r': 3,
-  '4': 4,
-  '5': 5,
-  '6': 6,
-  '7': 7
+  's': 0, 'x': 1, 'o': 2, 'r': 3, '4': 4, '5': 5, '6': 6, '7': 7
 };
 
 const FIELD_INPUT_KEY_BADGES = {
-  0: 'S',
-  1: 'X',
-  2: 'O',
-  3: 'R',
-  4: '4',
-  5: '5',
-  6: '6',
-  7: '7'
+  0: 'S', 1: 'X', 2: 'O', 3: 'R', 4: '4', 5: '5', 6: '6', 7: '7'
 };
+
+/* First-Run Interactive Guided Walkthrough */
+const ONBOARDING_STEPS = [
+  {
+    text: 'Load a pre-wired motor control routine from <strong>Routine Preset</strong> or click <strong>Load 3-Wire Starter</strong>.',
+    actionLabel: 'Load 3-Wire Starter',
+    action: () => {
+      const sel = document.getElementById('presetSelector');
+      if (sel) sel.value = 'preset1';
+      loadPreset('preset1');
+    }
+  },
+  {
+    text: 'Press and hold <strong>Start (.0) [S]</strong> in the bottom dock or left 1756-IB16 rack to energize <strong>Main_KM1</strong>.',
+    actionLabel: 'Pulse Start PB',
+    action: () => {
+      triggerFieldInputKeyDown(0);
+      setTimeout(() => triggerFieldInputKeyUp(0), 220);
+    }
+  },
+  {
+    text: 'Watch the green power-flow rails, live <strong>Trace Bar</strong>, and 3-phase motor RPM update on each 50ms scan.',
+    actionLabel: 'Test Overload Trip',
+    action: () => {
+      toggleOverloadTrip();
+    }
+  },
+  {
+    text: 'Click any ladder instruction to inspect/edit tags, click <strong>+</strong> on any wire to insert contacts/timers, or use <strong>Configure</strong>.',
+    actionLabel: 'Open Inspector',
+    action: () => {
+      if (PLC.rungs.length > 0) {
+        openInspector({ rIdx: 0, eIdx: 0 });
+      }
+    }
+  }
+];
+let onboardingIdx = 0;
+
+function startOnboardingWalkthrough() {
+  onboardingIdx = 0;
+  renderOnboardingStep();
+  document.getElementById('onboardingBanner')?.classList.add('open');
+}
+
+function renderOnboardingStep() {
+  const step = ONBOARDING_STEPS[onboardingIdx];
+  if (!step) return;
+  const pill = document.getElementById('onboardingStepPill');
+  const txt = document.getElementById('onboardingText');
+  const btn = document.getElementById('btnOnboardingAction');
+  if (pill) pill.textContent = `STEP ${onboardingIdx + 1} / ${ONBOARDING_STEPS.length}`;
+  if (txt) txt.innerHTML = step.text;
+  if (btn) btn.textContent = step.actionLabel;
+}
+
+function runOnboardingStepAction() {
+  const step = ONBOARDING_STEPS[onboardingIdx];
+  if (step && typeof step.action === 'function') step.action();
+}
+
+function advanceOnboardingStep() {
+  if (onboardingIdx < ONBOARDING_STEPS.length - 1) {
+    onboardingIdx++;
+    renderOnboardingStep();
+  } else {
+    dismissOnboarding();
+  }
+}
+
+function dismissOnboarding() {
+  document.getElementById('onboardingBanner')?.classList.remove('open');
+  try { localStorage.setItem('logix5000_onboarding_seen', '1'); } catch (_) {}
+}
 
 function getInputAddress(idx) {
   return PLC.inputAddresses[idx] || `Local:1:I.Data.${idx}`;
@@ -2315,6 +2325,42 @@ function findOutputIndexByAddress(addr) {
   return -1;
 }
 
+function isKnownTagAddress(addr) {
+  if (!addr) return false;
+  if (findInputIndexByAddress(addr) !== -1) return true;
+  if (findOutputIndexByAddress(addr) !== -1) return true;
+  if (addr.startsWith('Control_Bits.')) {
+    const idx = parseInt(addr.slice(13), 10);
+    return !isNaN(idx) && idx >= 0 && idx < PLC.Control_Bits.length;
+  }
+  if (addr.startsWith('Timer_')) {
+    const tKey = addr.split('.')[0];
+    return !!PLC.timers[tKey];
+  }
+  if (addr.startsWith('Counter_')) {
+    const cKey = addr.split('.')[0];
+    return !!PLC.counters[cKey];
+  }
+  if (addr.startsWith('ONS_')) return true;
+  return false;
+}
+
+function remapRungAddresses(addressMap) {
+  if (!addressMap || Object.keys(addressMap).length === 0) return;
+  const walk = (list) => {
+    list.forEach(el => {
+      if (el.type === 'BRANCH' && Array.isArray(el.branches)) {
+        el.branches.forEach(leg => walk(leg));
+      } else if (el.addr && addressMap[el.addr]) {
+        el.addr = addressMap[el.addr];
+        const newAlias = getDefaultLabelForAddress(el.addr);
+        if (newAlias) el.label = newAlias;
+      }
+    });
+  };
+  PLC.rungs.forEach(r => walk(r.elements));
+}
+
 function getAddressShortPoint(addr) {
   if (!addr) return '';
   const dotMatch = addr.match(/(\.\d+)$/);
@@ -2323,37 +2369,19 @@ function getAddressShortPoint(addr) {
   return parts[parts.length - 1] || addr;
 }
 
-function getInputCount() {
-  return PLC.physicalIn.length;
-}
-
-function getOutputCount() {
-  return PLC.physicalOut.length;
-}
-
-function getBitCount() {
-  return PLC.Control_Bits.length;
-}
-
-function getTimerKeys() {
-  return Object.keys(PLC.timers);
-}
-
-function getCounterKeys() {
-  return Object.keys(PLC.counters);
-}
+function getInputCount() { return PLC.physicalIn.length; }
+function getOutputCount() { return PLC.physicalOut.length; }
+function getBitCount() { return PLC.Control_Bits.length; }
+function getTimerKeys() { return Object.keys(PLC.timers); }
+function getCounterKeys() { return Object.keys(PLC.counters); }
 
 function getContactAddresses() {
   const list = [];
   for (let i = 0; i < getInputCount(); i++) list.push(getInputAddress(i));
   for (let i = 0; i < getOutputCount(); i++) list.push(getOutputAddress(i));
   for (let i = 0; i < getBitCount(); i++) list.push(`Control_Bits.${i}`);
-  getTimerKeys().forEach(tKey => {
-    list.push(`${tKey}.DN`, `${tKey}.TT`, `${tKey}.EN`);
-  });
-  getCounterKeys().forEach(cKey => {
-    list.push(`${cKey}.DN`, `${cKey}.CU`, `${cKey}.CD`);
-  });
+  getTimerKeys().forEach(tKey => list.push(`${tKey}.DN`, `${tKey}.TT`, `${tKey}.EN`));
+  getCounterKeys().forEach(cKey => list.push(`${cKey}.DN`, `${cKey}.CU`, `${cKey}.CD`));
   return Array.from(new Set(list));
 }
 
@@ -2837,23 +2865,6 @@ const PRESETS = {
   }
 };
 
-function syncBlankCustomizationVisibility() {
-  const isBlank = PLC.presetId === 'blank';
-  const flexIds = new Set([
-    'blankModeBadge',
-    'blankIoBanner',
-    'blankMimicBanner',
-    'blankBitsBanner',
-    'blankTimersBanner'
-  ]);
-  flexIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.style.display = isBlank ? 'flex' : 'none';
-    }
-  });
-}
-
 function loadPreset(id) {
   const p = PRESETS[id];
   if (!p) return;
@@ -2915,7 +2926,6 @@ function loadPreset(id) {
   KB_NAV.selectedRungIdx = 0;
   KB_NAV.selectedItemIdx = 0;
 
-  syncBlankCustomizationVisibility();
   clearPlcMemory();
   buildInputOutputRacks();
   buildMobileQuickDock();
@@ -3034,7 +3044,7 @@ function clearPlcMemory() {
 }
 
 function validateHardwareInterlocks() {
-  if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') return null;
+  if (PLC.blankMimic.driveMode === 'CUSTOM') return null;
 
   let fwdActive = false;
   let revActive = false;
@@ -3052,17 +3062,14 @@ function validateHardwareInterlocks() {
     }
   }
 
-  // 1. Phase-to-phase short circuit check (Forward + Reverse energized simultaneously)
   if (fwdActive && revActive) {
     return 'L1/L3 Phase-to-Phase Short Circuit: FORWARD and REVERSE contactors energized simultaneously!';
   }
 
-  // 2. Star-Delta simultaneous short check
   if (starActive && deltaActive) {
     return 'Star-Delta Busbar Short Circuit: STAR (Y) and DELTA (Δ) contactors energized simultaneously!';
   }
 
-  // 3. Star-Delta arc-extinguishing dead-time check (min 250ms = 5 scans at 50ms)
   if (PLC.wasStarEnergized && !starActive) {
     PLC.starOpenedAtScan = PLC.scanCount;
   }
@@ -3117,6 +3124,7 @@ function executePlcScan(dtMs) {
 
 function solveRung(rung, dtMs, rIdx) {
   let rungPower = true;
+  let blockerDesc = '';
 
   for (let i = 0; i < rung.elements.length; i++) {
     const el = rung.elements[i];
@@ -3133,13 +3141,21 @@ function solveRung(rung, dtMs, rIdx) {
         if (pathPower) branchContinuity = true;
       }
 
+      if (rungPower && !branchContinuity && !blockerDesc) {
+        blockerDesc = `OR Branch (all ${el.branches.length} parallel legs FALSE)`;
+      }
       rungPower = branchContinuity;
       el.outPower = rungPower;
     } else {
+      const prevPower = rungPower;
       rungPower = solveInstruction(el, rungPower, dtMs, `${rIdx}_${i}`);
+      if (prevPower && !rungPower && !blockerDesc) {
+        blockerDesc = `${el.type} ${el.addr}${el.label ? ` (${el.label})` : ''} evaluated FALSE`;
+      }
     }
   }
   rung.energized = rungPower;
+  rung.blockerDesc = blockerDesc;
 }
 
 function solveInstruction(el, inPower, dtMs, uid) {
@@ -3160,10 +3176,11 @@ function solveInstruction(el, inPower, dtMs, uid) {
       break;
     }
     case 'ONS': {
-      const key = el.addr || `ONS_${uid}`;
-      const prev = !!PLC.oneshotStorage[key];
+      // Unique storage per instruction instance + tag so multiple ONS never collide
+      const storageKey = `${el.addr || 'ONS'}__${uid}`;
+      const prev = !!PLC.oneshotStorage[storageKey];
       const pulse = inPower && !prev;
-      PLC.oneshotStorage[key] = inPower;
+      PLC.oneshotStorage[storageKey] = inPower;
       el.energized = pulse;
       outPower = pulse;
       break;
@@ -3227,6 +3244,10 @@ function solveInstruction(el, inPower, dtMs, uid) {
               t.TT = false;
               t.DN = false;
             }
+          } else {
+            t.EN = false;
+            t.TT = false;
+            t.DN = false;
           }
         }
         el.energized = t.DN;
@@ -3335,6 +3356,35 @@ function solveInstruction(el, inPower, dtMs, uid) {
   return outPower;
 }
 
+function updateRungTraceDisplay() {
+  const statusEl = document.getElementById('traceRungStatus');
+  const detailEl = document.getElementById('traceRungDetail');
+  if (!statusEl || !detailEl) return;
+
+  if (PLC.rungs.length === 0) {
+    statusEl.className = 'trace-status-badge false';
+    statusEl.textContent = 'NO RUNGS';
+    detailEl.textContent = 'Click "+ Add Rung" or load a preset from the top menu.';
+    return;
+  }
+
+  const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
+  const rung = PLC.rungs[rIdx];
+  if (!rung) return;
+
+  if (rung.energized) {
+    statusEl.className = 'trace-status-badge true';
+    statusEl.textContent = `RUNG ${rIdx}: TRUE`;
+    detailEl.textContent = 'Continuous power flow from +24VDC Left Rail to 0VDC Right Rail.';
+  } else {
+    statusEl.className = 'trace-status-badge false';
+    statusEl.textContent = `RUNG ${rIdx}: FALSE`;
+    detailEl.textContent = rung.blockerDesc
+      ? `Blocked at: ${rung.blockerDesc}`
+      : 'Rung continuity open.';
+  }
+}
+
 function createWireSegment(slotSpec, wireMeta) {
   const seg = document.createElement('div');
   seg.className = 'wire-segment';
@@ -3354,7 +3404,7 @@ function createWireSegment(slotSpec, wireMeta) {
   insertBtn.className = 'wire-insert-btn kb-nav-node';
   insertBtn.type = 'button';
   insertBtn.textContent = '+';
-  insertBtn.title = 'Insert Contact, OR Branch, Timer, Counter, or Output Here';
+  insertBtn.title = 'Insert Instruction Here';
   insertBtn.dataset.slot = JSON.stringify(slotSpec);
   insertBtn.onclick = (e) => {
     e.stopPropagation();
@@ -3379,7 +3429,7 @@ function renderLadderCanvas() {
     host.innerHTML = `
       <div class="empty-routine-prompt">
         <div style="color:var(--sky-accent); font-weight:800; font-size:13px;">EMPTY MAINROUTINE (MAINPROGRAM)</div>
-        <div>Blank Routine — Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> above to begin programming.</div>
+        <div>Press <strong>[N]</strong> or click <strong>'+ Add Rung'</strong> to begin programming, or choose a motor starter preset above.</div>
         <div class="empty-quick-actions">
           <button id="btnAddFirstRung" class="btn-run kb-nav-node" onclick="addNewRung()">+ Add First Rung <span class="kbd-tag hide-mobile">N</span></button>
         </div>
@@ -3394,13 +3444,18 @@ function renderLadderCanvas() {
     const block = document.createElement('div');
     block.className = 'rung-block';
     block.dataset.rungIdx = rIdx;
+    block.onclick = () => {
+      KB_NAV.selectedRungIdx = rIdx;
+      applyLadderKeyboardCursor();
+      updateRungTraceDisplay();
+    };
 
     const topBar = document.createElement('div');
     topBar.className = 'rung-top-bar';
     topBar.innerHTML = `
       <div class="rung-id-group">
         <span class="rung-tag">Rung ${rIdx}</span>
-        <span class="rung-comment-text" onclick="promptRungComment(${rIdx})">${escapeHtml(rung.comment || 'Tap to add rung comment')}</span>
+        <span class="rung-comment-text" onclick="promptRungComment(${rIdx})">${escapeHtml(rung.comment || 'Click to add rung comment')}</span>
       </div>
       <div class="rung-btn-group">
         <button onclick="openInsertModal({ rIdx: ${rIdx}, insertIndex: ${Math.max(0, rung.elements.length - 1)} })">+ Contact</button>
@@ -3473,30 +3528,25 @@ function renderLadderCanvas() {
 }
 
 function buildInstructionNode(el, path) {
+  const known = isKnownTagAddress(el.addr);
   const node = document.createElement('div');
-  node.className = 'inst-node kb-nav-node';
+  node.className = 'inst-node kb-nav-node' + (!known ? ' orphan-tag' : '');
   node.dataset.path = JSON.stringify(path);
-  node.onclick = () => {
+  node.onclick = (e) => {
+    e.stopPropagation();
     selectNodeInNav(node);
     openInspector(path);
   };
 
   let symMarkup = '';
-  if (el.type === 'XIC') {
-    symMarkup = `<div class="inst-symbol" data-sym>| |</div>`;
-  } else if (el.type === 'XIO') {
-    symMarkup = `<div class="inst-symbol" data-sym>|/|</div>`;
-  } else if (el.type === 'ONS') {
-    symMarkup = `<div class="inst-symbol" data-sym>[ONS]</div>`;
-  } else if (el.type === 'OTE') {
-    symMarkup = `<div class="inst-symbol" data-sym>( )</div>`;
-  } else if (el.type === 'OTL') {
-    symMarkup = `<div class="inst-symbol" data-sym>(L)</div>`;
-  } else if (el.type === 'OTU') {
-    symMarkup = `<div class="inst-symbol" data-sym>(U)</div>`;
-  } else if (el.type === 'RES') {
-    symMarkup = `<div class="inst-symbol" data-sym>(RES)</div>`;
-  } else if (el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') {
+  if (el.type === 'XIC') symMarkup = `<div class="inst-symbol" data-sym>| |</div>`;
+  else if (el.type === 'XIO') symMarkup = `<div class="inst-symbol" data-sym>|/|</div>`;
+  else if (el.type === 'ONS') symMarkup = `<div class="inst-symbol" data-sym>[ONS]</div>`;
+  else if (el.type === 'OTE') symMarkup = `<div class="inst-symbol" data-sym>( )</div>`;
+  else if (el.type === 'OTL') symMarkup = `<div class="inst-symbol" data-sym>(L)</div>`;
+  else if (el.type === 'OTU') symMarkup = `<div class="inst-symbol" data-sym>(U)</div>`;
+  else if (el.type === 'RES') symMarkup = `<div class="inst-symbol" data-sym>(RES)</div>`;
+  else if (el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') {
     const t = PLC.timers[el.addr] || { PRE: el.preset || 3000, ACC: 0 };
     symMarkup = `
       <div class="inst-symbol timer-block" data-sym>
@@ -3532,7 +3582,7 @@ function buildInstructionNode(el, path) {
   }
 
   node.innerHTML = `
-    <div class="inst-addr" title="${escapeHtml(el.addr)}">${escapeHtml(el.addr)}</div>
+    <div class="inst-addr" title="${escapeHtml(el.addr)}${!known ? ' (Unmapped tag — click to reassign)' : ''}">${!known ? '⚠ ' : ''}${escapeHtml(el.addr)}</div>
     ${symMarkup}
     <div class="inst-sublabel">${escapeHtml(el.label || '')}</div>
   `;
@@ -3541,8 +3591,208 @@ function buildInstructionNode(el, path) {
 }
 
 /**
- * Focus Mode & Quick-Control Bottom Dock
+ * Unified Configuration Studio Modal
  */
+let draftBlankIo = { inputs: [], outputs: [] };
+let draftQuickDockItems = [];
+
+function openConfigStudio(tabName) {
+  activeStudioTab = tabName || 'io';
+  initDraftBlankIoFromPlc();
+  draftQuickDockItems = JSON.parse(JSON.stringify(PLC.quickDockItems));
+
+  renderBlankIoEditorLists();
+  renderQuickDockEditorList();
+  populateMimicStudioFields();
+  populateTagsStudioFields();
+
+  switchStudioTab(activeStudioTab);
+  KB_NAV.modalArmedForApply = false;
+  document.getElementById('configStudioModal').classList.add('open');
+}
+
+function closeConfigStudio() {
+  closeCustomSelectDropdown();
+  KB_NAV.modalArmedForApply = false;
+  document.getElementById('configStudioModal').classList.remove('open');
+  if (document.activeElement && document.activeElement !== document.body) {
+    document.activeElement.blur();
+  }
+}
+
+function switchStudioTab(tabName) {
+  activeStudioTab = tabName;
+  document.querySelectorAll('.studio-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.studioTab === tabName);
+  });
+  document.querySelectorAll('.studio-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `studioPanel_${tabName}`);
+  });
+}
+
+function resetActiveStudioTabDefaults() {
+  if (activeStudioTab === 'io') resetBlankIoDefaults();
+  else if (activeStudioTab === 'mimic') resetBlankMimicDefaults();
+  else if (activeStudioTab === 'tags') resetBlankTagsDefaults();
+  else if (activeStudioTab === 'dock') resetQuickDockDefaults();
+}
+
+function applyAllStudioChanges() {
+  const prevInAddrs = [...PLC.inputAddresses];
+  const prevOutAddrs = [...PLC.outputAddresses];
+  const prevOut = [...PLC.physicalOut];
+
+  // 1. Apply 1756 I/O & build address migration map so ladder rungs never break
+  captureDraftBlankIoFromDom();
+  const addressMap = {};
+  const nextIn = [];
+  const nextInAddrs = [];
+  const nextModes = [];
+  const nextInLabels = [];
+  draftBlankIo.inputs.forEach((inp, i) => {
+    const resolved = inp.addr || `Local:1:I.Data.${i}`;
+    if (prevInAddrs[i] && prevInAddrs[i] !== resolved) {
+      addressMap[prevInAddrs[i]] = resolved;
+    }
+    nextInAddrs.push(resolved);
+    nextInLabels.push(inp.label || `Input_${i}`);
+    nextModes.push(inp.mode || 'MOM_NO');
+    nextIn.push(!!inp.state);
+  });
+
+  const nextOutAddrs = [];
+  const nextOutLabels = [];
+  const nextOutConfigs = [];
+  draftBlankIo.outputs.forEach((outp, i) => {
+    const resolved = outp.addr || `Local:2:O.Data.${i}`;
+    if (prevOutAddrs[i] && prevOutAddrs[i] !== resolved) {
+      addressMap[prevOutAddrs[i]] = resolved;
+    }
+    const labelStr = outp.label || `Output_${i}`;
+    nextOutAddrs.push(resolved);
+    nextOutLabels.push(labelStr);
+    nextOutConfigs.push(normalizeOutputConfig(outp, labelStr, i));
+  });
+
+  remapRungAddresses(addressMap);
+
+  PLC.physicalIn = nextIn;
+  PLC.inputAddresses = nextInAddrs;
+  PLC.inputModes = nextModes;
+  PLC.inputLabels = nextInLabels;
+  PLC.I = Array(nextIn.length).fill(false);
+
+  PLC.outputAddresses = nextOutAddrs;
+  PLC.outputLabels = nextOutLabels;
+  PLC.outputConfigs = nextOutConfigs;
+  PLC.O = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
+  PLC.physicalOut = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
+
+  // 2. Apply Mimic Settings
+  const driveMode = document.getElementById('mimicDriveMode')?.value || 'AUTO';
+  const state = document.getElementById('mimicPresetState')?.value || 'STOPPED';
+  const rpmVal = parseInt(document.getElementById('mimicCustomRpm')?.value || '0', 10);
+  const subtextVal = (document.getElementById('mimicCustomSubtext')?.value || '').trim();
+
+  PLC.blankMimic.driveMode = driveMode;
+  PLC.blankMimic.state = state;
+  PLC.blankMimic.rpm = isNaN(rpmVal) ? 0 : Math.min(3600, Math.max(0, rpmVal));
+  PLC.blankMimic.subtext = subtextVal || 'CUSTOM MIMIC';
+
+  const lampRows = document.querySelectorAll('#blankLampsEditorList .custom-io-item');
+  if (lampRows.length > 0) {
+    const nextLamps = [];
+    for (let i = 0; i < lampRows.length; i++) {
+      const lbl = (document.getElementById(`editLampLabel_${i}`)?.value || '').trim();
+      const bitIdx = parseInt(document.getElementById(`editLampBit_${i}`)?.value || String(i), 10);
+      const col = document.getElementById(`editLampColor_${i}`)?.value || 'green';
+      const resolvedBit = isNaN(bitIdx) ? i : Math.min(PLC.outputLabels.length - 1, Math.max(0, bitIdx));
+      nextLamps.push({
+        bitIndex: resolvedBit,
+        label: lbl || PLC.outputLabels[resolvedBit] || `Lamp_${i}`,
+        color: col
+      });
+      if (PLC.outputConfigs[resolvedBit] && PLC.outputConfigs[resolvedBit].deviceType === 'PILOT') {
+        PLC.outputConfigs[resolvedBit].color = col;
+      }
+    }
+    PLC.blankMimic.lamps = nextLamps;
+  } else {
+    syncMimicLampsFromOutputConfigs(true);
+  }
+
+  // 3. Apply Control_Bits, Timers & Counters
+  const bitCount = document.querySelectorAll('#blankBitsEditorList .custom-io-item').length;
+  if (bitCount > 0) {
+    const nextBits = [];
+    const nextBitLabels = [];
+    for (let i = 0; i < bitCount; i++) {
+      const lbl = (document.getElementById(`editBitLabel_${i}`)?.value || '').trim();
+      const val = document.getElementById(`editBitState_${i}`)?.value === '1';
+      nextBitLabels.push(lbl || `Aux_Bit_${i}`);
+      nextBits.push(val);
+    }
+    PLC.controlBitLabels = nextBitLabels;
+    PLC.Control_Bits = nextBits;
+  }
+
+  Array.from(document.querySelectorAll('#blankTimersEditorList .custom-io-item')).forEach(row => {
+    const tKey = row.dataset.timerKey;
+    const t = PLC.timers[tKey];
+    if (!t) return;
+    const lbl = (document.getElementById(`editTmrLabel_${tKey}`)?.value || '').trim();
+    const preParsed = parseInt(document.getElementById(`editTmrPre_${tKey}`)?.value || '3000', 10);
+    const accParsed = parseInt(document.getElementById(`editTmrAcc_${tKey}`)?.value || '0', 10);
+    t.label = lbl || tKey;
+    t.PRE = isNaN(preParsed) ? 3000 : Math.min(60000, Math.max(100, preParsed));
+    t.ACC = isNaN(accParsed) ? 0 : Math.min(t.PRE, Math.max(0, accParsed));
+    t.DN = t.ACC >= t.PRE;
+    PLC.rungs.forEach(rung => {
+      rung.elements.forEach(el => {
+        if ((el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') && el.addr === tKey) {
+          el.preset = t.PRE;
+        }
+      });
+    });
+  });
+
+  Array.from(document.querySelectorAll('#blankCountersEditorList .custom-io-item')).forEach(row => {
+    const cKey = row.dataset.counterKey;
+    const c = PLC.counters[cKey];
+    if (!c) return;
+    const lbl = (document.getElementById(`editCntLabel_${cKey}`)?.value || '').trim();
+    const preParsed = parseInt(document.getElementById(`editCntPre_${cKey}`)?.value || '5', 10);
+    const accParsed = parseInt(document.getElementById(`editCntAcc_${cKey}`)?.value || '0', 10);
+    c.label = lbl || cKey;
+    c.PRE = isNaN(preParsed) ? 5 : preParsed;
+    c.ACC = isNaN(accParsed) ? 0 : accParsed;
+    c.DN = c.ACC >= c.PRE;
+    PLC.rungs.forEach(rung => {
+      rung.elements.forEach(el => {
+        if ((el.type === 'CTU' || el.type === 'CTD') && el.addr === cKey) {
+          el.preset = c.PRE;
+        }
+      });
+    });
+  });
+
+  // 4. Apply Quick-Control Dock
+  captureDraftQuickDockFromDom();
+  draftQuickDockItems.forEach(item => {
+    if (addressMap[item.addr]) item.addr = addressMap[item.addr];
+    const inIdx = findInputIndexByAddress(item.addr);
+    if (inIdx !== -1) PLC.inputModes[inIdx] = item.mode;
+  });
+  PLC.quickDockItems = JSON.parse(JSON.stringify(draftQuickDockItems));
+
+  closeConfigStudio();
+  buildInputOutputRacks();
+  buildMobileQuickDock();
+  buildMimicLamps();
+  renderLadderCanvas();
+  syncUiVisuals();
+}
+
 function toggleFocusMode() {
   PLC.focusMode = !PLC.focusMode;
   document.body.classList.toggle('focus-mode', PLC.focusMode);
@@ -3550,57 +3800,24 @@ function toggleFocusMode() {
   if (btn) btn.classList.toggle('btn-accent', PLC.focusMode);
 }
 
-let draftQuickDockItems = [];
-
 function toggleQuickDockBar() {
   PLC.dockVisible = !PLC.dockVisible;
   const dock = document.getElementById('mobileQuickDock');
-  if (dock) {
-    dock.classList.toggle('dock-hidden', !PLC.dockVisible);
-  }
+  if (dock) dock.classList.toggle('dock-hidden', !PLC.dockVisible);
 }
 
 function getAllDockTargetAddresses() {
   const list = [];
   for (let i = 0; i < PLC.physicalIn.length; i++) {
-    list.push({
-      addr: getInputAddress(i),
-      tag: `${getInputAddress(i)} (${PLC.inputLabels[i] || `Input_${i}`})`
-    });
+    list.push({ addr: getInputAddress(i), tag: `${getInputAddress(i)} (${PLC.inputLabels[i] || `Input_${i}`})` });
   }
   for (let i = 0; i < PLC.physicalOut.length; i++) {
-    list.push({
-      addr: getOutputAddress(i),
-      tag: `${getOutputAddress(i)} (${PLC.outputLabels[i] || `Output_${i}`})`
-    });
+    list.push({ addr: getOutputAddress(i), tag: `${getOutputAddress(i)} (${PLC.outputLabels[i] || `Output_${i}`})` });
   }
   for (let i = 0; i < PLC.Control_Bits.length; i++) {
-    list.push({
-      addr: `Control_Bits.${i}`,
-      tag: `Control_Bits.${i} (${PLC.controlBitLabels[i] || `Bit_${i}`})`
-    });
+    list.push({ addr: `Control_Bits.${i}`, tag: `Control_Bits.${i} (${PLC.controlBitLabels[i] || `Bit_${i}`})` });
   }
   return list;
-}
-
-function openQuickDockModal() {
-  draftQuickDockItems = JSON.parse(JSON.stringify(PLC.quickDockItems));
-  renderQuickDockEditorList();
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('quickDockModal').classList.add('open');
-  setTimeout(() => {
-    const firstInput = document.querySelector('#quickDockEditorList input');
-    if (firstInput) firstInput.focus();
-  }, 15);
-}
-
-function closeQuickDockModal() {
-  closeCustomSelectDropdown();
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('quickDockModal').classList.remove('open');
-  if (document.activeElement && document.activeElement !== document.body) {
-    document.activeElement.blur();
-  }
 }
 
 function captureDraftQuickDockFromDom() {
@@ -3633,9 +3850,8 @@ function renderQuickDockEditorList() {
   host.innerHTML = '';
 
   const targetPool = getAllDockTargetAddresses();
-
   if (draftQuickDockItems.length === 0) {
-    host.innerHTML = `<div class="custom-io-item" style="text-align:center; color:var(--text-secondary);">No dock buttons configured. Click <strong>'+ Add Dock Button'</strong> above to add one.</div>`;
+    host.innerHTML = `<div class="custom-io-item" style="text-align:center; color:var(--text-secondary);">No dock buttons configured. Click <strong>'+ Add Button'</strong> above.</div>`;
     return;
   }
 
@@ -3652,14 +3868,14 @@ function renderQuickDockEditorList() {
     card.innerHTML = `
       <div class="custom-io-row">
         <strong style="color:var(--sky-accent); min-width:54px;">BTN #${idx + 1}</strong>
-        <input type="text" class="dock-edit-label" maxlength="16" value="${escapeHtml(item.label)}" placeholder="Label (e.g. Start, Stop, OL, Rev)">
-        <input type="text" class="dock-edit-key" maxlength="1" style="max-width:56px; text-align:center;" value="${escapeHtml(item.key || '')}" placeholder="Key" title="Single Keyboard Shortcut Letter/Digit">
-        <button type="button" class="mini-icon-btn" onclick="moveQuickDockItem(${idx}, -1)" title="Move Left / Up" ${idx === 0 ? 'disabled' : ''}>&uarr;</button>
-        <button type="button" class="mini-icon-btn" onclick="moveQuickDockItem(${idx}, 1)" title="Move Right / Down" ${idx === draftQuickDockItems.length - 1 ? 'disabled' : ''}>&darr;</button>
-        <button type="button" class="mini-icon-btn btn-danger" onclick="removeQuickDockItem(${idx})" title="Remove Dock Button">&times;</button>
+        <input type="text" class="dock-edit-label" maxlength="16" value="${escapeHtml(item.label)}" placeholder="Label">
+        <input type="text" class="dock-edit-key" maxlength="1" style="max-width:56px; text-align:center;" value="${escapeHtml(item.key || '')}" placeholder="Key">
+        <button type="button" class="mini-icon-btn" onclick="moveQuickDockItem(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>&uarr;</button>
+        <button type="button" class="mini-icon-btn" onclick="moveQuickDockItem(${idx}, 1)" ${idx === draftQuickDockItems.length - 1 ? 'disabled' : ''}>&darr;</button>
+        <button type="button" class="mini-icon-btn btn-danger" onclick="removeQuickDockItem(${idx})">&times;</button>
       </div>
       <div class="custom-io-row">
-        <select class="dock-edit-addr-select" onchange="handleDockSelectChange(this, ${idx})">${optionsHtml}</select>
+        <select class="dock-edit-addr-select" onchange="handleDockSelectChange(this)">${optionsHtml}</select>
         <input type="text" class="dock-edit-addr-custom" maxlength="28" style="display:${!matchesPool ? 'block' : 'none'};" value="${escapeHtml(!matchesPool ? item.addr : '')}" placeholder="e.g. Local:3:I.Data.0">
         <select class="dock-edit-mode" style="max-width:110px;">
           <option value="MOM_NO" ${item.mode === 'MOM_NO' ? 'selected' : ''}>MOM_NO</option>
@@ -3672,7 +3888,7 @@ function renderQuickDockEditorList() {
   });
 }
 
-function handleDockSelectChange(selectEl, idx) {
+function handleDockSelectChange(selectEl) {
   captureDraftQuickDockFromDom();
   const row = selectEl.closest('.custom-io-item');
   const customInput = row?.querySelector('.dock-edit-addr-custom');
@@ -3688,13 +3904,9 @@ function handleDockSelectChange(selectEl, idx) {
     if (customInput) customInput.style.display = 'none';
     const chosenAddr = selectEl.value;
     const inIdx = findInputIndexByAddress(chosenAddr);
-    if (inIdx !== -1 && modeSelect) {
-      modeSelect.value = PLC.inputModes[inIdx] || 'MOM_NO';
-    }
+    if (inIdx !== -1 && modeSelect) modeSelect.value = PLC.inputModes[inIdx] || 'MOM_NO';
     const alias = getDefaultLabelForAddress(chosenAddr);
-    if (alias && labelInput) {
-      labelInput.value = alias.split('_')[0];
-    }
+    if (alias && labelInput) labelInput.value = alias.split('_')[0];
   }
 }
 
@@ -3712,14 +3924,6 @@ function addQuickDockItem() {
     key: FIELD_INPUT_KEY_BADGES[targetInIdx] || ''
   });
   renderQuickDockEditorList();
-  setTimeout(() => {
-    const inputs = document.querySelectorAll('#quickDockEditorList .dock-edit-label');
-    const lastInp = inputs[inputs.length - 1];
-    if (lastInp) {
-      lastInp.focus();
-      lastInp.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
 }
 
 function moveQuickDockItem(idx, delta) {
@@ -3744,48 +3948,9 @@ function resetQuickDockDefaults() {
   renderQuickDockEditorList();
 }
 
-function applyQuickDockChanges() {
-  captureDraftQuickDockFromDom();
-
-  draftQuickDockItems.forEach(item => {
-    const existsIn = findInputIndexByAddress(item.addr) !== -1;
-    const existsOut = findOutputIndexByAddress(item.addr) !== -1;
-    const existsBit = item.addr.startsWith('Control_Bits.');
-    if (!existsIn && !existsOut && !existsBit && item.addr) {
-      PLC.inputAddresses.push(item.addr);
-      PLC.inputLabels.push(item.label || `Custom_${PLC.physicalIn.length}`);
-      PLC.inputModes.push(item.mode || 'MOM_NO');
-      PLC.physicalIn.push(item.mode === 'MOM_NC');
-      PLC.I.push(false);
-    } else if (existsIn) {
-      const inIdx = findInputIndexByAddress(item.addr);
-      PLC.inputModes[inIdx] = item.mode;
-    }
-  });
-
-  PLC.quickDockItems = JSON.parse(JSON.stringify(draftQuickDockItems));
-  PLC.dockVisible = true;
-  const dock = document.getElementById('mobileQuickDock');
-  if (dock) dock.classList.remove('dock-hidden');
-
-  closeQuickDockModal();
-  buildInputOutputRacks();
-  buildMobileQuickDock();
-  syncUiVisuals();
-}
-
-/**
- * 1756 I/O Customization Modal
- */
-let draftBlankIo = {
-  inputs: [],
-  outputs: []
-};
-
 function getAllAvailableControllerProgramTags() {
   const catalog = [];
   const seen = new Set();
-
   const pushTag = (addr, group, alias) => {
     if (!addr || seen.has(addr)) return;
     seen.add(addr);
@@ -3797,40 +3962,10 @@ function getAllAvailableControllerProgramTags() {
     });
   };
 
-  for (let i = 0; i < 16; i++) {
-    const addr = `Local:1:I.Data.${i}`;
-    pushTag(addr, '1756-IB16 IN', PLC.inputLabels[i] || `IB16_In_${i}`);
-  }
-  PLC.inputAddresses.forEach((addr, idx) => {
-    pushTag(addr, '1756-IB16 IN', PLC.inputLabels[idx] || `Input_${idx}`);
-  });
-
-  for (let i = 0; i < 16; i++) {
-    const addr = `Local:2:O.Data.${i}`;
-    pushTag(addr, '1756-OB16E OUT', PLC.outputLabels[i] || `OB16E_Out_${i}`);
-  }
-  PLC.outputAddresses.forEach((addr, idx) => {
-    pushTag(addr, '1756-OB16E OUT', PLC.outputLabels[idx] || `Output_${idx}`);
-  });
-
-  for (let i = 0; i < PLC.Control_Bits.length; i++) {
-    const addr = `Control_Bits.${i}`;
-    pushTag(addr, 'Program DINT', PLC.controlBitLabels[i] || `Bit_${i}`);
-  }
-
-  getTimerKeys().forEach(tKey => {
-    const tAlias = PLC.timers[tKey]?.label || tKey;
-    pushTag(`${tKey}.DN`, 'TIMER Bit', `${tAlias}.DN`);
-    pushTag(`${tKey}.TT`, 'TIMER Bit', `${tAlias}.TT`);
-    pushTag(`${tKey}.EN`, 'TIMER Bit', `${tAlias}.EN`);
-  });
-
-  getCounterKeys().forEach(cKey => {
-    const cAlias = PLC.counters[cKey]?.label || cKey;
-    pushTag(`${cKey}.DN`, 'COUNTER Bit', `${cAlias}.DN`);
-    pushTag(`${cKey}.CU`, 'COUNTER Bit', `${cAlias}.CU`);
-  });
-
+  for (let i = 0; i < 16; i++) pushTag(`Local:1:I.Data.${i}`, '1756-IB16 IN', PLC.inputLabels[i] || `IB16_In_${i}`);
+  PLC.inputAddresses.forEach((addr, idx) => pushTag(addr, '1756-IB16 IN', PLC.inputLabels[idx] || `Input_${idx}`));
+  for (let i = 0; i < 16; i++) pushTag(`Local:2:O.Data.${i}`, '1756-OB16E OUT', PLC.outputLabels[i] || `OB16E_Out_${i}`);
+  PLC.outputAddresses.forEach((addr, idx) => pushTag(addr, '1756-OB16E OUT', PLC.outputLabels[idx] || `Output_${idx}`));
   return catalog;
 }
 
@@ -3884,15 +4019,9 @@ function captureDraftBlankIoFromDom() {
 function buildAvailableTagOptionsHtml(currentAddr, usedByOtherRows) {
   const catalog = getAllAvailableControllerProgramTags();
   const available = catalog.filter(item => item.addr === currentAddr || !usedByOtherRows.has(item.addr));
-
   if (currentAddr && !available.some(item => item.addr === currentAddr)) {
-    available.unshift({
-      addr: currentAddr,
-      group: 'Assigned',
-      displayText: `${currentAddr} [Assigned]`
-    });
+    available.unshift({ addr: currentAddr, group: 'Assigned', displayText: `${currentAddr} [Assigned]` });
   }
-
   return available.map(item =>
     `<option value="${escapeHtml(item.addr)}" ${item.addr === currentAddr ? 'selected' : ''}>${escapeHtml(item.displayText)}</option>`
   ).join('');
@@ -3901,6 +4030,7 @@ function buildAvailableTagOptionsHtml(currentAddr, usedByOtherRows) {
 function renderBlankIoEditorLists() {
   const inHost = document.getElementById('blankInputEditorList');
   const outHost = document.getElementById('blankOutputEditorList');
+  if (!inHost || !outHost) return;
   inHost.innerHTML = '';
   outHost.innerHTML = '';
 
@@ -3912,15 +4042,13 @@ function renderBlankIoEditorLists() {
   draftBlankIo.inputs.forEach((inp, i) => {
     const usedByOthers = new Set(allSelectedAddrs.filter((_, idx) => idx !== i));
     const optionsHtml = buildAvailableTagOptionsHtml(inp.addr, usedByOthers);
-
     const item = document.createElement('div');
     item.className = 'custom-io-item';
-    item.dataset.inIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
         <strong style="color:var(--sky-accent);">IN #${i}</strong>
-        <select id="editInAddr_${i}" class="io-addr-select" onchange="handleBlankIoAddrSelectChange('IN', ${i}, this.value)">${optionsHtml}</select>
-        ${draftBlankIo.inputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomInputChannel(${i})" title="Remove Input">&times;</button>` : ''}
+        <select id="editInAddr_${i}" onchange="handleBlankIoAddrSelectChange('IN', ${i}, this.value)">${optionsHtml}</select>
+        ${draftBlankIo.inputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomInputChannel(${i})">&times;</button>` : ''}
       </div>
       <div class="custom-io-row">
         <input type="text" id="editInLabel_${i}" maxlength="18" value="${escapeHtml(inp.label)}" placeholder="Alias / Label">
@@ -3949,29 +4077,28 @@ function renderBlankIoEditorLists() {
 
     const item = document.createElement('div');
     item.className = 'custom-io-item';
-    item.dataset.outIdx = i;
     item.innerHTML = `
       <div class="custom-io-row">
         <strong style="color:var(--power-green);">OUT #${i}</strong>
-        <select id="editOutAddr_${i}" class="io-addr-select" onchange="handleBlankIoAddrSelectChange('OUT', ${i}, this.value)">${optionsHtml}</select>
-        ${draftBlankIo.outputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomOutputChannel(${i})" title="Remove Output">&times;</button>` : ''}
+        <select id="editOutAddr_${i}" onchange="handleBlankIoAddrSelectChange('OUT', ${i}, this.value)">${optionsHtml}</select>
+        ${draftBlankIo.outputs.length > 1 ? `<button type="button" class="mini-icon-btn btn-danger" onclick="removeCustomOutputChannel(${i})">&times;</button>` : ''}
       </div>
       <div class="custom-io-row">
-        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(outp.label)}" placeholder="Output / KM / Pilot Alias">
+        <input type="text" id="editOutLabel_${i}" maxlength="18" value="${escapeHtml(outp.label)}" placeholder="Output Alias">
       </div>
       <div class="custom-io-row">
         <select id="editOutType_${i}" onchange="handleOutputDeviceTypeChange(${i}, this.value)">
           <option value="CONTACTOR" ${!isPilot ? 'selected' : ''}>Contactor (KM)</option>
           <option value="PILOT" ${isPilot ? 'selected' : ''}>Pilot Light</option>
         </select>
-        <select id="editOutDir_${i}" style="display:${!isPilot ? 'block' : 'none'};" onchange="handleOutputDirectionChange(${i}, this.value)">
+        <select id="editOutDir_${i}" style="display:${!isPilot ? 'block' : 'none'};">
           <option value="FORWARD" ${outp.direction === 'FORWARD' ? 'selected' : ''}>Role: Forward (CW)</option>
           <option value="REVERSE" ${outp.direction === 'REVERSE' ? 'selected' : ''}>Role: Reverse (CCW)</option>
           <option value="STAR" ${outp.direction === 'STAR' ? 'selected' : ''}>Role: Star (Y)</option>
           <option value="DELTA" ${outp.direction === 'DELTA' ? 'selected' : ''}>Role: Delta (Δ)</option>
           <option value="NONE" ${outp.direction === 'NONE' ? 'selected' : ''}>Role: Auxiliary</option>
         </select>
-        <select id="editOutColor_${i}" style="display:${isPilot ? 'block' : 'none'};" onchange="handleOutputPilotColorChange(${i}, this.value)">
+        <select id="editOutColor_${i}" style="display:${isPilot ? 'block' : 'none'};">
           <option value="green" ${outp.color === 'green' ? 'selected' : ''}>Color: Green</option>
           <option value="amber" ${outp.color === 'amber' ? 'selected' : ''}>Color: Amber</option>
           <option value="blue" ${outp.color === 'blue' ? 'selected' : ''}>Color: Blue</option>
@@ -3983,69 +4110,12 @@ function renderBlankIoEditorLists() {
   });
 }
 
-function isGenericOrAutoOutputLabel(label) {
-  const s = String(label || '').trim();
-  if (!s) return true;
-  return /^(Output_\d+|KM_Aux_\d+|Spare_Out\d*|Fwd_KM\d+|Rev_KM\d+|Star_KM\d+|Delta_KM\d+|Main_KM\d+|Green_Pilot|Amber_Pilot|Blue_Pilot|Red_Pilot|Run_Pilot|Fault_Pilot)$/i.test(s);
-}
-
 function handleOutputDeviceTypeChange(idx, newDeviceType) {
   captureDraftBlankIoFromDom();
   const item = draftBlankIo.outputs[idx];
   if (!item) return;
   item.deviceType = newDeviceType === 'PILOT' ? 'PILOT' : 'CONTACTOR';
-
-  if (item.deviceType === 'PILOT') {
-    if (!VALID_LAMP_COLORS.includes(item.color)) item.color = 'green';
-    if (isGenericOrAutoOutputLabel(item.label)) {
-      const capColor = item.color.charAt(0).toUpperCase() + item.color.slice(1);
-      item.label = `${capColor}_Pilot`;
-    }
-  } else {
-    if (!VALID_CONTACTOR_ROLES.includes(item.direction)) item.direction = 'FORWARD';
-    if (isGenericOrAutoOutputLabel(item.label)) {
-      if (item.direction === 'REVERSE') item.label = `Rev_KM${idx + 1}`;
-      else if (item.direction === 'STAR') item.label = `Star_KM${idx + 1}`;
-      else if (item.direction === 'DELTA') item.label = `Delta_KM${idx + 1}`;
-      else if (item.direction === 'FORWARD') item.label = `Fwd_KM${idx + 1}`;
-      else item.label = `KM_Aux_${idx}`;
-    }
-  }
-
   renderBlankIoEditorLists();
-  const focusEl = document.getElementById(item.deviceType === 'PILOT' ? `editOutColor_${idx}` : `editOutDir_${idx}`);
-  if (focusEl) focusEl.focus();
-}
-
-function handleOutputDirectionChange(idx, newDir) {
-  captureDraftBlankIoFromDom();
-  const item = draftBlankIo.outputs[idx];
-  if (!item) return;
-  item.direction = newDir;
-  if (isGenericOrAutoOutputLabel(item.label)) {
-    if (newDir === 'REVERSE') item.label = `Rev_KM${idx + 1}`;
-    else if (newDir === 'STAR') item.label = `Star_KM${idx + 1}`;
-    else if (newDir === 'DELTA') item.label = `Delta_KM${idx + 1}`;
-    else if (newDir === 'FORWARD') item.label = `Fwd_KM${idx + 1}`;
-    else item.label = `KM_Aux_${idx}`;
-  }
-  renderBlankIoEditorLists();
-  const focusEl = document.getElementById(`editOutDir_${idx}`);
-  if (focusEl) focusEl.focus();
-}
-
-function handleOutputPilotColorChange(idx, newColor) {
-  captureDraftBlankIoFromDom();
-  const item = draftBlankIo.outputs[idx];
-  if (!item) return;
-  item.color = newColor;
-  if (isGenericOrAutoOutputLabel(item.label)) {
-    const capColor = newColor.charAt(0).toUpperCase() + newColor.slice(1);
-    item.label = `${capColor}_Pilot`;
-  }
-  renderBlankIoEditorLists();
-  const focusEl = document.getElementById(`editOutColor_${idx}`);
-  if (focusEl) focusEl.focus();
 }
 
 function handleBlankIoAddrSelectChange(kind, idx, selectedTag) {
@@ -4059,37 +4129,11 @@ function handleBlankIoAddrSelectChange(kind, idx, selectedTag) {
     if (alias) draftBlankIo.outputs[idx].label = alias;
   }
   renderBlankIoEditorLists();
-  const focusTarget = document.getElementById(kind === 'IN' ? `editInAddr_${idx}` : `editOutAddr_${idx}`);
-  if (focusTarget) focusTarget.focus();
-}
-
-function openBlankIoModal(focusSection) {
-  initDraftBlankIoFromPlc();
-  renderBlankIoEditorLists();
-
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('blankIoModal').classList.add('open');
-
-  if (focusSection === 'outputs') {
-    document.getElementById('blankOutputEditorSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(() => {
-      const firstOut = document.getElementById('editOutType_0') || document.getElementById('editOutAddr_0');
-      if (firstOut) firstOut.focus();
-    }, 20);
-  } else {
-    setTimeout(() => {
-      const firstAddrSel = document.getElementById('editInAddr_0');
-      if (firstAddrSel) firstAddrSel.focus();
-    }, 10);
-  }
 }
 
 function addCustomInputChannel() {
   captureDraftBlankIoFromDom();
-  const used = new Set([
-    ...draftBlankIo.inputs.map(x => x.addr),
-    ...draftBlankIo.outputs.map(x => x.addr)
-  ]);
+  const used = new Set([...draftBlankIo.inputs.map(x => x.addr), ...draftBlankIo.outputs.map(x => x.addr)]);
   const nextAvailable = getAllAvailableControllerProgramTags().find(t => !used.has(t.addr));
   const idx = draftBlankIo.inputs.length;
   const chosenAddr = nextAvailable ? nextAvailable.addr : `Local:1:I.Data.${idx}`;
@@ -4100,13 +4144,6 @@ function addCustomInputChannel() {
     state: false
   });
   renderBlankIoEditorLists();
-  setTimeout(() => {
-    const el = document.getElementById(`editInAddr_${idx}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
 }
 
 function removeCustomInputChannel(idx) {
@@ -4118,10 +4155,7 @@ function removeCustomInputChannel(idx) {
 
 function addCustomOutputChannel() {
   captureDraftBlankIoFromDom();
-  const used = new Set([
-    ...draftBlankIo.inputs.map(x => x.addr),
-    ...draftBlankIo.outputs.map(x => x.addr)
-  ]);
+  const used = new Set([...draftBlankIo.inputs.map(x => x.addr), ...draftBlankIo.outputs.map(x => x.addr)]);
   const nextAvailable = getAllAvailableControllerProgramTags().find(t => !used.has(t.addr));
   const idx = draftBlankIo.outputs.length;
   const chosenAddr = nextAvailable ? nextAvailable.addr : `Local:2:O.Data.${idx}`;
@@ -4135,13 +4169,6 @@ function addCustomOutputChannel() {
     color: inferred.color
   });
   renderBlankIoEditorLists();
-  setTimeout(() => {
-    const el = document.getElementById(`editOutAddr_${idx}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
 }
 
 function removeCustomOutputChannel(idx) {
@@ -4149,15 +4176,6 @@ function removeCustomOutputChannel(idx) {
   captureDraftBlankIoFromDom();
   draftBlankIo.outputs.splice(idx, 1);
   renderBlankIoEditorLists();
-}
-
-function closeBlankIoModal() {
-  closeCustomSelectDropdown();
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('blankIoModal').classList.remove('open');
-  if (document.activeElement && document.activeElement !== document.body) {
-    document.activeElement.blur();
-  }
 }
 
 function resetBlankIoDefaults() {
@@ -4187,89 +4205,19 @@ function resetBlankIoDefaults() {
   renderBlankIoEditorLists();
 }
 
-function applyBlankIoChanges() {
-  captureDraftBlankIoFromDom();
-
-  const prevInAddrs = [...PLC.inputAddresses];
-  const prevOutAddrs = [...PLC.outputAddresses];
-  const prevOut = [...PLC.physicalOut];
-
-  const nextIn = [];
-  const nextInAddrs = [];
-  const nextModes = [];
-  const nextInLabels = [];
-  draftBlankIo.inputs.forEach((inp, i) => {
-    nextInAddrs.push(inp.addr || `Local:1:I.Data.${i}`);
-    nextInLabels.push(inp.label || `Input_${i}`);
-    nextModes.push(inp.mode || 'MOM_NO');
-    nextIn.push(!!inp.state);
-  });
-
-  const nextOutAddrs = [];
-  const nextOutLabels = [];
-  const nextOutConfigs = [];
-  draftBlankIo.outputs.forEach((outp, i) => {
-    const labelStr = outp.label || `Output_${i}`;
-    nextOutAddrs.push(outp.addr || `Local:2:O.Data.${i}`);
-    nextOutLabels.push(labelStr);
-    nextOutConfigs.push(normalizeOutputConfig(outp, labelStr, i));
-  });
-
-  PLC.quickDockItems.forEach(item => {
-    const oldInIdx = prevInAddrs.indexOf(item.addr);
-    if (oldInIdx !== -1 && oldInIdx < nextInAddrs.length) {
-      item.addr = nextInAddrs[oldInIdx];
-      item.mode = nextModes[oldInIdx];
-      item.label = nextInLabels[oldInIdx].split('_')[0];
-    }
-    const oldOutIdx = prevOutAddrs.indexOf(item.addr);
-    if (oldOutIdx !== -1 && oldOutIdx < nextOutAddrs.length) {
-      item.addr = nextOutAddrs[oldOutIdx];
-      item.label = nextOutLabels[oldOutIdx].split('_')[0];
-    }
-  });
-
-  PLC.physicalIn = nextIn;
-  PLC.inputAddresses = nextInAddrs;
-  PLC.inputModes = nextModes;
-  PLC.inputLabels = nextInLabels;
-  PLC.I = Array(nextIn.length).fill(false);
-
-  PLC.outputAddresses = nextOutAddrs;
-  PLC.outputLabels = nextOutLabels;
-  PLC.outputConfigs = nextOutConfigs;
-  PLC.O = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
-  PLC.physicalOut = Array(nextOutAddrs.length).fill(false).map((_, idx) => !!prevOut[idx]);
-
-  syncMimicLampsFromOutputConfigs(true);
-
-  closeBlankIoModal();
-  buildInputOutputRacks();
-  buildMobileQuickDock();
-  buildMimicLamps();
-  syncUiVisuals();
-}
-
-function openBlankMimicModal() {
+function populateMimicStudioFields() {
   const bm = PLC.blankMimic;
   document.getElementById('mimicDriveMode').value = bm.driveMode;
   document.getElementById('mimicPresetState').value = bm.state;
   document.getElementById('mimicCustomRpm').value = bm.rpm;
   document.getElementById('mimicCustomSubtext').value = bm.subtext;
   toggleCustomMimicFields();
-
   renderMimicLampsEditor();
-
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('blankMimicModal').classList.add('open');
-  setTimeout(() => {
-    const modeSel = document.getElementById('mimicDriveMode');
-    if (modeSel) modeSel.focus();
-  }, 10);
 }
 
 function renderMimicLampsEditor() {
   const lampsHost = document.getElementById('blankLampsEditorList');
+  if (!lampsHost) return;
   lampsHost.innerHTML = '';
   PLC.blankMimic.lamps.forEach((lamp, idx) => {
     let bitOpts = '';
@@ -4307,22 +4255,6 @@ function addCustomMimicLamp() {
     color: colors[idx % colors.length]
   });
   renderMimicLampsEditor();
-  setTimeout(() => {
-    const el = document.getElementById(`editLampLabel_${idx}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
-}
-
-function closeBlankMimicModal() {
-  closeCustomSelectDropdown();
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('blankMimicModal').classList.remove('open');
-  if (document.activeElement && document.activeElement !== document.body) {
-    document.activeElement.blur();
-  }
 }
 
 function toggleCustomMimicFields() {
@@ -4335,25 +4267,12 @@ function syncMimicStateDefaults() {
   const state = document.getElementById('mimicPresetState').value;
   const rpmEl = document.getElementById('mimicCustomRpm');
   const subEl = document.getElementById('mimicCustomSubtext');
-  if (state === 'STOPPED') {
-    rpmEl.value = 0;
-    subEl.value = 'STANDBY';
-  } else if (state === 'FORWARD') {
-    rpmEl.value = 1760;
-    subEl.value = 'CW 3-PHASE';
-  } else if (state === 'REVERSE') {
-    rpmEl.value = 1760;
-    subEl.value = 'CCW 3-PHASE';
-  } else if (state === 'STAR') {
-    rpmEl.value = 1040;
-    subEl.value = '58% REDUCED V (STAR)';
-  } else if (state === 'DELTA') {
-    rpmEl.value = 1785;
-    subEl.value = '100% FULL V (DELTA)';
-  } else if (state === 'FAULT') {
-    rpmEl.value = 0;
-    subEl.value = 'OVERLOAD TRIP';
-  }
+  if (state === 'STOPPED') { rpmEl.value = 0; subEl.value = 'STANDBY'; }
+  else if (state === 'FORWARD') { rpmEl.value = 1760; subEl.value = 'CW 3-PHASE'; }
+  else if (state === 'REVERSE') { rpmEl.value = 1760; subEl.value = 'CCW 3-PHASE'; }
+  else if (state === 'STAR') { rpmEl.value = 1040; subEl.value = '58% REDUCED V (STAR)'; }
+  else if (state === 'DELTA') { rpmEl.value = 1785; subEl.value = '100% FULL V (DELTA)'; }
+  else if (state === 'FAULT') { rpmEl.value = 0; subEl.value = 'OVERLOAD TRIP'; }
 }
 
 function resetBlankMimicDefaults() {
@@ -4362,49 +4281,14 @@ function resetBlankMimicDefaults() {
   PLC.blankMimic.rpm = 0;
   PLC.blankMimic.subtext = 'STANDBY';
   syncMimicLampsFromOutputConfigs(false);
-  openBlankMimicModal();
+  populateMimicStudioFields();
 }
 
-function applyBlankMimicChanges() {
-  const driveMode = document.getElementById('mimicDriveMode').value;
-  const state = document.getElementById('mimicPresetState').value;
-  const rpmVal = parseInt(document.getElementById('mimicCustomRpm').value, 10);
-  const subtextVal = (document.getElementById('mimicCustomSubtext').value || '').trim();
-
-  PLC.blankMimic.driveMode = driveMode;
-  PLC.blankMimic.state = state;
-  PLC.blankMimic.rpm = isNaN(rpmVal) ? 0 : Math.min(3600, Math.max(0, rpmVal));
-  PLC.blankMimic.subtext = subtextVal || 'CUSTOM MIMIC';
-
-  const lampCount = document.querySelectorAll('#blankLampsEditorList .custom-io-item').length;
-  const nextLamps = [];
-  for (let i = 0; i < lampCount; i++) {
-    const lbl = (document.getElementById(`editLampLabel_${i}`)?.value || '').trim();
-    const bitIdx = parseInt(document.getElementById(`editLampBit_${i}`)?.value || String(i), 10);
-    const col = document.getElementById(`editLampColor_${i}`)?.value || 'green';
-    const resolvedBit = isNaN(bitIdx) ? i : bitIdx;
-    nextLamps.push({
-      bitIndex: resolvedBit,
-      label: lbl || PLC.outputLabels[resolvedBit] || `Lamp_${i}`,
-      color: col
-    });
-
-    if (PLC.outputConfigs[resolvedBit] && PLC.outputConfigs[resolvedBit].deviceType === 'PILOT') {
-      PLC.outputConfigs[resolvedBit].color = col;
-    }
-  }
-  PLC.blankMimic.lamps = nextLamps;
-
-  closeBlankMimicModal();
-  buildInputOutputRacks();
-  buildMimicLamps();
-  syncUiVisuals();
-}
-
-function openBlankTagsModal(focusSection) {
+function populateTagsStudioFields() {
   const bitsHost = document.getElementById('blankBitsEditorList');
   const timersHost = document.getElementById('blankTimersEditorList');
   const countersHost = document.getElementById('blankCountersEditorList');
+  if (!bitsHost || !timersHost || !countersHost) return;
   bitsHost.innerHTML = '';
   timersHost.innerHTML = '';
   countersHost.innerHTML = '';
@@ -4464,81 +4348,29 @@ function openBlankTagsModal(focusSection) {
     `;
     countersHost.appendChild(row);
   });
-
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('blankTagsModal').classList.add('open');
-
-  if (focusSection === 'timers') {
-    document.getElementById('blankTimersEditorSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(() => {
-      const firstTmr = document.querySelector('#blankTimersEditorList input');
-      if (firstTmr) firstTmr.focus();
-    }, 20);
-  } else {
-    setTimeout(() => {
-      const firstBit = document.getElementById('editBitLabel_0');
-      if (firstBit) firstBit.focus();
-    }, 10);
-  }
 }
 
 function addCustomControlBit() {
   const idx = PLC.Control_Bits.length;
   PLC.Control_Bits.push(false);
   PLC.controlBitLabels.push(`Aux_Bit_${idx}`);
-  openBlankTagsModal('bits');
-  setTimeout(() => {
-    const el = document.getElementById(`editBitLabel_${idx}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
+  populateTagsStudioFields();
 }
 
 function addCustomTimerTag() {
-  const keys = getTimerKeys();
-  let nextNum = keys.length;
-  while (PLC.timers[`Timer_${nextNum}`]) {
-    nextNum++;
-  }
+  let nextNum = getTimerKeys().length;
+  while (PLC.timers[`Timer_${nextNum}`]) nextNum++;
   const newKey = `Timer_${nextNum}`;
   PLC.timers[newKey] = { EN: false, TT: false, DN: false, PRE: 2500, ACC: 0, label: `Delay_${nextNum}` };
-  openBlankTagsModal('timers');
-  setTimeout(() => {
-    const el = document.getElementById(`editTmrLabel_${newKey}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
+  populateTagsStudioFields();
 }
 
 function addCustomCounterTag() {
-  const keys = getCounterKeys();
-  let nextNum = keys.length;
-  while (PLC.counters[`Counter_${nextNum}`]) {
-    nextNum++;
-  }
+  let nextNum = getCounterKeys().length;
+  while (PLC.counters[`Counter_${nextNum}`]) nextNum++;
   const newKey = `Counter_${nextNum}`;
   PLC.counters[newKey] = { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 5, ACC: 0, label: `Count_${nextNum}` };
-  openBlankTagsModal('timers');
-  setTimeout(() => {
-    const el = document.getElementById(`editCntLabel_${newKey}`);
-    if (el) {
-      el.focus();
-      el.scrollIntoView({ block: 'nearest' });
-    }
-  }, 15);
-}
-
-function closeBlankTagsModal() {
-  closeCustomSelectDropdown();
-  KB_NAV.modalArmedForApply = false;
-  document.getElementById('blankTagsModal').classList.remove('open');
-  if (document.activeElement && document.activeElement !== document.body) {
-    document.activeElement.blur();
-  }
+  populateTagsStudioFields();
 }
 
 function resetBlankTagsDefaults() {
@@ -4555,71 +4387,7 @@ function resetBlankTagsDefaults() {
     'Counter_0': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 5, ACC: 0, label: 'Batch_Count' },
     'Counter_1': { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: 10, ACC: 0, label: 'Cycle_Count' }
   };
-  openBlankTagsModal();
-}
-
-function applyBlankTagsChanges() {
-  const bitCount = document.querySelectorAll('#blankBitsEditorList .custom-io-item').length;
-  const nextBits = [];
-  const nextBitLabels = [];
-  for (let i = 0; i < bitCount; i++) {
-    const lbl = (document.getElementById(`editBitLabel_${i}`)?.value || '').trim();
-    const val = document.getElementById(`editBitState_${i}`)?.value === '1';
-    nextBitLabels.push(lbl || `Aux_Bit_${i}`);
-    nextBits.push(val);
-  }
-  PLC.controlBitLabels = nextBitLabels;
-  PLC.Control_Bits = nextBits;
-
-  const timerRows = Array.from(document.querySelectorAll('#blankTimersEditorList .custom-io-item'));
-  timerRows.forEach(row => {
-    const tKey = row.dataset.timerKey;
-    const t = PLC.timers[tKey];
-    if (!t) return;
-    const lbl = (document.getElementById(`editTmrLabel_${tKey}`)?.value || '').trim();
-    const preParsed = parseInt(document.getElementById(`editTmrPre_${tKey}`)?.value || '3000', 10);
-    const accParsed = parseInt(document.getElementById(`editTmrAcc_${tKey}`)?.value || '0', 10);
-
-    t.label = lbl || tKey;
-    t.PRE = isNaN(preParsed) ? 3000 : Math.min(60000, Math.max(100, preParsed));
-    t.ACC = isNaN(accParsed) ? 0 : Math.min(t.PRE, Math.max(0, accParsed));
-    t.DN = t.ACC >= t.PRE;
-
-    PLC.rungs.forEach(rung => {
-      rung.elements.forEach(el => {
-        if ((el.type === 'TON' || el.type === 'TOF' || el.type === 'RTO') && el.addr === tKey) {
-          el.preset = t.PRE;
-        }
-      });
-    });
-  });
-
-  const counterRows = Array.from(document.querySelectorAll('#blankCountersEditorList .custom-io-item'));
-  counterRows.forEach(row => {
-    const cKey = row.dataset.counterKey;
-    const c = PLC.counters[cKey];
-    if (!c) return;
-    const lbl = (document.getElementById(`editCntLabel_${cKey}`)?.value || '').trim();
-    const preParsed = parseInt(document.getElementById(`editCntPre_${cKey}`)?.value || '5', 10);
-    const accParsed = parseInt(document.getElementById(`editCntAcc_${cKey}`)?.value || '0', 10);
-
-    c.label = lbl || cKey;
-    c.PRE = isNaN(preParsed) ? 5 : preParsed;
-    c.ACC = isNaN(accParsed) ? 0 : accParsed;
-    c.DN = c.ACC >= c.PRE;
-
-    PLC.rungs.forEach(rung => {
-      rung.elements.forEach(el => {
-        if ((el.type === 'CTU' || el.type === 'CTD') && el.addr === cKey) {
-          el.preset = c.PRE;
-        }
-      });
-    });
-  });
-
-  closeBlankTagsModal();
-  renderLadderCanvas();
-  syncUiVisuals();
+  populateTagsStudioFields();
 }
 
 function toggleBlankControlBit(idx) {
@@ -4627,13 +4395,229 @@ function toggleBlankControlBit(idx) {
   syncUiVisuals();
 }
 
+/* Routine JSON Export / Import */
+function serializeRoutinePayload() {
+  return {
+    schema: 'Studio5000_Logix_Sim_v2',
+    exportedAt: new Date().toISOString(),
+    inputAddresses: PLC.inputAddresses,
+    inputModes: PLC.inputModes,
+    inputLabels: PLC.inputLabels,
+    outputAddresses: PLC.outputAddresses,
+    outputLabels: PLC.outputLabels,
+    outputConfigs: PLC.outputConfigs,
+    controlBitLabels: PLC.controlBitLabels,
+    timers: Object.fromEntries(
+      Object.entries(PLC.timers).map(([k, v]) => [k, { PRE: v.PRE, label: v.label }])
+    ),
+    counters: Object.fromEntries(
+      Object.entries(PLC.counters).map(([k, v]) => [k, { PRE: v.PRE, label: v.label }])
+    ),
+    rungs: PLC.rungs
+  };
+}
+
+function openRoutineJsonModal() {
+  const ta = document.getElementById('routineJsonTextarea');
+  const fb = document.getElementById('routineJsonFeedback');
+  if (ta) ta.value = JSON.stringify(serializeRoutinePayload(), null, 2);
+  if (fb) fb.textContent = '';
+  document.getElementById('routineJsonModal').classList.add('open');
+}
+
+function closeRoutineJsonModal() {
+  document.getElementById('routineJsonModal').classList.remove('open');
+}
+
+function copyRoutineJsonToClipboard() {
+  const ta = document.getElementById('routineJsonTextarea');
+  const fb = document.getElementById('routineJsonFeedback');
+  if (!ta) return;
+  navigator.clipboard?.writeText(ta.value).then(() => {
+    if (fb) fb.textContent = 'Copied routine JSON to clipboard.';
+  }).catch(() => {
+    ta.select();
+    if (fb) fb.textContent = 'Selected JSON text — press Ctrl+C to copy.';
+  });
+}
+
+function triggerLegacyJsonDownload(jsonText, suggestedName) {
+  const blob = new Blob([jsonText], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = suggestedName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function downloadRoutineJsonFile() {
+  const ta = document.getElementById('routineJsonTextarea');
+  const fb = document.getElementById('routineJsonFeedback');
+  const jsonText = ta && ta.value.trim()
+    ? ta.value
+    : JSON.stringify(serializeRoutinePayload(), null, 2);
+  const suggestedName = `logix5000-routine-${PLC.presetId || 'custom'}-${Date.now()}.json`;
+
+  if (window.isSecureContext && typeof window.showSaveFilePicker === 'function') {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName,
+        types: [{
+          description: 'Logix 5000 Routine JSON',
+          accept: { 'application/json': ['.json'] }
+        }]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(jsonText);
+      await writable.close();
+      if (fb) {
+        fb.style.color = 'var(--power-green)';
+        fb.textContent = `Saved "${handle.name}" via native file picker.`;
+      }
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') {
+        if (fb) {
+          fb.style.color = 'var(--text-secondary)';
+          fb.textContent = 'Export cancelled.';
+        }
+        return;
+      }
+    }
+  }
+
+  triggerLegacyJsonDownload(jsonText, suggestedName);
+  if (fb) {
+    fb.style.color = 'var(--sky-accent)';
+    fb.textContent = `Exported "${suggestedName}" to device downloads.`;
+  }
+}
+
+async function pickAndImportRoutineJsonFile() {
+  const fb = document.getElementById('routineJsonFeedback');
+  if (window.isSecureContext && typeof window.showOpenFilePicker === 'function') {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        multiple: false,
+        types: [{
+          description: 'Logix 5000 Routine JSON',
+          accept: { 'application/json': ['.json'] }
+        }]
+      });
+      const file = await handle.getFile();
+      const text = await file.text();
+      applyImportedRoutinePayload(text, file.name);
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') {
+        if (fb) {
+          fb.style.color = 'var(--text-secondary)';
+          fb.textContent = 'File selection cancelled.';
+        }
+        return;
+      }
+    }
+  }
+
+  const fileInput = document.getElementById('routineJsonFileInput');
+  if (fileInput) {
+    fileInput.value = '';
+    fileInput.click();
+  }
+}
+
+async function handleRoutineFileInputChange(event) {
+  const file = event.target?.files?.[0];
+  if (!file) return;
+  const fb = document.getElementById('routineJsonFeedback');
+  try {
+    const text = await file.text();
+    applyImportedRoutinePayload(text, file.name);
+  } catch (err) {
+    if (fb) {
+      fb.style.color = 'var(--crimson-fault)';
+      fb.textContent = `Could not read file "${file.name}": ${err.message}`;
+    }
+  }
+}
+
+function applyImportedRoutinePayload(rawText, sourceName) {
+  const ta = document.getElementById('routineJsonTextarea');
+  const fb = document.getElementById('routineJsonFeedback');
+  if (ta) ta.value = rawText;
+
+  const data = JSON.parse(rawText);
+  if (!data || !Array.isArray(data.rungs)) {
+    throw new Error('JSON must contain a valid "rungs" array.');
+  }
+
+  if (Array.isArray(data.inputAddresses)) PLC.inputAddresses = data.inputAddresses;
+  if (Array.isArray(data.inputModes)) PLC.inputModes = data.inputModes;
+  if (Array.isArray(data.inputLabels)) PLC.inputLabels = data.inputLabels;
+  PLC.physicalIn = PLC.inputModes.map(m => m === 'MOM_NC');
+  PLC.I = Array(PLC.physicalIn.length).fill(false);
+
+  if (Array.isArray(data.outputAddresses)) PLC.outputAddresses = data.outputAddresses;
+  if (Array.isArray(data.outputLabels)) PLC.outputLabels = data.outputLabels;
+  if (Array.isArray(data.outputConfigs)) {
+    PLC.outputConfigs = data.outputConfigs.map((c, idx) => normalizeOutputConfig(c, PLC.outputLabels[idx], idx));
+  }
+  PLC.O = Array(PLC.outputLabels.length).fill(false);
+  PLC.physicalOut = Array(PLC.outputLabels.length).fill(false);
+
+  if (Array.isArray(data.controlBitLabels)) {
+    PLC.controlBitLabels = data.controlBitLabels;
+    PLC.Control_Bits = Array(data.controlBitLabels.length).fill(false);
+  }
+  if (data.timers && typeof data.timers === 'object') {
+    Object.entries(data.timers).forEach(([k, v]) => {
+      PLC.timers[k] = { EN: false, TT: false, DN: false, PRE: Number(v.PRE) || 3000, ACC: 0, label: v.label || k };
+    });
+  }
+  if (data.counters && typeof data.counters === 'object') {
+    Object.entries(data.counters).forEach(([k, v]) => {
+      PLC.counters[k] = { CU: false, CD: false, DN: false, OV: false, UN: false, PRE: Number(v.PRE) || 5, ACC: 0, label: v.label || k };
+    });
+  }
+
+  PLC.rungs = data.rungs;
+  syncMimicLampsFromOutputConfigs(false);
+  syncQuickDockFromCurrentIo(false);
+  clearPlcMemory();
+  buildInputOutputRacks();
+  buildMobileQuickDock();
+  buildMimicLamps();
+  renderLadderCanvas();
+  if (fb && sourceName) {
+    fb.style.color = 'var(--power-green)';
+    fb.textContent = `Loaded "${sourceName}" into PLC.`;
+  }
+  closeRoutineJsonModal();
+}
+
+function importRoutineFromJson() {
+  const ta = document.getElementById('routineJsonTextarea');
+  const fb = document.getElementById('routineJsonFeedback');
+  if (!ta) return;
+  try {
+    applyImportedRoutinePayload(ta.value, 'editor JSON');
+  } catch (err) {
+    if (fb) {
+      fb.style.color = 'var(--crimson-fault)';
+      fb.textContent = `Import error: ${err.message}`;
+    }
+  }
+}
+
 /**
  * Shared Inspector-Style Keyboard Handler for Modals
  */
 function handleInspectorStyleModalKeydown(e, modalEl, applyFn, closeFn, deleteFn) {
   const activeEl = document.activeElement;
-  const activeTag = activeEl ? activeEl.tagName : '';
-  const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
+  const isTextTyping = isEditableTarget(activeEl) && activeEl.tagName !== 'SELECT';
   const focusables = Array.from(
     modalEl.querySelectorAll('select, input, .modal-actions button')
   ).filter(el => el.offsetParent !== null);
@@ -4652,12 +4636,8 @@ function handleInspectorStyleModalKeydown(e, modalEl, applyFn, closeFn, deleteFn
     e.preventDefault();
     if (!KB_NAV.modalArmedForApply) {
       KB_NAV.modalArmedForApply = true;
-      if (activeEl && activeEl !== document.body) {
-        activeEl.blur();
-      }
-      if (applyBtn) {
-        applyBtn.focus({ preventScroll: true });
-      }
+      if (activeEl && activeEl !== document.body) activeEl.blur();
+      if (applyBtn) applyBtn.focus({ preventScroll: true });
     } else {
       closeFn();
     }
@@ -4665,7 +4645,7 @@ function handleInspectorStyleModalKeydown(e, modalEl, applyFn, closeFn, deleteFn
   }
 
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-    if (activeTag === 'INPUT' && activeEl.type === 'number') return;
+    if (activeEl && activeEl.tagName === 'INPUT' && activeEl.type === 'number') return;
     e.preventDefault();
     KB_NAV.modalArmedForApply = false;
     const curIdx = focusables.indexOf(activeEl);
@@ -4676,26 +4656,13 @@ function handleInspectorStyleModalKeydown(e, modalEl, applyFn, closeFn, deleteFn
     return;
   }
 
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    if (activeTag === 'BUTTON') {
-      e.preventDefault();
-      KB_NAV.modalArmedForApply = false;
-      const curIdx = focusables.indexOf(activeEl);
-      const dir = e.key === 'ArrowRight' ? 1 : -1;
-      const nextIdx = (curIdx + dir + focusables.length) % focusables.length;
-      focusables[nextIdx].focus();
-      focusables[nextIdx].scrollIntoView({ block: 'nearest' });
-    }
-    return;
-  }
-
-  if (e.key === 'Enter') {
+  if (e.key === 'Enter' && (!activeEl || activeEl.tagName !== 'TEXTAREA')) {
     e.preventDefault();
     if (KB_NAV.modalArmedForApply || activeEl === applyBtn) {
       applyFn();
-    } else if (activeTag === 'SELECT') {
+    } else if (activeEl && activeEl.tagName === 'SELECT') {
       openCustomSelectDropdown(activeEl);
-    } else if (activeTag === 'BUTTON') {
+    } else if (activeEl && activeEl.tagName === 'BUTTON') {
       activeEl.click();
     } else {
       applyFn();
@@ -4704,7 +4671,7 @@ function handleInspectorStyleModalKeydown(e, modalEl, applyFn, closeFn, deleteFn
 }
 
 /**
- * Desktop Ladder & Button Cursor Helpers
+ * Ladder & Button Cursor Helpers
  */
 function getRungNavItems(rIdx) {
   const rungBlock = document.querySelector(`.rung-block[data-rung-idx="${rIdx}"]`);
@@ -4720,9 +4687,7 @@ function getButtonNavGroup() {
 
 function setHighlightedButton(btnEl) {
   document.querySelectorAll('button.kb-focus').forEach(el => {
-    if (!el.classList.contains('kb-nav-node')) {
-      el.classList.remove('kb-focus');
-    }
+    if (!el.classList.contains('kb-nav-node')) el.classList.remove('kb-focus');
   });
   if (btnEl) {
     KB_NAV.arrowNavActive = true;
@@ -4748,14 +4713,19 @@ function selectNodeInNav(nodeEl) {
 
 function applyLadderKeyboardCursor() {
   document.querySelectorAll('.kb-nav-node.kb-focus').forEach(el => el.classList.remove('kb-focus'));
+  document.querySelectorAll('.rung-block.rung-selected').forEach(el => el.classList.remove('rung-selected'));
 
   if (PLC.rungs.length === 0) {
     const firstBtn = document.getElementById('btnAddFirstRung');
     if (firstBtn) firstBtn.classList.add('kb-focus');
+    updateRungTraceDisplay();
     return;
   }
 
   KB_NAV.selectedRungIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
+  const selectedBlock = document.querySelector(`.rung-block[data-rung-idx="${KB_NAV.selectedRungIdx}"]`);
+  if (selectedBlock) selectedBlock.classList.add('rung-selected');
+
   const items = getRungNavItems(KB_NAV.selectedRungIdx);
   if (items.length === 0) return;
 
@@ -4767,18 +4737,17 @@ function applyLadderKeyboardCursor() {
     target.classList.add('kb-focus');
     target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
+  updateRungTraceDisplay();
 }
 
 function getActiveNavNode() {
-  if (PLC.rungs.length === 0) {
-    return document.getElementById('btnAddFirstRung');
-  }
+  if (PLC.rungs.length === 0) return document.getElementById('btnAddFirstRung');
   const items = getRungNavItems(KB_NAV.selectedRungIdx);
   return items[KB_NAV.selectedItemIdx] || null;
 }
 
 /**
- * Keyboard Shortcuts Help Modal & Arrow/Enter Menu Navigation
+ * Keyboard Shortcuts Modal
  */
 function getShortcutRows() {
   return Array.from(document.querySelectorAll('#shortcutsModal .shortcut-row'));
@@ -4791,17 +4760,12 @@ function updateShortcutsSelection(nextIdx) {
   rows.forEach((row, idx) => {
     const isSelected = idx === KB_NAV.shortcutsIdx;
     row.classList.toggle('kb-focus', isSelected);
-    if (isSelected) {
-      row.scrollIntoView({ block: 'nearest' });
-    }
+    if (isSelected) row.scrollIntoView({ block: 'nearest' });
   });
 }
 
 function executeShortcutRowAction(rowEl) {
-  if (!rowEl) {
-    closeShortcutsModal();
-    return;
-  }
+  if (!rowEl) { closeShortcutsModal(); return; }
   const action = rowEl.dataset.shortcutAction || '';
   closeShortcutsModal();
 
@@ -4810,38 +4774,16 @@ function executeShortcutRowAction(rowEl) {
     if (viewNum === '1') switchWorkspaceView('paneLadder', document.getElementById('tabBtnLadder'));
     else if (viewNum === '2') switchWorkspaceView('paneIo', document.getElementById('tabBtnIo'));
     else if (viewNum === '3') switchWorkspaceView('paneData', document.getElementById('tabBtnData'));
-    return;
-  }
-
-  if (action === 'toggle-focus') {
-    toggleFocusMode();
-    return;
-  }
-
-  if (action === 'toggle-dock') {
-    toggleQuickDockBar();
-    return;
-  }
-
-  if (action === 'preset') {
+  } else if (action === 'toggle-focus') toggleFocusMode();
+  else if (action === 'toggle-dock') toggleQuickDockBar();
+  else if (action === 'preset') {
     const presetSel = document.getElementById('presetSelector');
-    if (presetSel) {
-      presetSel.focus();
-      openCustomSelectDropdown(presetSel);
-    }
-    return;
-  }
-
-  if (action === 'shortcuts') {
-    return;
-  }
-
-  if (action.startsWith('input:')) {
+    if (presetSel) { presetSel.focus(); openCustomSelectDropdown(presetSel); }
+  } else if (action.startsWith('input:')) {
     const target = action.split(':')[1];
     const idx = target === '4-7' ? 4 : parseInt(target, 10);
     if (!isNaN(idx)) {
-      const mode = PLC.inputModes[idx];
-      if (mode === 'TOGGLE') {
+      if (PLC.inputModes[idx] === 'TOGGLE') {
         PLC.physicalIn[idx] = !PLC.physicalIn[idx];
         syncUiVisuals();
       } else {
@@ -4849,66 +4791,17 @@ function executeShortcutRowAction(rowEl) {
         setTimeout(() => triggerFieldInputKeyUp(idx), 160);
       }
     }
-    return;
-  }
-
-  if (action === 'reset-mem') {
-    clearPlcMemory();
-    return;
-  }
-
-  if (action === 'run-toggle') {
-    toggleCpuRun();
-    return;
-  }
-
-  if (action === 'step-scan') {
-    stepSingleScan();
-    return;
-  }
-
-  if (action === 'add-rung') {
-    addNewRung();
-    return;
-  }
-
-  if (action === 'insert-cbu') {
-    if (PLC.rungs.length > 0) {
-      const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
-      const rung = PLC.rungs[rIdx];
-      if (rung) {
-        openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) });
-      }
-    }
-    return;
-  }
-
-  if (action === 'nav-arrows') {
+  } else if (action === 'reset-mem') clearPlcMemory();
+  else if (action === 'run-toggle') toggleCpuRun();
+  else if (action === 'step-scan') stepSingleScan();
+  else if (action === 'add-rung') addNewRung();
+  else if (action === 'insert-cbu' && PLC.rungs.length > 0) {
+    const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
+    const rung = PLC.rungs[rIdx];
+    if (rung) openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) });
+  } else if (action === 'nav-arrows') {
     KB_NAV.arrowNavActive = true;
     applyLadderKeyboardCursor();
-    return;
-  }
-
-  if (action === 'exec-enter') {
-    const activeNode = getActiveNavNode();
-    if (activeNode) {
-      if (activeNode.classList.contains('inst-node')) {
-        openInspector(JSON.parse(activeNode.dataset.path));
-      } else if (activeNode.classList.contains('wire-insert-btn')) {
-        openInsertModal(JSON.parse(activeNode.dataset.slot));
-      } else {
-        activeNode.click();
-      }
-    }
-    return;
-  }
-
-  if (action === 'delete-node') {
-    const activeNode = getActiveNavNode();
-    if (activeNode && activeNode.classList.contains('inst-node')) {
-      deleteInstructionAtPath(JSON.parse(activeNode.dataset.path));
-    }
-    return;
   }
 }
 
@@ -4916,10 +4809,8 @@ function openShortcutsModal() {
   closeCustomSelectDropdown();
   closeInsertModal();
   closeInspector();
-  closeQuickDockModal();
-  closeBlankIoModal();
-  closeBlankMimicModal();
-  closeBlankTagsModal();
+  closeConfigStudio();
+  closeRoutineJsonModal();
   document.getElementById('shortcutsModal').classList.add('open');
 
   const rows = getShortcutRows();
@@ -5014,18 +4905,12 @@ function updatePaletteHighlight() {
 
 function createDefaultInstruction(type) {
   switch (type) {
-    case 'XIC':
-      return { type: 'XIC', addr: getInputAddress(0), label: PLC.inputLabels[0] || 'Start_PB' };
-    case 'XIO':
-      return { type: 'XIO', addr: getInputAddress(1), label: PLC.inputLabels[1] || 'Stop_NC' };
-    case 'ONS':
-      return { type: 'ONS', addr: `ONS_Bit_${Math.floor(Math.random() * 90 + 10)}`, label: 'One_Shot' };
-    case 'OTE':
-      return { type: 'OTE', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Output_Bit' };
-    case 'OTL':
-      return { type: 'OTL', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Latch_Bit' };
-    case 'OTU':
-      return { type: 'OTU', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Unlatch_Bit' };
+    case 'XIC': return { type: 'XIC', addr: getInputAddress(0), label: PLC.inputLabels[0] || 'Start_PB' };
+    case 'XIO': return { type: 'XIO', addr: getInputAddress(1), label: PLC.inputLabels[1] || 'Stop_NC' };
+    case 'ONS': return { type: 'ONS', addr: `ONS_Bit_${Math.floor(Math.random() * 90 + 10)}`, label: 'One_Shot' };
+    case 'OTE': return { type: 'OTE', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Output_Bit' };
+    case 'OTL': return { type: 'OTL', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Latch_Bit' };
+    case 'OTU': return { type: 'OTU', addr: 'Control_Bits.0', label: PLC.controlBitLabels[0] || 'Unlatch_Bit' };
     case 'TON':
     case 'TOF':
     case 'RTO': {
@@ -5037,12 +4922,10 @@ function createDefaultInstruction(type) {
       const c0 = PLC.counters['Counter_0'] || { PRE: 5, label: 'Batch_Count' };
       return { type, addr: 'Counter_0', preset: c0.PRE, label: c0.label || 'Batch_Count' };
     }
-    case 'RES':
-      return { type: 'RES', addr: 'Counter_0', label: 'Reset_Tag' };
+    case 'RES': return { type: 'RES', addr: 'Counter_0', label: 'Reset_Tag' };
     case 'EQU':
     case 'GRT':
-    case 'LES':
-      return { type, addr: 'Counter_0.ACC', preset: 5, label: 'Cmp_Check' };
+    case 'LES': return { type, addr: 'Counter_0.ACC', preset: 5, label: 'Cmp_Check' };
     case 'BRANCH':
       return {
         type: 'BRANCH',
@@ -5051,8 +4934,7 @@ function createDefaultInstruction(type) {
           [{ type: 'XIC', addr: getOutputAddress(0), label: PLC.outputLabels[0] || 'Path_B' }]
         ]
       };
-    default:
-      return { type: 'XIC', addr: getInputAddress(0), label: 'New_Tag' };
+    default: return { type: 'XIC', addr: getInputAddress(0), label: 'New_Tag' };
   }
 }
 
@@ -5159,9 +5041,7 @@ function scrollDropdownItemIntoView() {
   const popup = document.getElementById('kbDropdownPopup');
   const items = Array.from(popup.querySelectorAll('.kb-dropdown-item'));
   items.forEach((el, i) => el.classList.toggle('active', i === KB_NAV.dropdownIdx));
-  if (items[KB_NAV.dropdownIdx]) {
-    items[KB_NAV.dropdownIdx].scrollIntoView({ block: 'nearest' });
-  }
+  if (items[KB_NAV.dropdownIdx]) items[KB_NAV.dropdownIdx].scrollIntoView({ block: 'nearest' });
 }
 
 function commitCustomSelectDropdown(idx) {
@@ -5187,9 +5067,7 @@ function syncUiVisuals() {
   document.querySelectorAll('.rung-block').forEach(block => {
     const rIdx = parseInt(block.dataset.rungIdx, 10);
     const rung = PLC.rungs[rIdx];
-    if (rung) {
-      block.classList.toggle('rung-energized', !!rung.energized);
-    }
+    if (rung) block.classList.toggle('rung-energized', !!rung.energized);
   });
 
   document.querySelectorAll('.inst-node').forEach(node => {
@@ -5238,9 +5116,8 @@ function syncUiVisuals() {
       const k = parseInt(seg.dataset.wireK, 10);
       const br = rung.elements[e];
       if (!br) return;
-      if (k === -1) {
-        seg.classList.toggle('hot', !!br.inPower);
-      } else {
+      if (k === -1) seg.classList.toggle('hot', !!br.inPower);
+      else {
         const bEl = br.branches?.[b]?.[k];
         seg.classList.toggle('hot', !!(bEl && bEl.outPower));
       }
@@ -5285,7 +5162,7 @@ function syncUiVisuals() {
   const olBtn = document.getElementById('btnOlTrip');
   if (olBtn) {
     const olTripped = !PLC.physicalIn[2];
-    olBtn.innerHTML = `${olTripped ? 'Reset OL Relay' : 'Trip OL Relay'} <span class="kbd-tag hide-mobile">O</span>`;
+    olBtn.innerHTML = `${olTripped ? 'Reset OL' : 'Trip OL'} <span class="kbd-tag hide-mobile">O</span>`;
   }
 
   for (let i = 0; i < PLC.physicalOut.length; i++) {
@@ -5296,6 +5173,7 @@ function syncUiVisuals() {
     if (led) led.classList.toggle('on', isOutOn);
   }
 
+  updateRungTraceDisplay();
   renderDataTables();
   updatePlantMimic();
 }
@@ -5333,7 +5211,7 @@ function buildInputOutputRacks() {
         </div>
         <div class="io-name">
           <span class="io-name-text">${escapeHtml(PLC.inputLabels[i])}</span>
-          ${keyHint ? `<span class="kbd-tag hide-mobile" title="Shortcut: ${escapeHtml(keyHint)}">${escapeHtml(keyHint)}</span>` : ''}
+          ${keyHint ? `<span class="kbd-tag hide-mobile">${escapeHtml(keyHint)}</span>` : ''}
         </div>
         <button id="inFieldBtn_${i}" class="field-btn">0 (OPEN)</button>
       `;
@@ -5358,17 +5236,11 @@ function buildInputOutputRacks() {
         badgeHtml = `<span class="out-role-badge pilot-${col}">PILOT · ${col.toUpperCase()}</span>`;
         ledColorClass = `pilot-${col}`;
       } else {
-        if (cfg.direction === 'FORWARD') {
-          badgeHtml = `<span class="out-role-badge fwd">KM · FWD</span>`;
-        } else if (cfg.direction === 'REVERSE') {
-          badgeHtml = `<span class="out-role-badge rev">KM · REV</span>`;
-        } else if (cfg.direction === 'STAR') {
-          badgeHtml = `<span class="out-role-badge star">KM · STAR</span>`;
-        } else if (cfg.direction === 'DELTA') {
-          badgeHtml = `<span class="out-role-badge delta">KM · DELTA</span>`;
-        } else {
-          badgeHtml = `<span class="out-role-badge">KM · AUX</span>`;
-        }
+        if (cfg.direction === 'FORWARD') badgeHtml = `<span class="out-role-badge fwd">KM · FWD</span>`;
+        else if (cfg.direction === 'REVERSE') badgeHtml = `<span class="out-role-badge rev">KM · REV</span>`;
+        else if (cfg.direction === 'STAR') badgeHtml = `<span class="out-role-badge star">KM · STAR</span>`;
+        else if (cfg.direction === 'DELTA') badgeHtml = `<span class="out-role-badge delta">KM · DELTA</span>`;
+        else badgeHtml = `<span class="out-role-badge">KM · AUX</span>`;
       }
 
       const slot = document.createElement('div');
@@ -5397,32 +5269,22 @@ function bindUniversalSwitchPointer(btnEl, addr, mode) {
   } else if (mode === 'MOM_NO') {
     const press = (e) => {
       e.preventDefault();
-      if (btnEl.setPointerCapture) {
-        try { btnEl.setPointerCapture(e.pointerId); } catch (_) {}
-      }
+      if (btnEl.setPointerCapture) { try { btnEl.setPointerCapture(e.pointerId); } catch (_) {} }
       setUniversalAddressState(addr, true);
       syncUiVisuals();
     };
-    const release = () => {
-      setUniversalAddressState(addr, false);
-      syncUiVisuals();
-    };
+    const release = () => { setUniversalAddressState(addr, false); syncUiVisuals(); };
     btnEl.addEventListener('pointerdown', press);
     btnEl.addEventListener('pointerup', release);
     btnEl.addEventListener('pointercancel', release);
   } else if (mode === 'MOM_NC') {
     const press = (e) => {
       e.preventDefault();
-      if (btnEl.setPointerCapture) {
-        try { btnEl.setPointerCapture(e.pointerId); } catch (_) {}
-      }
+      if (btnEl.setPointerCapture) { try { btnEl.setPointerCapture(e.pointerId); } catch (_) {} }
       setUniversalAddressState(addr, false);
       syncUiVisuals();
     };
-    const release = () => {
-      setUniversalAddressState(addr, true);
-      syncUiVisuals();
-    };
+    const release = () => { setUniversalAddressState(addr, true); syncUiVisuals(); };
     btnEl.addEventListener('pointerdown', press);
     btnEl.addEventListener('pointerup', release);
     btnEl.addEventListener('pointercancel', release);
@@ -5430,24 +5292,15 @@ function bindUniversalSwitchPointer(btnEl, addr, mode) {
 }
 
 function triggerUniversalSwitchKeyDown(addr, mode) {
-  if (mode === 'TOGGLE') {
-    setUniversalAddressState(addr, !getUniversalAddressState(addr));
-  } else if (mode === 'MOM_NO') {
-    setUniversalAddressState(addr, true);
-  } else if (mode === 'MOM_NC') {
-    setUniversalAddressState(addr, false);
-  }
+  if (mode === 'TOGGLE') setUniversalAddressState(addr, !getUniversalAddressState(addr));
+  else if (mode === 'MOM_NO') setUniversalAddressState(addr, true);
+  else if (mode === 'MOM_NC') setUniversalAddressState(addr, false);
   syncUiVisuals();
 }
 
 function triggerUniversalSwitchKeyUp(addr, mode) {
-  if (mode === 'MOM_NO') {
-    setUniversalAddressState(addr, false);
-    syncUiVisuals();
-  } else if (mode === 'MOM_NC') {
-    setUniversalAddressState(addr, true);
-    syncUiVisuals();
-  }
+  if (mode === 'MOM_NO') { setUniversalAddressState(addr, false); syncUiVisuals(); }
+  else if (mode === 'MOM_NC') { setUniversalAddressState(addr, true); syncUiVisuals(); }
 }
 
 function triggerFieldInputKeyDown(idx) {
@@ -5469,9 +5322,7 @@ function cycleSwitchMode(idx) {
   PLC.physicalIn[idx] = (next === 'MOM_NC');
 
   const addr = getInputAddress(idx);
-  PLC.quickDockItems.forEach(d => {
-    if (d.addr === addr) d.mode = next;
-  });
+  PLC.quickDockItems.forEach(d => { if (d.addr === addr) d.mode = next; });
 
   buildInputOutputRacks();
   buildMobileQuickDock();
@@ -5512,8 +5363,7 @@ function buildMobileQuickDock() {
   editBtn.type = 'button';
   editBtn.className = 'dock-edit-btn';
   editBtn.textContent = 'Edit Dock';
-  editBtn.title = 'Edit Bottom Dock Buttons & 1756 I/O Addresses';
-  editBtn.onclick = () => openQuickDockModal();
+  editBtn.onclick = () => openConfigStudio('dock');
   dock.appendChild(editBtn);
 }
 
@@ -5527,24 +5377,11 @@ function getEffectiveMimicLamps() {
   for (let i = 0; i < PLC.outputLabels.length; i++) {
     const cfg = getOutputConfig(i);
     if (cfg.deviceType === 'PILOT') {
-      pilotOutputs.push({
-        bitIndex: i,
-        label: PLC.outputLabels[i] || `Pilot_${i}`,
-        color: cfg.color || 'green'
-      });
+      pilotOutputs.push({ bitIndex: i, label: PLC.outputLabels[i] || `Pilot_${i}`, color: cfg.color || 'green' });
     }
   }
-
-  if (PLC.presetId === 'blank') {
-    return Array.isArray(PLC.blankMimic.lamps) && PLC.blankMimic.lamps.length > 0
-      ? PLC.blankMimic.lamps
-      : pilotOutputs;
-  }
-
-  if (pilotOutputs.length > 0) {
-    return pilotOutputs;
-  }
-
+  if (Array.isArray(PLC.blankMimic.lamps) && PLC.blankMimic.lamps.length > 0) return PLC.blankMimic.lamps;
+  if (pilotOutputs.length > 0) return pilotOutputs;
   return [
     { bitIndex: 0, label: PLC.outputLabels[0] || 'Out_0', color: 'green' },
     { bitIndex: 1, label: PLC.outputLabels[1] || 'Out_1', color: 'amber' },
@@ -5566,11 +5403,7 @@ function buildMimicLamps() {
 }
 
 function getActiveContactorRoles() {
-  let fwdActive = false;
-  let revActive = false;
-  let starActive = false;
-  let deltaActive = false;
-
+  let fwdActive = false, revActive = false, starActive = false, deltaActive = false;
   for (let i = 0; i < PLC.physicalOut.length; i++) {
     if (!PLC.physicalOut[i]) continue;
     const cfg = getOutputConfig(i);
@@ -5602,80 +5435,33 @@ function updatePlantMimic() {
   const modeEl = document.getElementById('motorModeText');
   const rotorEl = document.getElementById('motorRotorGroup');
 
-  let rpm = 0;
-  let degStep = 0;
-  let stateStr = 'STOPPED';
-  let stateColor = 'var(--text-secondary)';
-  let modeStr = 'STANDBY';
-
+  let rpm = 0, degStep = 0, stateStr = 'STOPPED', stateColor = 'var(--text-secondary)', modeStr = 'STANDBY';
   const { fwdActive, revActive, starActive, deltaActive } = getActiveContactorRoles();
 
   if (PLC.majorFault) {
     stateStr = 'MAJOR INTERLOCK FAULT';
     stateColor = 'var(--crimson-fault)';
     modeStr = 'CPU HALTED — CHECK LOGIC';
-    degStep = 0;
-  } else if (PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM') {
+  } else if (PLC.blankMimic.driveMode === 'CUSTOM') {
     const bm = PLC.blankMimic;
     rpm = bm.rpm;
     modeStr = bm.subtext;
-
-    if (bm.state === 'STOPPED') {
-      stateStr = 'STOPPED';
-      stateColor = 'var(--text-secondary)';
-      degStep = 0;
-    } else if (bm.state === 'FORWARD') {
-      stateStr = 'FORWARD RUN';
-      stateColor = 'var(--power-green)';
-      degStep = speedStepFromRpm(rpm > 0 ? rpm : 1760, false);
-    } else if (bm.state === 'REVERSE') {
-      stateStr = 'REVERSE RUN';
-      stateColor = 'var(--amber-warn)';
-      degStep = speedStepFromRpm(rpm > 0 ? rpm : 1760, true);
-    } else if (bm.state === 'STAR') {
-      const starRpm = rpm > 0 ? rpm : 1040;
-      rpm = starRpm;
-      stateStr = 'STAR (Y) START';
-      stateColor = 'var(--amber-warn)';
-      degStep = speedStepFromRpm(starRpm, false);
-    } else if (bm.state === 'DELTA') {
-      const deltaRpm = rpm > 0 ? rpm : 1785;
-      rpm = deltaRpm;
-      stateStr = 'DELTA (Δ) RUN';
-      stateColor = 'var(--power-green)';
-      degStep = speedStepFromRpm(deltaRpm, false);
-    } else if (bm.state === 'FAULT') {
-      stateStr = 'FAULT / OL TRIP';
-      stateColor = 'var(--crimson-fault)';
-      degStep = 0;
-    }
+    if (bm.state === 'FORWARD') { stateStr = 'FORWARD RUN'; stateColor = 'var(--power-green)'; degStep = speedStepFromRpm(rpm || 1760, false); }
+    else if (bm.state === 'REVERSE') { stateStr = 'REVERSE RUN'; stateColor = 'var(--amber-warn)'; degStep = speedStepFromRpm(rpm || 1760, true); }
+    else if (bm.state === 'STAR') { rpm = rpm || 1040; stateStr = 'STAR (Y) START'; stateColor = 'var(--amber-warn)'; degStep = speedStepFromRpm(rpm, false); }
+    else if (bm.state === 'DELTA') { rpm = rpm || 1785; stateStr = 'DELTA (Δ) RUN'; stateColor = 'var(--power-green)'; degStep = speedStepFromRpm(rpm, false); }
+    else if (bm.state === 'FAULT') { stateStr = 'FAULT / OL TRIP'; stateColor = 'var(--crimson-fault)'; }
   } else if (fwdActive && starActive && !deltaActive) {
-    rpm = 1040;
-    degStep = speedStepFromRpm(rpm, false);
-    stateStr = 'STAR (Y) START';
-    stateColor = 'var(--amber-warn)';
-    modeStr = '58% REDUCED V (STAR)';
+    rpm = 1040; degStep = speedStepFromRpm(rpm, false); stateStr = 'STAR (Y) START'; stateColor = 'var(--amber-warn)'; modeStr = '58% REDUCED V (STAR)';
   } else if (fwdActive && deltaActive && !starActive) {
-    rpm = 1785;
-    degStep = speedStepFromRpm(rpm, false);
-    stateStr = 'DELTA (Δ) RUN';
-    stateColor = 'var(--power-green)';
-    modeStr = '100% FULL V (DELTA)';
+    rpm = 1785; degStep = speedStepFromRpm(rpm, false); stateStr = 'DELTA (Δ) RUN'; stateColor = 'var(--power-green)'; modeStr = '100% FULL V (DELTA)';
   } else if (revActive && !fwdActive) {
-    rpm = 1760;
-    degStep = speedStepFromRpm(rpm, true);
-    stateStr = 'REVERSE RUN';
-    stateColor = 'var(--amber-warn)';
-    modeStr = 'CCW 3-PHASE';
+    rpm = 1760; degStep = speedStepFromRpm(rpm, true); stateStr = 'REVERSE RUN'; stateColor = 'var(--amber-warn)'; modeStr = 'CCW 3-PHASE';
   } else if (fwdActive) {
-    rpm = 1760;
-    degStep = speedStepFromRpm(rpm, false);
-    stateStr = 'FORWARD RUN';
-    stateColor = 'var(--power-green)';
-    modeStr = 'CW 3-PHASE';
+    rpm = 1760; degStep = speedStepFromRpm(rpm, false); stateStr = 'FORWARD RUN'; stateColor = 'var(--power-green)'; modeStr = 'CW 3-PHASE';
   }
 
-  if (!PLC.majorFault && !(PLC.presetId === 'blank' && PLC.blankMimic.driveMode === 'CUSTOM')) {
+  if (!PLC.majorFault && PLC.blankMimic.driveMode !== 'CUSTOM') {
     const redFaultPilotOn = lamps.some(l => l.color === 'red' && !!PLC.physicalOut[l.bitIndex]);
     if (redFaultPilotOn || !PLC.physicalIn[2]) {
       stateStr = 'FAULT / OL TRIP';
@@ -5688,17 +5474,13 @@ function updatePlantMimic() {
     if (rotorEl) rotorEl.setAttribute('transform', `rotate(${PLC.rotorDeg} 50 50)`);
   }
 
-  if (statusEl) {
-    statusEl.textContent = stateStr;
-    statusEl.style.color = stateColor;
-  }
+  if (statusEl) { statusEl.textContent = stateStr; statusEl.style.color = stateColor; }
   if (rpmEl) rpmEl.textContent = `${rpm} RPM`;
   if (modeEl) modeEl.textContent = modeStr;
 }
 
 function renderDataTables() {
   const bHost = document.getElementById('binaryTableHost');
-  const isBlank = PLC.presetId === 'blank';
   if (bHost) {
     let html = '';
     for (let i = 0; i < PLC.Control_Bits.length; i++) {
@@ -5709,7 +5491,7 @@ function renderDataTables() {
              onclick="toggleBlankControlBit(${i})" title="Tap to toggle Control_Bits.${i}">
           <div class="data-cell-tag">
             <span>Control_Bits.${i}</span>
-            ${(isBlank || alias) && alias ? `<span class="data-cell-alias">${escapeHtml(alias)}</span>` : ''}
+            ${alias ? `<span class="data-cell-alias">${escapeHtml(alias)}</span>` : ''}
           </div>
           <strong>${on ? '1' : '0'}</strong>
         </div>
@@ -5760,9 +5542,7 @@ function renderDataTables() {
 function resolveElementPath(path) {
   const rung = PLC.rungs[path.rIdx];
   if (!rung) return null;
-  if (path.bIdx !== undefined) {
-    return rung.elements[path.eIdx]?.branches?.[path.bIdx]?.[path.kIdx] || null;
-  }
+  if (path.bIdx !== undefined) return rung.elements[path.eIdx]?.branches?.[path.bIdx]?.[path.kIdx] || null;
   return rung.elements[path.eIdx] || null;
 }
 
@@ -5807,19 +5587,13 @@ function promptRungComment(rIdx) {
   };
   input.onblur = save;
   input.onkeydown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      e.stopPropagation();
-      save();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      renderLadderCanvas();
-    }
+    if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); save(); }
+    else if (e.key === 'Escape') { e.preventDefault(); renderLadderCanvas(); }
   };
 }
 
 /**
- * Instruction Inspector Modal / Bottom Sheet
+ * Instruction Inspector Modal
  */
 function openInspector(path) {
   const el = resolveElementPath(path);
@@ -5886,23 +5660,14 @@ function populateAddressOptions(type, selectedAddr) {
   addrSel.innerHTML = '';
 
   let pool = getContactAddresses();
-  if (type === 'OTE' || type === 'OTL' || type === 'OTU') {
-    pool = getCoilAddresses();
-  } else if (type === 'TON' || type === 'TOF' || type === 'RTO') {
-    pool = getTimerKeys();
-  } else if (type === 'CTU' || type === 'CTD') {
-    pool = getCounterKeys();
-  } else if (type === 'RES') {
-    pool = getResetAddresses();
-  } else if (type === 'EQU' || type === 'GRT' || type === 'LES') {
-    pool = getCompareAddresses();
-  } else if (type === 'ONS') {
-    pool = Array.from(new Set([selectedAddr || 'ONS_Bit_1', 'ONS_Bit_1', 'ONS_Bit_2', 'ONS_Bit_3']));
-  }
+  if (type === 'OTE' || type === 'OTL' || type === 'OTU') pool = getCoilAddresses();
+  else if (type === 'TON' || type === 'TOF' || type === 'RTO') pool = getTimerKeys();
+  else if (type === 'CTU' || type === 'CTD') pool = getCounterKeys();
+  else if (type === 'RES') pool = getResetAddresses();
+  else if (type === 'EQU' || type === 'GRT' || type === 'LES') pool = getCompareAddresses();
+  else if (type === 'ONS') pool = Array.from(new Set([selectedAddr || 'ONS_Bit_1', 'ONS_Bit_1', 'ONS_Bit_2', 'ONS_Bit_3']));
 
-  if (selectedAddr && !pool.includes(selectedAddr)) {
-    pool = [selectedAddr, ...pool];
-  }
+  if (selectedAddr && !pool.includes(selectedAddr)) pool = [selectedAddr, ...pool];
 
   pool.forEach(addr => {
     const opt = document.createElement('option');
@@ -5927,9 +5692,7 @@ function handleInspectorAddrChange() {
   const newAddr = document.getElementById('inspAddr').value;
   const alias = getDefaultLabelForAddress(newAddr);
   const labelInp = document.getElementById('inspLabel');
-  if (labelInp && alias) {
-    labelInp.value = alias;
-  }
+  if (labelInp && alias) labelInp.value = alias;
   const presetInp = document.getElementById('inspPreset');
   if (!presetInp) return;
 
@@ -5971,21 +5734,13 @@ function deleteInstructionAtPath(path) {
     const br = rung.elements[eIdx];
     if (br && br.branches && br.branches[bIdx]) {
       br.branches[bIdx].splice(kIdx, 1);
-      if (br.branches[bIdx].length === 0) {
-        br.branches.splice(bIdx, 1);
-      }
-      if (br.branches.length === 1) {
-        rung.elements.splice(eIdx, 1, ...br.branches[0]);
-      } else if (br.branches.length === 0) {
-        rung.elements.splice(eIdx, 1);
-      }
+      if (br.branches[bIdx].length === 0) br.branches.splice(bIdx, 1);
+      if (br.branches.length === 1) rung.elements.splice(eIdx, 1, ...br.branches[0]);
+      else if (br.branches.length === 0) rung.elements.splice(eIdx, 1);
     }
   } else {
-    if (rung.elements.length > 1) {
-      rung.elements.splice(eIdx, 1);
-    } else {
-      PLC.rungs.splice(rIdx, 1);
-    }
+    if (rung.elements.length > 1) rung.elements.splice(eIdx, 1);
+    else PLC.rungs.splice(rIdx, 1);
   }
 
   renderLadderCanvas();
@@ -6018,14 +5773,9 @@ function switchWorkspaceView(paneId, btnEl) {
 }
 
 function toggleCpuRun() {
-  if (PLC.majorFault) {
-    clearControllerFault();
-    return;
-  }
+  if (PLC.majorFault) { clearControllerFault(); return; }
   PLC.running = !PLC.running;
-  if (PLC.running) {
-    PLC.lastFrameTime = performance.now();
-  }
+  if (PLC.running) PLC.lastFrameTime = performance.now();
   syncCpuStatusPill();
 }
 
@@ -6060,12 +5810,12 @@ function escapeHtml(str) {
 }
 
 /**
- * Desktop Keyboard Shortcuts & Navigation
+ * Hardened Keyboard Shortcuts & Navigation (Focus-Safe)
  */
 document.addEventListener('keydown', function (e) {
   const activeEl = document.activeElement;
   const activeTag = activeEl ? activeEl.tagName : '';
-  const isTextTyping = activeTag === 'INPUT' && (activeEl.type === 'text' || activeEl.type === 'number');
+  const editingField = isEditableTarget(e.target) || isEditableTarget(activeEl);
   const lowerKey = e.key.toLowerCase();
 
   if (KB_NAV.activeSelect) {
@@ -6087,9 +5837,7 @@ document.addEventListener('keydown', function (e) {
       const chosenIdx = KB_NAV.dropdownIdx;
       const inModal = !!KB_NAV.activeSelect.closest('.modal-overlay');
       commitCustomSelectDropdown(chosenIdx);
-      if (!inModal && document.activeElement) {
-        document.activeElement.blur();
-      }
+      if (!inModal && document.activeElement) document.activeElement.blur();
       return;
     }
     if (e.key === 'Escape') {
@@ -6100,54 +5848,29 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  const quickDockModal = document.getElementById('quickDockModal');
-  if (quickDockModal && quickDockModal.classList.contains('open')) {
-    handleInspectorStyleModalKeydown(e, quickDockModal, applyQuickDockChanges, closeQuickDockModal);
+  const configStudioModal = document.getElementById('configStudioModal');
+  if (configStudioModal && configStudioModal.classList.contains('open')) {
+    handleInspectorStyleModalKeydown(e, configStudioModal, applyAllStudioChanges, closeConfigStudio);
     return;
   }
 
-  const blankIoModal = document.getElementById('blankIoModal');
-  if (blankIoModal && blankIoModal.classList.contains('open')) {
-    handleInspectorStyleModalKeydown(e, blankIoModal, applyBlankIoChanges, closeBlankIoModal);
-    return;
-  }
-
-  const blankMimicModal = document.getElementById('blankMimicModal');
-  if (blankMimicModal && blankMimicModal.classList.contains('open')) {
-    handleInspectorStyleModalKeydown(e, blankMimicModal, applyBlankMimicChanges, closeBlankMimicModal);
-    return;
-  }
-
-  const blankTagsModal = document.getElementById('blankTagsModal');
-  if (blankTagsModal && blankTagsModal.classList.contains('open')) {
-    handleInspectorStyleModalKeydown(e, blankTagsModal, applyBlankTagsChanges, closeBlankTagsModal);
+  const routineJsonModal = document.getElementById('routineJsonModal');
+  if (routineJsonModal && routineJsonModal.classList.contains('open')) {
+    if (e.key === 'Escape') { e.preventDefault(); closeRoutineJsonModal(); }
     return;
   }
 
   const shortcutsModal = document.getElementById('shortcutsModal');
   if (shortcutsModal && shortcutsModal.classList.contains('open')) {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      updateShortcutsSelection(KB_NAV.shortcutsIdx + 1);
-      return;
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      updateShortcutsSelection(KB_NAV.shortcutsIdx - 1);
-      return;
-    }
+    if (e.key === 'ArrowDown') { e.preventDefault(); updateShortcutsSelection(KB_NAV.shortcutsIdx + 1); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); updateShortcutsSelection(KB_NAV.shortcutsIdx - 1); return; }
     if (e.key === 'Enter') {
       e.preventDefault();
       const rows = getShortcutRows();
-      const selectedRow = rows[KB_NAV.shortcutsIdx] || rows[0];
-      executeShortcutRowAction(selectedRow);
+      executeShortcutRowAction(rows[KB_NAV.shortcutsIdx] || rows[0]);
       return;
     }
-    if (e.key === 'Escape' || e.key === '?' || lowerKey === 'k') {
-      e.preventDefault();
-      closeShortcutsModal();
-      return;
-    }
+    if (e.key === 'Escape' || e.key === '?' || lowerKey === 'k') { e.preventDefault(); closeShortcutsModal(); return; }
     return;
   }
 
@@ -6169,16 +5892,10 @@ document.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
       e.preventDefault();
       const highlightedPaletteBtn = btns.find(b => b.classList.contains('kb-focus')) || btns[KB_NAV.paletteIdx];
-      if (highlightedPaletteBtn) {
-        highlightedPaletteBtn.click();
-      }
+      if (highlightedPaletteBtn) highlightedPaletteBtn.click();
       return;
     }
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      closeInsertModal();
-      return;
-    }
+    if (e.key === 'Escape') { e.preventDefault(); closeInsertModal(); return; }
     return;
   }
 
@@ -6188,7 +5905,11 @@ document.addEventListener('keydown', function (e) {
     return;
   }
 
-  if (isTextTyping) return;
+  // Strictly block all single-key global shortcuts whenever user is typing/interacting with form fields
+  if (editingField) {
+    if (e.key === 'Escape' && activeEl) activeEl.blur();
+    return;
+  }
 
   if ((lowerKey === 'k' || e.key === '?') && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
@@ -6199,52 +5920,24 @@ document.addEventListener('keydown', function (e) {
   if (!e.ctrlKey && !e.altKey && !e.metaKey) {
     if (e.key === '1') {
       e.preventDefault();
-      KB_NAV.arrowNavActive = false;
-      if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneLadder', document.getElementById('tabBtnLadder'));
       applyLadderKeyboardCursor();
       return;
     }
     if (e.key === '2') {
       e.preventDefault();
-      KB_NAV.arrowNavActive = false;
-      if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneIo', document.getElementById('tabBtnIo'));
       return;
     }
     if (e.key === '3') {
       e.preventDefault();
-      KB_NAV.arrowNavActive = false;
-      if (activeEl && activeEl !== document.body) activeEl.blur();
       switchWorkspaceView('paneData', document.getElementById('tabBtnData'));
       return;
     }
-
-    if (lowerKey === 'f') {
-      e.preventDefault();
-      toggleFocusMode();
-      return;
-    }
-
-    if (lowerKey === 'd') {
-      e.preventDefault();
-      toggleQuickDockBar();
-      return;
-    }
-
-    if (lowerKey === 'n' || e.key === '+' || e.key === '=') {
-      e.preventDefault();
-      KB_NAV.arrowNavActive = false;
-      if (activeEl && activeEl !== document.body) activeEl.blur();
-      addNewRung();
-      return;
-    }
-
-    if (lowerKey === 'r' && e.shiftKey) {
-      e.preventDefault();
-      clearPlcMemory();
-      return;
-    }
+    if (lowerKey === 'f') { e.preventDefault(); toggleFocusMode(); return; }
+    if (lowerKey === 'd') { e.preventDefault(); toggleQuickDockBar(); return; }
+    if (lowerKey === 'n' || e.key === '+' || e.key === '=') { e.preventDefault(); addNewRung(); return; }
+    if (lowerKey === 'r' && e.shiftKey) { e.preventDefault(); clearPlcMemory(); return; }
 
     const customDockMatch = PLC.quickDockItems.find(d => d.key && d.key.toLowerCase() === lowerKey);
     if (customDockMatch) {
@@ -6266,23 +5959,16 @@ document.addEventListener('keydown', function (e) {
       return;
     }
 
-    if (e.code === 'Space' && activeTag !== 'BUTTON' && activeTag !== 'SELECT') {
+    if (e.code === 'Space' && activeTag !== 'BUTTON') {
       e.preventDefault();
       toggleCpuRun();
       return;
     }
-    if (lowerKey === 't') {
-      e.preventDefault();
-      stepSingleScan();
-      return;
-    }
+    if (lowerKey === 't') { e.preventDefault(); stepSingleScan(); return; }
     if (lowerKey === 'p') {
       e.preventDefault();
       const presetSel = document.getElementById('presetSelector');
-      if (presetSel) {
-        presetSel.focus();
-        openCustomSelectDropdown(presetSel);
-      }
+      if (presetSel) { presetSel.focus(); openCustomSelectDropdown(presetSel); }
       return;
     }
 
@@ -6291,77 +5977,16 @@ document.addEventListener('keydown', function (e) {
       const rIdx = Math.max(0, Math.min(PLC.rungs.length - 1, KB_NAV.selectedRungIdx));
       const rung = PLC.rungs[rIdx];
       if (rung) {
-        if (lowerKey === 'c') {
-          openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) });
-        } else if (lowerKey === 'b') {
-          openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) }, 'BRANCH');
-        } else if (lowerKey === 'u') {
-          openInsertModal({ rIdx, insertIndex: rung.elements.length }, 'OTE');
-        }
+        if (lowerKey === 'c') openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) });
+        else if (lowerKey === 'b') openInsertModal({ rIdx, insertIndex: Math.max(0, rung.elements.length - 1) }, 'BRANCH');
+        else if (lowerKey === 'u') openInsertModal({ rIdx, insertIndex: rung.elements.length }, 'OTE');
       }
       return;
-    }
-  }
-
-  if (activeTag === 'SELECT') {
-    if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      openCustomSelectDropdown(activeEl);
-      return;
-    }
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      activeEl.blur();
-      return;
-    }
-  }
-
-  const highlightedBtn = document.querySelector('button.kb-focus:not(.kb-nav-node)');
-  if (KB_NAV.arrowNavActive && (highlightedBtn || (activeTag === 'BUTTON' && !activeEl.classList.contains('kb-nav-node')))) {
-    const currentBtn = highlightedBtn || activeEl;
-    const navButtons = getButtonNavGroup();
-    const idx = navButtons.indexOf(currentBtn);
-
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      KB_NAV.arrowNavActive = false;
-      currentBtn.classList.remove('kb-focus');
-      currentBtn.click();
-      return;
-    }
-
-    if (idx !== -1) {
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        setHighlightedButton(navButtons[(idx + 1) % navButtons.length]);
-        return;
-      }
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        setHighlightedButton(navButtons[(idx - 1 + navButtons.length) % navButtons.length]);
-        return;
-      }
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        KB_NAV.arrowNavActive = false;
-        currentBtn.classList.remove('kb-focus');
-        currentBtn.blur();
-        applyLadderKeyboardCursor();
-        return;
-      }
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        KB_NAV.arrowNavActive = false;
-        currentBtn.classList.remove('kb-focus');
-        currentBtn.blur();
-        return;
-      }
     }
   }
 
   if (e.key === 'ArrowRight') {
     e.preventDefault();
-    KB_NAV.arrowNavActive = true;
     const items = getRungNavItems(KB_NAV.selectedRungIdx);
     if (items.length > 0) {
       KB_NAV.selectedItemIdx = (KB_NAV.selectedItemIdx + 1) % items.length;
@@ -6372,7 +5997,6 @@ document.addEventListener('keydown', function (e) {
 
   if (e.key === 'ArrowLeft') {
     e.preventDefault();
-    KB_NAV.arrowNavActive = true;
     const items = getRungNavItems(KB_NAV.selectedRungIdx);
     if (items.length > 0) {
       KB_NAV.selectedItemIdx = (KB_NAV.selectedItemIdx - 1 + items.length) % items.length;
@@ -6383,7 +6007,6 @@ document.addEventListener('keydown', function (e) {
 
   if (e.key === 'ArrowDown') {
     e.preventDefault();
-    KB_NAV.arrowNavActive = true;
     if (PLC.rungs.length > 0) {
       KB_NAV.selectedRungIdx = (KB_NAV.selectedRungIdx + 1) % PLC.rungs.length;
       applyLadderKeyboardCursor();
@@ -6393,22 +6016,9 @@ document.addEventListener('keydown', function (e) {
 
   if (e.key === 'ArrowUp') {
     e.preventDefault();
-    KB_NAV.arrowNavActive = true;
     if (PLC.rungs.length > 0) {
-      if (KB_NAV.selectedRungIdx === 0) {
-        const navButtons = getButtonNavGroup();
-        if (navButtons.length > 0) {
-          setHighlightedButton(navButtons[0]);
-          return;
-        }
-      }
       KB_NAV.selectedRungIdx = (KB_NAV.selectedRungIdx - 1 + PLC.rungs.length) % PLC.rungs.length;
       applyLadderKeyboardCursor();
-    } else {
-      const navButtons = getButtonNavGroup();
-      if (navButtons.length > 0) {
-        setHighlightedButton(navButtons[0]);
-      }
     }
     return;
   }
@@ -6417,14 +6027,9 @@ document.addEventListener('keydown', function (e) {
     const activeNode = getActiveNavNode();
     if (activeNode) {
       e.preventDefault();
-      KB_NAV.arrowNavActive = false;
-      if (activeNode.classList.contains('inst-node')) {
-        openInspector(JSON.parse(activeNode.dataset.path));
-      } else if (activeNode.classList.contains('wire-insert-btn')) {
-        openInsertModal(JSON.parse(activeNode.dataset.slot));
-      } else {
-        activeNode.click();
-      }
+      if (activeNode.classList.contains('inst-node')) openInspector(JSON.parse(activeNode.dataset.path));
+      else if (activeNode.classList.contains('wire-insert-btn')) openInsertModal(JSON.parse(activeNode.dataset.slot));
+      else activeNode.click();
     }
     return;
   }
@@ -6433,40 +6038,16 @@ document.addEventListener('keydown', function (e) {
     const activeNode = getActiveNavNode();
     if (!activeNode) return;
     e.preventDefault();
-
     if (activeNode.classList.contains('inst-node')) {
       deleteInstructionAtPath(JSON.parse(activeNode.dataset.path));
-    } else if (activeNode.classList.contains('wire-insert-btn')) {
-      const slot = JSON.parse(activeNode.dataset.slot);
-      const rung = PLC.rungs[slot.rIdx];
-      if (rung) {
-        if (slot.bIdx !== undefined) {
-          const leg = rung.elements[slot.eIdx]?.branches?.[slot.bIdx];
-          if (leg && leg.length > 0) {
-            const targetK = Math.min(leg.length - 1, Math.max(0, slot.insertIndex - 1));
-            deleteInstructionAtPath({ rIdx: slot.rIdx, eIdx: slot.eIdx, bIdx: slot.bIdx, kIdx: targetK });
-          }
-        } else if (rung.elements.length > 0) {
-          const targetE = Math.min(rung.elements.length - 1, Math.max(0, slot.insertIndex - 1));
-          const targetEl = rung.elements[targetE];
-          if (targetEl && targetEl.type !== 'BRANCH') {
-            deleteInstructionAtPath({ rIdx: slot.rIdx, eIdx: targetE });
-          } else {
-            removeRung(slot.rIdx);
-          }
-        }
-      }
     }
   }
 });
 
 function releaseHeldShortcutEntry(heldEntry) {
   if (!heldEntry) return;
-  if (heldEntry.type === 'DOCK') {
-    triggerUniversalSwitchKeyUp(heldEntry.addr, heldEntry.mode);
-  } else if (heldEntry.type === 'FIELD') {
-    triggerFieldInputKeyUp(heldEntry.idx);
-  }
+  if (heldEntry.type === 'DOCK') triggerUniversalSwitchKeyUp(heldEntry.addr, heldEntry.mode);
+  else if (heldEntry.type === 'FIELD') triggerFieldInputKeyUp(heldEntry.idx);
 }
 
 document.addEventListener('keyup', function (e) {
@@ -6491,14 +6072,17 @@ document.addEventListener('mousedown', function (e) {
   if (popup && popup.classList.contains('open') && !popup.contains(e.target) && e.target !== KB_NAV.activeSelect) {
     closeCustomSelectDropdown();
   }
-  if (e.target.closest && e.target.closest('button')) {
-    KB_NAV.arrowNavActive = false;
-    document.querySelectorAll('button.kb-focus:not(.kb-nav-node)').forEach(b => b.classList.remove('kb-focus'));
-  }
 });
 
 window.onload = function () {
   loadPreset('blank');
+  try {
+    if (!localStorage.getItem('logix5000_onboarding_seen')) {
+      startOnboardingWalkthrough();
+    }
+  } catch (_) {
+    startOnboardingWalkthrough();
+  }
   PLC.lastFrameTime = performance.now();
   requestAnimationFrame(mainScanLoop);
 };
